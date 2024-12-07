@@ -1,0 +1,74 @@
+table {
+  width: 100%; /* 테이블 전체 너비 */
+  border-collapse: collapse; /* 테이블 셀 간 간격 없애기 */
+}
+
+th {
+  border: 1px solid grey; /* 셀 테두리 설정 (원하는 경우) */
+  padding: 5px; /* 셀 안 패딩 */
+  text-align: center; /* 텍스트 정렬 방식 */
+  background-color: #f0f0f0; /* 라이트 모드 배경색 */
+  font-size: 1.2em;
+}
+.q-dark th {
+  background-color: #333333; /* 다크 모드 배경색 */
+}
+
+td {
+  border: 1px solid grey; /* 셀 테두리 설정 (원하는 경우) */
+  padding: 10px; /* 셀 안 패딩 */
+  font-size: 1.3em;
+  text-align: center;
+}
+
+/* 각 열 별로 너비 설정 */
+.table-1 td:nth-child(1) {
+  width: 40%;
+}
+.table-1 td:nth-child(2) {
+  width: 20%;
+}
+.table-1 td:nth-child(3) {
+  width: 20%;
+}
+
+.table-2 th:nth-child(1) {
+  width: 20%;
+}
+.table-2 th:nth-child(2) {
+  width: 25%;
+  background-color: #ffffff;
+}
+.q-dark .table-2 th:nth-child(2) {
+  width: 25%;
+  background-color: #1d1d1d;
+}
+.table-2 th:nth-child(3) {
+  width: 20%;
+}
+.table-2 th:nth-child(4) {
+  width: 25%;
+  background-color: #ffffff;
+}
+.q-dark .table-2 th:nth-child(4) {
+  width: 25%;
+  background-color: #1d1d1d;
+}
+
+.table-3 td:nth-child(1) {
+  width: 20%;
+}
+.table-3 td:nth-child(2) {
+  width: 20%;
+}
+.table-3 td:nth-child(3) {
+  width: 20%;
+}
+.table-3 td:nth-child(4) {
+  width: 20%;
+  font-weight: bold;
+}
+.table-3 td:nth-child(5) {
+  width: 20%;
+  font-weight: bold;
+}
