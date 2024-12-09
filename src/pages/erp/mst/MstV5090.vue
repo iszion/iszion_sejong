@@ -183,7 +183,6 @@ const columnDefsGroup = reactive({
       headerName: '그룹코드명',
       field: 'commNm',
       minWidth: 130,
-      maxWidth: 130,
     },
     {
       headerName: '등록수',

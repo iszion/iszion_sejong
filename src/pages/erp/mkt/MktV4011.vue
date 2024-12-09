@@ -91,7 +91,7 @@ import notifySave from 'src/js_comm/notify-save';
 import commUtil from 'src/js_comm/comm-util';
 import { useUserInfoStore } from 'src/store/setUserInfo';
 import HelpProject from 'components/subvue/HelpProject.vue';
-import STEP_EDIT from 'pages/erp/mkt/STEP_EDIT.vue';
+import STEP_EDIT from 'pages/erp/mst/STEP_EDIT.vue';
 
 const htmlContent = ref(null);
 

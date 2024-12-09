@@ -1,0 +1,1070 @@
+<template>
+  <q-page class="q-pa-xs-xs q-pa-sm-md">
+    <q-card bordered>
+      <!-- contents list title bar -->
+      <q-bar class="">
+        <q-icon name="list_alt" />
+        <span class="q-px-sm text-bold text-subtitle1" :class="$q.dark.isActive ? 'text-orange' : 'text-primary'">{{ menuLabel }}</span>
+        <q-space />
+      </q-bar>
+      <!--  end of contents list title bar -->
+      <q-card-section>
+        <div class="row q-col-gutter-x-sm">
+          <div class="col-3">
+            <q-date
+              minimal
+              style="width: 100%"
+              color="orange"
+              mask="YYYY-MM-DD"
+              v-model="currentDate"
+              :events="eventDays"
+              :event-color="date => ($q.dark.isActive ? 'blue' : 'orange')"
+              @update:model-value="onDateClick"
+              @navigation="onNavigation"
+              :default-year-month="currentYearMonth"
+            />
+          </div>
+          <div class="col-9">
+            <div class="row q-pb-sm">
+              <q-input
+                stack-label
+                bottom-slots
+                label-color="orange"
+                v-model="searchParam.word"
+                label="검색"
+                dense
+                class="q-pb-none"
+                style="width: 120px"
+                @keyup.enter="handelGetData"
+              >
+                <template v-slot:append>
+                  <q-icon v-if="searchParam.word !== ''" name="close" @click="searchParam.word = ''" class="cursor-pointer" />
+                </template>
+              </q-input>
+              <q-space />
+              <div class="q-gutter-xs col-3 text-right">
+                <q-btn outline color="primary" dense @click="saveDataSection"><q-icon name="save" size="xs" /> 저장 </q-btn>
+                <q-btn outline color="positive" dense @click="addDataSection"><q-icon name="add" size="xs" /> 신규 </q-btn>
+                <q-btn outline color="negative" dense @click="deleteDataSection"> <q-icon name="delete" size="xs" /> 삭제</q-btn>
+              </div>
+            </div>
+            <!--            <div :style="contentZoneStyle">-->
+            <div style="height: 230px">
+              <ag-grid-vue
+                ref="myGridHead"
+                style="width: 100%; height: 100%"
+                :class="$q.dark.isActive ? 'ag-theme-alpine-dark' : 'ag-theme-alpine'"
+                :grid-options="gridOptionsHead"
+              >
+              </ag-grid-vue>
+            </div>
+          </div>
+        </div>
+      </q-card-section>
+
+      <!-- contents list title bar -->
+      <q-bar class="q-px-sm">
+        <q-icon name="list_alt" />
+        <span class="text-subtitle2 q-px-sm">자료 조회/조정</span>
+        <q-space />
+        <q-chip v-if="isShowStatusEdit" size="sm" outline :color="statusEdit.color" class="q-px-md">
+          <q-icon :name="statusEdit.icon" class="q-mr-sm" size="15px" /> {{ statusEdit.message }}
+        </q-chip>
+      </q-bar>
+      <q-card-section>
+        <div class="row">
+          <div class="col-7 q-gutter-y-md">
+            <div class="row q-col-gutter-x-lg">
+              <q-input
+                stack-label
+                :dense="dense"
+                class="col-3"
+                v-model="formData.makeDate"
+                type="date"
+                label="등록일"
+                :label-color="$q.dark.isActive ? 'green' : 'blue'"
+                :disable="formDisable"
+              />
+              <q-input
+                stack-label
+                :dense="dense"
+                class="col-3 text-subtitle1"
+                v-model="formData.custCd"
+                label="전표번호"
+                mask="###-####"
+                fill-mask
+                :label-color="$q.dark.isActive ? 'green' : 'blue'"
+                :disable="formDisable"
+              >
+                <template v-slot:append>
+                  <q-icon v-if="isSaveFg === 'I'" size="0.8em" name="sync" @click="getDataMaxCustCdCheck()" class="cursor-pointer q-pt-md">
+                    <q-tooltip class="bg-amber text-black shadow-4" anchor="top middle" self="bottom middle" :offset="[10, 10]">
+                      <strong> 코드생성하기 </strong>
+                    </q-tooltip>
+                  </q-icon>
+                </template>
+              </q-input>
+            </div>
+            <div class="row q-col-gutter-x-lg">
+              <q-input
+                :dense="dense"
+                stack-label
+                class="col-5"
+                v-model="formData.agentNm"
+                label="입고처"
+                :label-color="$q.dark.isActive ? 'green' : 'blue'"
+                :disable="formDisable"
+                @keyup.enter="openHelpAgentDialog()"
+              >
+                <template v-slot:append>
+                  <q-icon size="0.8em" v-if="formData.agentNm !== ''" name="close" @click="formData.agentNm = ''" class="cursor-pointer q-pt-md" />
+                  <q-icon size="0.8em" name="search" @click="openHelpCustDialog()" class="cursor-pointer q-pt-md" />
+                </template>
+              </q-input>
+              <q-input
+                stack-label
+                :dense="dense"
+                class="col-2"
+                v-model="formData.agentCd"
+                label="코드"
+                :label-color="$q.dark.isActive ? 'green' : 'blue'"
+                readonly
+                maxlength="100"
+              />
+            </div>
+          </div>
+
+          <div class="col-5">
+            <q-input
+              stack-label
+              :dense="dense"
+              :disable="formDisable"
+              type="textarea"
+              v-model="formData.remarks"
+              label="참고사항"
+              :label-color="$q.dark.isActive ? 'green' : 'blue'"
+              autogrow
+              clearable
+              :hint="`${byteCount.remarks} / 200(한글100)자 까지 입력하실 수 있습니다.`"
+              @update:model-value="updateByteCount('remarks', formData.remarks, 200)"
+            />
+          </div>
+        </div>
+      </q-card-section>
+
+      <q-separator />
+      <!--  end of contents list (우측 화면)  -->
+
+      <q-card-section class="q-pa-xs">
+        <div :style="contentZoneStyle">
+          <ag-grid-vue
+            ref="myGrid"
+            style="width: 100%; height: 100%"
+            :class="$q.dark.isActive ? 'ag-theme-alpine-dark' : 'ag-theme-alpine'"
+            :grid-options="gridOptions"
+          >
+          </ag-grid-vue>
+        </div>
+      </q-card-section>
+    </q-card>
+    <!--  end of contents list  (좌측 화면) -->
+  </q-page>
+</template>
+
+<script setup>
+import 'ag-grid-community/styles/ag-grid.css';
+import 'ag-grid-community/styles/ag-theme-quartz.css';
+import 'ag-grid-community/styles/ag-theme-alpine.css';
+import 'ag-grid-community/styles/ag-theme-balham.css';
+import { AgGridVue } from 'ag-grid-vue3';
+import { QBtn, QIcon, QToggle, useQuasar } from 'quasar';
+import { computed, onBeforeMount, onBeforeUnmount, onMounted, reactive, ref, watch } from 'vue';
+import { api } from '/src/boot/axios';
+
+import { isEqual } from 'lodash';
+import jsonUtil from 'src/js_comm/json-util';
+import notifySave from 'src/js_comm/notify-save';
+import commUtil from 'src/js_comm/comm-util';
+import HelpCust from 'components/subvue/HelpCust.vue';
+
+const $q = useQuasar();
+const dense = ref(false);
+const isSaveFg = ref(null);
+
+const divCdOptionsSearch = ref(null);
+const divCdOptions = ref(null);
+
+const searchParam = reactive({
+  divCd: '',
+  useYn: 'N',
+  word: '',
+});
+const statusEdit = reactive({
+  icon: '',
+  message: '',
+  color: '',
+});
+
+const formDisable = ref(true);
+
+const contentZoneHeight = ref(500);
+const handleResize = () => {
+  contentZoneHeight.value = window.innerHeight;
+};
+const contentZoneStyle = computed(() => ({
+  height: `${contentZoneHeight.value - 700}px`,
+}));
+
+const rowData = reactive({ rows: [] });
+
+const dateFormatter = params => {
+  const dateStr = params.value;
+  if (dateStr && dateStr.length === 8) {
+    return `${dateStr.slice(0, 4)}-${dateStr.slice(4, 6)}-${dateStr.slice(6)}`;
+  }
+  return dateStr;
+};
+
+const businNoFormatter = params => {
+  const dateStr = params.value;
+  if (dateStr && dateStr.length === 10) {
+    return `${dateStr.slice(0, 3)}-${dateStr.slice(3, 5)}-${dateStr.slice(5)}`;
+  }
+  return dateStr;
+};
+
+onBeforeUnmount(() => {
+  // Remove the resize event listener when the component is destroyed
+  window.removeEventListener('resize', handleResize);
+});
+onBeforeMount(() => {
+  formDataInitialize();
+  // 영업담당
+  getDataCommOption('201').then(() => {
+    handelGetData();
+  });
+});
+
+const menuLabel = ref('');
+onMounted(() => {
+  window.addEventListener('resize', handleResize);
+  handleResize();
+  menuLabel.value = window.history.state.label;
+});
+
+const columnDefsHead = ref([
+  {
+    headerName: 'No',
+    field: 'rowNum',
+    minWidth: 70,
+    filter: true,
+    pinned: !$q.screen.xs && !$q.screen.sm ? 'left' : null,
+  },
+  {
+    headerName: '',
+    field: '',
+    maxWidth: 50,
+    minWidth: 50,
+    checkboxSelection: true,
+    headerCheckboxSelection: true,
+    filter: false,
+    pinned: !$q.screen.xs && !$q.screen.sm ? 'left' : null,
+  },
+  {
+    headerName: '입고일',
+    field: 'makeDate',
+    pinned: !$q.screen.xs && !$q.screen.sm ? 'left' : null,
+    valueFormatter: dateFormatter,
+    minWidth: 120,
+    maxWidth: 120,
+  },
+  {
+    headerName: '전표번호',
+    field: 'custBusinNo',
+    valueFormatter: businNoFormatter,
+    minWidth: 100,
+    maxWidth: 100,
+  },
+  {
+    headerName: '입고처',
+    field: 'custNm',
+    minWidth: 150,
+  },
+  {
+    headerName: '코드',
+    field: 'custCd',
+    minWidth: 80,
+    maxWidth: 80,
+  },
+
+  {
+    headerName: '건수',
+    field: 'limitAmt',
+    minWidth: 80,
+    maxWidth: 80,
+    valueFormatter: params => {
+      if (params.value != null) {
+        return new Intl.NumberFormat('ko-KR', {
+          // style: 'currency',
+          // currency: 'KRW',
+          minimumFractionDigits: 0,
+          maximumFractionDigits: 0,
+        }).format(params.value);
+      }
+      return '';
+    },
+    cellClass: 'ag-right-aligned-cell',
+    cellStyle: () => {
+      return {
+        color: $q.dark.isActive ? 'orange' : 'teal',
+      };
+    },
+  },
+  {
+    headerName: '수량',
+    field: 'limitAmt',
+    minWidth: 110,
+    maxWidth: 110,
+    valueFormatter: params => {
+      if (params.value != null) {
+        return new Intl.NumberFormat('ko-KR', {
+          // style: 'currency',
+          // currency: 'KRW',
+          minimumFractionDigits: 0,
+          maximumFractionDigits: 0,
+        }).format(params.value);
+      }
+      return '';
+    },
+    cellClass: 'ag-right-aligned-cell',
+    cellStyle: () => {
+      return {
+        color: $q.dark.isActive ? 'orange' : 'teal',
+      };
+    },
+  },
+
+  {
+    headerName: '기타사항',
+    field: 'remarks',
+    minWidth: 200,
+  },
+]);
+
+const columnDefs = ref([
+  {
+    headerName: 'No',
+    field: 'rowNum',
+    minWidth: 70,
+    maxWidth: 70,
+    filter: true,
+    pinned: !$q.screen.xs && !$q.screen.sm ? 'left' : null,
+  },
+  {
+    headerName: '',
+    field: '',
+    maxWidth: 50,
+    minWidth: 50,
+    checkboxSelection: true,
+    headerCheckboxSelection: true,
+    filter: false,
+    pinned: !$q.screen.xs && !$q.screen.sm ? 'left' : null,
+  },
+  {
+    headerName: '구분',
+    field: 'custCd',
+    minWidth: 80,
+    maxWidth: 80,
+  },
+  {
+    headerName: '도서명',
+    field: 'custNm',
+    minWidth: 150,
+  },
+  {
+    headerName: '코드',
+    field: 'custCd',
+    minWidth: 80,
+    maxWidth: 80,
+  },
+  {
+    headerName: '수량',
+    field: 'limitAmt',
+    minWidth: 100,
+    maxWidth: 100,
+    valueFormatter: params => {
+      if (params.value != null) {
+        return new Intl.NumberFormat('ko-KR', {
+          // style: 'currency',
+          // currency: 'KRW',
+          minimumFractionDigits: 0,
+          maximumFractionDigits: 0,
+        }).format(params.value);
+      }
+      return '';
+    },
+    cellClass: 'ag-right-aligned-cell',
+    cellStyle: () => {
+      return {
+        color: $q.dark.isActive ? 'orange' : 'teal',
+      };
+    },
+  },
+  {
+    headerName: '단가',
+    field: 'limitAmt',
+    minWidth: 100,
+    maxWidth: 100,
+    valueFormatter: params => {
+      if (params.value != null) {
+        return new Intl.NumberFormat('ko-KR', {
+          // style: 'currency',
+          // currency: 'KRW',
+          minimumFractionDigits: 0,
+          maximumFractionDigits: 0,
+        }).format(params.value);
+      }
+      return '';
+    },
+    cellClass: 'ag-right-aligned-cell',
+    cellStyle: () => {
+      return {
+        color: $q.dark.isActive ? 'orange' : 'teal',
+      };
+    },
+  },
+  {
+    headerName: '비율',
+    field: 'limitAmt',
+    minWidth: 100,
+    maxWidth: 100,
+    valueFormatter: params => {
+      if (params.value != null) {
+        return new Intl.NumberFormat('ko-KR', {
+          // style: 'currency',
+          // currency: 'KRW',
+          minimumFractionDigits: 0,
+          maximumFractionDigits: 0,
+        }).format(params.value);
+      }
+      return '';
+    },
+    cellClass: 'ag-right-aligned-cell',
+    cellStyle: () => {
+      return {
+        color: $q.dark.isActive ? 'orange' : 'teal',
+      };
+    },
+  },
+  {
+    headerName: '금액',
+    field: 'limitAmt',
+    minWidth: 100,
+    maxWidth: 100,
+    valueFormatter: params => {
+      if (params.value != null) {
+        return new Intl.NumberFormat('ko-KR', {
+          // style: 'currency',
+          // currency: 'KRW',
+          minimumFractionDigits: 0,
+          maximumFractionDigits: 0,
+        }).format(params.value);
+      }
+      return '';
+    },
+    cellClass: 'ag-right-aligned-cell',
+    cellStyle: () => {
+      return {
+        color: $q.dark.isActive ? 'orange' : 'teal',
+      };
+    },
+  },
+  {
+    headerName: '기타사항',
+    field: 'remarks',
+    minWidth: 200,
+  },
+]);
+
+const oldFormData = ref(null);
+const formData = ref(null);
+const formDataInitialize = () => {
+  formData.value = {
+    custCd: '',
+    custNm: '',
+    divCd: '',
+    divCdNm: '',
+    zoneNm: '',
+    custBusinNm: '',
+    custOwner: '',
+    custBusinNo: '',
+    custCond: '',
+    custKind: '',
+    custZip1: '',
+    custAddr1: '',
+    custAddr1X: '',
+    custZip2: '',
+    custAddr2: '',
+    custAddr2X: '',
+    managerNm: '',
+    mobile: '',
+    tel: '',
+    fax: '',
+    yulWt: '0',
+    yulHm: '0',
+    yulMj: '0',
+    yulNp: '0',
+    yulTb: '0',
+    yulHd: '0',
+    yulHs: '0',
+    yulSg: '0',
+    yulGt: '0',
+    limitAmt: '0',
+    makeDate: '',
+    billYn: '',
+    billEmail: '',
+    useYn: 'N',
+    useExplain: '',
+    remarks: '',
+    remarks2: '',
+  };
+};
+
+const selectedRows = ref([]);
+const isShowStatusEdit = ref(false);
+const isShowDeleteBtn = ref(false);
+const isShowSaveBtn = ref(false);
+
+const startFocus = ref(null);
+const secondFocus = ref(null);
+const addDataSection = () => {
+  getDataMaxCustCdCheck();
+  formDataInitialize();
+  oldFormData.value = null;
+  isShowStatusEdit.value = true;
+  statusEdit.icon = 'edit';
+  statusEdit.message = '신규입력모드 입니다';
+  statusEdit.color = 'primary';
+  isSaveFg.value = 'I';
+  isShowSaveBtn.value = true;
+  formDisable.value = false;
+  formData.value.itemCl = '1';
+  formData.value.ebookYn = 'N';
+  formData.value.useYn = 'N';
+  formData.value.makeDate = commUtil.getToday();
+
+  setTimeout(() => {
+    startFocus.value.focus();
+  }, 100);
+};
+const deleteDataSection = () => {
+  $q.dialog({
+    dark: true,
+    title: '자료삭제',
+    message: '선택된 자료를 삭제하시겠습니까? ',
+    ok: {
+      push: true,
+      color: 'negative',
+    },
+    cancel: {
+      push: true,
+      color: 'grey-7',
+    },
+    // persistent: true,
+  })
+    .onOk(() => {
+      isSaveFg.value = 'D';
+
+      let iu = [];
+      let iuD = [];
+      for (let i = 0; i < selectedRows.value.length; i++) {
+        let tmpJson = '{"mode":"D","data":' + JSON.stringify(selectedRows.value[i]) + '}';
+        iuD.push(tmpJson);
+      }
+      saveDataAndHandleResult(jsonUtil.jsonFiller(iu, iuD));
+    })
+    .onCancel(() => {})
+    .onDismiss(() => {
+      // 확인/취소 모두 실행되었을때
+    });
+};
+const saveDataSection = () => {
+  formData.value.makeDate = commUtil.unFormatDate(formData.value.makeDate);
+  formData.value.custBusinNo = formData.value.custBusinNo.replace(/-/g, '');
+  // console.log('formData : ', JSON.stringify(formData.value));
+  // console.log('oldFormData : ', JSON.stringify(oldFormData.value));
+
+  if (isEqual(formData.value, oldFormData.value)) {
+    $q.dialog({
+      dark: true,
+      title: '안내',
+      message: '변경된 자료가 없습니다. ',
+      // persistent: true,
+    })
+      .onOk(() => {})
+      .onCancel(() => {})
+      .onDismiss(() => {
+        // 확인/취소 모두 실행되었을때
+      });
+  } else {
+    saveDataAndHandleResult(jsonUtil.dataJsonParse(isSaveFg.value, formData.value));
+  }
+};
+
+// **************************************************************//
+// ***** DataBase 연결부분    *************************************//
+// **************************************************************//
+
+// ***** 자료저장 및 삭제 처리부분 *****************************//
+const saveDataAndHandleResult = resFormData => {
+  api
+    .post('/api/mst/mst2020_save', resFormData)
+    .then(res => {
+      if (res.data.rtn === '0') {
+        if (isSaveFg.value === 'I') {
+          let newData = [formData.value];
+          myGrid.value.api.applyTransaction({
+            add: newData,
+            addIndex: 0,
+          });
+          handelGetData();
+        } else if (isSaveFg.value === 'U') {
+          const selectedData = myGrid.value.api.getSelectedRows();
+          Object.assign(selectedData[0], formData.value);
+          myGrid.value.api.applyTransaction({
+            update: selectedData,
+          });
+          myGrid.value.api.deselectAll();
+        } else if (isSaveFg.value === 'D') {
+          const selectedData = myGrid.value.api.getSelectedRows();
+          myGrid.value.api.applyTransaction({ remove: selectedData });
+        }
+      }
+      let saveStatus = {};
+      saveStatus.rtn = res.data.rtn;
+      saveStatus.rtnMsg = res.data.rtnMsg;
+      notifySave.notifyView(saveStatus);
+    })
+    .catch(error => {
+      console.log('error: ', error);
+    });
+};
+
+// ***** 사용자정보 목록 자료 가져오기 부분  *****************************//
+const handelGetData = () => {
+  getDataMaxPages().then(() => {
+    getData();
+  });
+};
+
+const getDataMaxPages = async () => {
+  totalPages.value = 0;
+  currentPages.value = 0;
+  pagination.startRowNum = 0;
+  try {
+    const response = await api.post('/api/mst/mst2020_maxPages', {
+      paramDivCd: searchParam.divCd,
+      paramUseYn: searchParam.useYn,
+      paramSearchValue: searchParam.word,
+      paramPageRows: pagination.pageRows,
+      paramStartRowNum: pagination.startRowNum,
+    });
+    let maxRows = response.data.data[0].maxPages;
+
+    totalPages.value = Math.ceil(maxRows / pagination.pageRows);
+    // console.log('totalPage : ', totalPages.value);
+  } catch (error) {
+    console.error('Error fetching users:', error);
+  }
+};
+const getData = async () => {
+  try {
+    const response = await api.post('/api/mst/mst2020_list', {
+      paramDivCd: searchParam.divCd,
+      paramUseYn: searchParam.useYn,
+      paramSearchValue: searchParam.word,
+      paramPageRows: pagination.pageRows,
+      paramStartRowNum: pagination.startRowNum,
+    });
+    rowData.rows = response.data.data;
+    myGrid.value.api.setGridOption('rowData', rowData.rows);
+  } catch (error) {
+    console.error('Error fetching users:', error);
+  }
+};
+// ***** 사용자정보 목록 자료 가져오기 부분  *****************************//
+
+// ***** 자동코드처리 마지막 코드+1 가져오기 부분  *****************************//
+const getDataMaxCustCdCheck = async () => {
+  try {
+    const response = await api.post('/api/mst/mst2020_max_codeCheck', {});
+    formData.value.custCd = response.data.data[0].maxCd;
+  } catch (error) {
+    console.error('Error fetching users:', error);
+  }
+};
+// ***** 사용자정보 선택된 자료 가져오기 부분  *****************************//
+const getDataSelect = async resCustCd => {
+  try {
+    const response = await api.post('/api/mst/mst2020_select', {
+      paramCustCd: resCustCd,
+    });
+    formData.value = response.data.data[0];
+    // console.log('select data ::: ', JSON.stringify(formData.value));
+    oldFormData.value = JSON.parse(JSON.stringify(formData.value)); // 초기자료 저장
+    formData.value.makeDate = commUtil.formatDate(response.data.data[0].makeDate);
+  } catch (error) {
+    console.error('Error fetching users:', error);
+  }
+};
+// ***** 사용자정보 선택된 자료 가져오기 부분  *****************************//
+
+async function getDataCommOption(resCommCd1) {
+  try {
+    const response = await api.post('/api/mst/comm_option_list', { paramCommCd1: resCommCd1 });
+    switch (resCommCd1) {
+      case '201':
+        divCdOptionsSearch.value = [...response.data.data];
+        divCdOptions.value = response.data.data;
+        divCdOptionsSearch.value.unshift({ commCd: '', commNm: '전체' });
+        break;
+      default:
+        divCdOptionsSearch.value = [];
+        divCdOptions.value = [];
+    }
+
+    // console.log('getData1: ', JSON.stringify(response.data.data));
+  } catch (error) {
+    console.error('Error fetching users:', error);
+  }
+}
+// **************************************************************//
+// ***** DataBase 연결부분 끝  *************************************//
+// **************************************************************//
+
+const myGridHead = ref(null);
+const gridOptionsHead = {
+  columnDefs: columnDefsHead.value,
+  rowData: rowData.rowsHead,
+  defaultColDef: {
+    flex: 1,
+    sortable: true,
+    filter: true,
+    floatingFilter: false,
+    editable: false,
+  },
+  pagination: false,
+  rowSelection: 'multiple' /* 'single' or 'multiple',*/,
+  enableColResize: false,
+  enableSorting: true,
+  enableFilter: false,
+  enableRangeSelection: true,
+  suppressRowClickSelection: false,
+  animateRows: true,
+  suppressHorizontalScroll: true,
+  localeText: { noRowsToShow: '조회 결과가 없습니다.' },
+  getRowStyle: function (param) {
+    if (param.node.rowPinned) {
+      return { 'font-weight': 'bold', background: '#dddddd' };
+    }
+    return { 'text-align': 'left' };
+  },
+  getRowHeight: function (param) {
+    // 고정된 행의 높이
+    if (param.node.rowPinned) {
+      return 45;
+    }
+    return 40;
+  },
+  // GRID READY 이벤트, 사이즈 자동조정
+  onGridReady: function (event) {
+    // console.log('Grid is ready'); // Check if grid initializes
+    event.api.sizeColumnsToFit();
+  },
+  // 창 크기 변경 되었을 때 이벤트
+  onGridSizeChanged: function (event) {
+    event.api.sizeColumnsToFit();
+  },
+  onRowEditingStarted: function (event) {
+    // console.log('never called - not doing row editing');
+  },
+  onRowEditingStopped: function (event) {
+    // console.log('never called - not doing row editing');
+  },
+  onCellEditingStarted: function (event) {
+    // console.log('cellEditingStarted');
+  },
+  onCellEditingStopped: function (event) {
+    // console.log('cellEditingStopped');
+  },
+  onRowClicked: function (event) {
+    // console.log('onRowClicked');
+    // selectedRows.value = event.api.getSelectedRows();
+    // console.log('sel: ', JSON.stringify(selectedRows.value));
+  },
+  onCellClicked: function (event) {
+    // console.log('onCellClicked');
+  },
+  isRowSelectable: function (event) {
+    // console.log('isRowSelectable');
+    return true;
+  },
+  onSelectionChanged: function (event) {
+    // console.log('onSelectionChanged1');
+    selectedRows.value = event.api.getSelectedRows();
+    isShowStatusEdit.value = false;
+    isShowDeleteBtn.value = selectedRows.value.length > 0;
+    isShowSaveBtn.value = false;
+
+    if (selectedRows.value.length === 1) {
+      getDataSelect(selectedRows.value[0].custCd).then(() => {
+        isShowSaveBtn.value = true;
+        isShowStatusEdit.value = true;
+        statusEdit.icon = 'edit_note';
+        statusEdit.message = '수정/삭제모드 입니다';
+        statusEdit.color = 'accent';
+        isSaveFg.value = 'U';
+        formDisable.value = false;
+      });
+    } else if (selectedRows.value.length > 1) {
+      isSaveFg.value = 'D';
+      isShowStatusEdit.value = true;
+      statusEdit.icon = 'delete';
+      statusEdit.message = '삭제모드 입니다';
+      statusEdit.color = 'negative';
+      formDisable.value = true;
+      formDataInitialize();
+    } else {
+      formDataInitialize();
+      isShowStatusEdit.value = false;
+      isSaveFg.value = '';
+      formDisable.value = true;
+    }
+  },
+  onSortChanged: function (event) {
+    // console.log('onSortChanged');
+  },
+  onCellValueChanged: function (event) {
+    // console.log('onCellValueChanged');
+    onCellValueChanged();
+  },
+  getRowNodeId: function (data) {
+    return null;
+  },
+  // 리드 상단 고정
+  setPinnedTopRowData: function (data) {
+    return null;
+  },
+  // 그리드 하단 고정
+  setPinnedBottomRowData: function (data) {
+    return null;
+  },
+  // components: {
+  //   numericCellEditor: NumericCellEditor,
+  //   moodEditor: MoodEditor,
+  // },
+  debug: false,
+};
+
+const myGrid = ref(null);
+const gridOptions = {
+  columnDefs: columnDefs.value,
+  rowData: rowData.rows,
+  defaultColDef: {
+    flex: 1,
+    sortable: true,
+    filter: true,
+    floatingFilter: false,
+    editable: false,
+  },
+  pagination: false,
+  rowSelection: 'multiple' /* 'single' or 'multiple',*/,
+  enableColResize: false,
+  enableSorting: true,
+  enableFilter: false,
+  enableRangeSelection: true,
+  suppressRowClickSelection: false,
+  animateRows: true,
+  suppressHorizontalScroll: true,
+  localeText: { noRowsToShow: '조회 결과가 없습니다.' },
+  getRowStyle: function (param) {
+    if (param.node.rowPinned) {
+      return { 'font-weight': 'bold', background: '#dddddd' };
+    }
+    return { 'text-align': 'left' };
+  },
+  getRowHeight: function (param) {
+    // 고정된 행의 높이
+    if (param.node.rowPinned) {
+      return 45;
+    }
+    return 40;
+  },
+  // GRID READY 이벤트, 사이즈 자동조정
+  onGridReady: function (event) {
+    // console.log('Grid is ready'); // Check if grid initializes
+    event.api.sizeColumnsToFit();
+  },
+  // 창 크기 변경 되었을 때 이벤트
+  onGridSizeChanged: function (event) {
+    event.api.sizeColumnsToFit();
+  },
+  onRowEditingStarted: function (event) {
+    // console.log('never called - not doing row editing');
+  },
+  onRowEditingStopped: function (event) {
+    // console.log('never called - not doing row editing');
+  },
+  onCellEditingStarted: function (event) {
+    // console.log('cellEditingStarted');
+  },
+  onCellEditingStopped: function (event) {
+    // console.log('cellEditingStopped');
+  },
+  onRowClicked: function (event) {
+    // console.log('onRowClicked');
+    // selectedRows.value = event.api.getSelectedRows();
+    // console.log('sel: ', JSON.stringify(selectedRows.value));
+  },
+  onCellClicked: function (event) {
+    // console.log('onCellClicked');
+  },
+  isRowSelectable: function (event) {
+    // console.log('isRowSelectable');
+    return true;
+  },
+  onSelectionChanged: function (event) {
+    // console.log('onSelectionChanged1');
+    selectedRows.value = event.api.getSelectedRows();
+    isShowStatusEdit.value = false;
+    isShowDeleteBtn.value = selectedRows.value.length > 0;
+    isShowSaveBtn.value = false;
+
+    if (selectedRows.value.length === 1) {
+      getDataSelect(selectedRows.value[0].custCd).then(() => {
+        isShowSaveBtn.value = true;
+        isShowStatusEdit.value = true;
+        statusEdit.icon = 'edit_note';
+        statusEdit.message = '수정/삭제모드 입니다';
+        statusEdit.color = 'accent';
+        isSaveFg.value = 'U';
+        formDisable.value = false;
+      });
+    } else if (selectedRows.value.length > 1) {
+      isSaveFg.value = 'D';
+      isShowStatusEdit.value = true;
+      statusEdit.icon = 'delete';
+      statusEdit.message = '삭제모드 입니다';
+      statusEdit.color = 'negative';
+      formDisable.value = true;
+      formDataInitialize();
+    } else {
+      formDataInitialize();
+      isShowStatusEdit.value = false;
+      isSaveFg.value = '';
+      formDisable.value = true;
+    }
+  },
+  onSortChanged: function (event) {
+    // console.log('onSortChanged');
+  },
+  onCellValueChanged: function (event) {
+    // console.log('onCellValueChanged');
+    onCellValueChanged();
+  },
+  getRowNodeId: function (data) {
+    return null;
+  },
+  // 리드 상단 고정
+  setPinnedTopRowData: function (data) {
+    return null;
+  },
+  // 그리드 하단 고정
+  setPinnedBottomRowData: function (data) {
+    return null;
+  },
+  // components: {
+  //   numericCellEditor: NumericCellEditor,
+  //   moodEditor: MoodEditor,
+  // },
+  debug: false,
+};
+
+const byteCount = ref({ itemNm: 0, remarks: 0, remarks2: 0 });
+const updateByteCount = (ch, val, maxCnt) => {
+  if (val) {
+    switch (ch) {
+      case 'itemNm':
+        byteCount.value.itemNm = commUtil.textByteLength(val);
+        if (byteCount.value.itemNm > maxCnt) {
+          alert('한글 ' + maxCnt + '자 (한글 ' + Math.trunc(maxCnt / 2) + '자)까지 가능합니다.');
+        }
+        break;
+      case 'remarks':
+        byteCount.value.remarks = commUtil.textByteLength(val);
+        if (byteCount.value.remarks > maxCnt) {
+          alert('한글 ' + maxCnt + '자 (한글 ' + Math.trunc(maxCnt / 2) + '자)까지 가능합니다.');
+        }
+        break;
+      case 'remarks2':
+        byteCount.value.remarks2 = commUtil.textByteLength(val);
+        if (byteCount.value.remarks2 > maxCnt) {
+          alert('한글 ' + maxCnt + '자 (한글 ' + Math.trunc(maxCnt / 2) + '자)까지 가능합니다.');
+        }
+        break;
+      default:
+        break;
+    }
+  }
+};
+
+// 포맷된 값을 관리하는 computed
+const formattedLimitAmt = formattedValue('limitAmt');
+
+function formattedValue(key) {
+  return computed({
+    get() {
+      return formData.value[key].toLocaleString(); // 3자리 콤마
+    },
+    set(value) {
+      formData.value[key] = Number(value.replace(/,/g, '')) || 0; // 콤마 제거 후 숫자로 변환
+    },
+  });
+}
+
+// 공통 업데이트 함수
+function updateValue(key, value) {
+  formData.value[key] = Number(value.replace(/,/g, '')) || 0;
+}
+// 포맷된 값을 관리하는 computed 끝
+
+/* *** 코드헬프부분 ** */
+const useDialog = ref(false);
+const openHelpCustDialog = resM => {
+  useDialog.value = true;
+  openHelpCustDialog1(resM);
+};
+
+const openHelpCustDialog1 = resM => {
+  if (useDialog.value) {
+    $q.dialog({
+      component: HelpCust,
+      componentProps: {
+        paramValueNm: resM.custsNm,
+        paramCloseDay: commUtil.unFormatDate('00000000'),
+      },
+    })
+      .onOk(res => {
+        resM.custCd = res.valueCd;
+        resM.custsNm = res.valueNm;
+      })
+      .onCancel(() => {})
+      .onDismiss(() => {
+        // console.log('Called on OK or Cancel');
+        useDialog.value = false;
+      });
+  }
+};
+</script>
+
+<style lang="sass" scoped></style>
