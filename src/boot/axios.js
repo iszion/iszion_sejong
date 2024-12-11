@@ -12,7 +12,6 @@ export default boot(({ app, router }) => {
       if (!token || token === 'undefined') {
         router.push('/');
       } else {
-        console.log('!!!');
         const accessToken = sessionStorage.getItem('accessToken').replace(/^"|"$/g, '');
         config.headers.Authorization = `Bearer ${accessToken}`;
       }

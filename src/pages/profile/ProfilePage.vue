@@ -214,10 +214,16 @@ const passwdSave = () => {
   });
 };
 
-const access_token = sessionStorage.getItem('accessToken');
+const accessToken = sessionStorage.getItem('accessToken');
+const refreshToken = sessionStorage.getItem('refreshToken');
+
+const tokenData = ref({
+  accessToken: accessToken,
+  refreshToken: refreshToken
+});
 const logout = () => {
   api
-    .post('/api/auth/logout', access_token)
+    .post('/api/auth/logout', tokenData.value)
     .then(res => {
       sessionStorage.removeItem('accessToken');
       sessionStorage.removeItem('refreshToken');

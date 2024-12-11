@@ -61,6 +61,7 @@
       </q-card-actions>
     </q-card>
   </q-dialog>
+  <q-btn @click="dataTest">Button</q-btn>
   <!--  게시글 조회부분 끝-->
 </template>
 
@@ -217,6 +218,10 @@ const saveEventDataAndHandleResult = resFormData => {
 // **************************************************************//
 // ***** DataBase 연결부분 끝  *************************************//
 // **************************************************************//
+const dataTest = async () => {
+  console.log("###dataTest###")
+  const response = await api.get('/api/sys/dataTest');
+};
 </script>
 
 <style scoped lang="sass"></style>
