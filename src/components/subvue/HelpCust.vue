@@ -21,7 +21,7 @@
           <q-space />
           <q-toggle
             v-model="searchParams.searchAll"
-            :label="`${searchParams.searchAll === 'Y' ? '전체' : '사용자만'}`"
+            :label="`${searchParams.searchAll === 'Y' ? '전체' : '출고정지'}`"
             color="pink"
             false-value="N"
             true-value="Y"
@@ -71,6 +71,11 @@ const { dialogRef, onDialogHide, onDialogOK, onDialogCancel } = useDialogPluginC
 
 const params = defineProps({
   paramValueNm: {
+    type: String,
+    required: true,
+    default: null,
+  },
+  paramUseYn: {
     type: String,
     required: true,
     default: null,
@@ -133,10 +138,10 @@ const businNoFormatter = params => {
 
 const columnDefs = reactive({
   columns: [
-    { headerName: '코드', field: 'custCd', maxWidth: 100, minWidth: 100, pinned: 'left' },
-    { headerName: '상호(가칭명)', field: 'custNm', minWidth: 100 },
-    { headerName: '상호(법인명)', field: 'custBusinNm', minWidth: 100 },
-    { headerName: '사업자등록번호', field: 'custBusinNo', minWidth: 100, valueFormatter: businNoFormatter },
+    { headerName: '코드', field: 'custCd', maxWidth: 90, minWidth: 90, pinned: 'left' },
+    { headerName: '상호(가칭명)', field: 'custNm', minWidth: 150 },
+    { headerName: '상호(법인명)', field: 'custBusinNm', minWidth: 150 },
+    { headerName: '사업자등록번호', field: 'custBusinNo', minWidth: 140, valueFormatter: businNoFormatter },
     { headerName: '대표자', field: 'custOwner', minWidth: 100 },
     { headerName: '출고정지', field: 'useYn', minWidth: 100 },
   ],
@@ -147,7 +152,7 @@ const rowData = reactive({ rows: [] });
 const searchParams = ref({
   searchNm: params.paramValueNm,
   searchCd: '',
-  searchAll: 'N',
+  searchAll: params.paramUseYn,
 });
 
 onBeforeMount(() => {
@@ -229,7 +234,6 @@ const getData = async () => {
   try {
     const response = await api.post('/api/mst/helpCust_list', {
       paramValueNm: searchParams.value.searchNm,
-      paramUseYn: 'N',
       paramCloseDay: params.paramCloseDay,
       paramAll: searchParams.value.searchAll,
     });

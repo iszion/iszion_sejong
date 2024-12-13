@@ -401,7 +401,7 @@ const refreshToken = sessionStorage.getItem('refreshToken');
 
 const form = ref({
   accessToken: accessToken,
-  refreshToken: refreshToken
+  refreshToken: refreshToken,
 });
 const logout = () => {
   api
@@ -600,7 +600,7 @@ const addFavorites = () => {
       };
       let tmpJson = '{"mode":"I","data":' + JSON.stringify(jsonFormData) + '}';
       iu.push(tmpJson);
-      const resFormData = JsonUtil.jsonFiller(iu, iuD);
+      const resFormData = JsonUtil.jsonFiller('no1', iu, iuD);
       api
         .post('/api/sys/fav_save', resFormData)
         .then(res => {

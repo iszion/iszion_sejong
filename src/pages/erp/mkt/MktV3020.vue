@@ -590,7 +590,7 @@ const deleteDataSection = () => {
         let tmpJson = '{"mode":"D","data":' + JSON.stringify(selectedRowsOrd.value[i]) + '}';
         iuD.push(tmpJson);
       }
-      saveDataAndHandleResult(jsonUtil.jsonFiller(iu, iuD));
+      saveDataAndHandleResult(jsonUtil.jsonFiller('no1', iu, iuD));
     })
     .onCancel(() => {})
     .onDismiss(() => {
@@ -609,7 +609,7 @@ const saveDataSection = () => {
     }
     iu.push(tmpJson);
   }
-  saveDataAndHandleResult(jsonUtil.jsonFiller(iu, iuD));
+  saveDataAndHandleResult(jsonUtil.jsonFiller('no1', iu, iuD));
 };
 
 // **************************************************************//

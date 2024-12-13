@@ -1,4 +1,9 @@
-INSERT into db_sej.MITEMTB 
+INSERT into db_sej.MITEMTB_BACK 
+select * from db_sejong.MITEMTB;
+
+truncate table db_sej.MPRODTB;
+
+INSERT into db_sej.MPRODTB 
 select 
 ITEM_CD,
 concat('101', ITEM_DIV),
@@ -31,4 +36,6 @@ REG_DATE,
 REG_ID,
 UPDATE_DATE,
 UPDATE_ID
-FROM db_sejong.MITEMTB;
+FROM db_sej.MITEMTB_BACK;
+
+commit;

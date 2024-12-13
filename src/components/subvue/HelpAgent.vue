@@ -188,21 +188,21 @@ const onCellKeyDown = params => {
 const handleSelectedClick = () => {
   // console.log('sel :: ', JSON.stringify(selectedRows.value));
   if (selectedRows.value && selectedRows.value.length > 0) {
-    const selectedAgentCd = selectedRows.value[0].agentCd;
-    const selectedAgentNm = selectedRows.value[0].agentNm;
+    const selectedValueCd = selectedRows.value[0].agentCd;
+    const selectedValueNm = selectedRows.value[0].agentNm;
 
     // Emit the selected values through onDismiss event
-    onDialogOK({ valueCd: selectedAgentCd, valueNm: selectedAgentNm });
+    onDialogOK({ valueCd: selectedValueCd, valueNm: selectedValueNm });
     onDialogCancel();
   }
 };
 
 const onRowDoubleClicked = params => {
   if (selectedRows.value && selectedRows.value.length > 0) {
-    const selectedAgentCd = selectedRows.value[0].agentCd;
-    const selectedAgentNm = selectedRows.value[0].agentNm;
+    const selectedValueCd = selectedRows.value[0].agentCd;
+    const selectedValueNm = selectedRows.value[0].agentNm;
     // Emit the selected values through onDismiss event
-    onDialogOK({ valueCd: selectedAgentCd, valueNm: selectedAgentNm });
+    onDialogOK({ valueCd: selectedValueCd, valueNm: selectedValueNm });
     // Close the dialog
     onDialogCancel();
   }

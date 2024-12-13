@@ -314,7 +314,7 @@ const saveDataSection = () => {
       });
   } else {
     console.log('save data::: ', JSON.stringify(formData.value));
-    saveDataAndHandleResult(jsonUtil.dataJsonParse(isSaveFg.value, formData.value));
+    saveDataAndHandleResult(jsonUtil.dataJsonParse('no1', isSaveFg.value, formData.value));
   }
 };
 
@@ -327,7 +327,7 @@ const saveDataSectionDialog = () => {
       iuD.push(tmpJson);
     }
   }
-  saveDataDialogAndHandleResult(jsonUtil.jsonFiller(iu, iuD));
+  saveDataDialogAndHandleResult(jsonUtil.jsonFiller('no1', iu, iuD));
 };
 
 const deleteDataSection = () => {
@@ -352,7 +352,7 @@ const deleteDataSection = () => {
         let tmpJson = '{"mode":"D","data":' + JSON.stringify(selectedRows.value[i]) + '}';
         iuD.push(tmpJson);
       }
-      saveDataAndHandleResult(jsonUtil.jsonFiller(iu, iuD));
+      saveDataAndHandleResult(jsonUtil.jsonFiller('no1', iu, iuD));
     })
     .onCancel(() => {})
     .onDismiss(() => {
@@ -437,7 +437,7 @@ const saveDataDialogAndHandleResult = resFormData => {
         iu.push(tmpJson);
       }
 
-      const tmpData = jsonUtil.jsonFiller(iu, iuD);
+      const tmpData = jsonUtil.jsonFiller('no1', iu, iuD);
       api
         .post('/api/aux/aux3010_tset_save', tmpData)
         .then(res => {

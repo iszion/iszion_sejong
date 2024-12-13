@@ -688,7 +688,7 @@ const deleteDataSection = () => {
         let tmpJson = '{"mode":"U","data":' + JSON.stringify(selectedRows.value[i]) + '}';
         iuD.push(tmpJson);
       }
-      saveDataAndHandleResult(jsonUtil.jsonFiller(iu, iuD));
+      saveDataAndHandleResult(jsonUtil.jsonFiller('no1', iu, iuD));
     })
     .onCancel(() => {})
     .onDismiss(() => {
@@ -714,7 +714,7 @@ const saveDataSection = () => {
         // 확인/취소 모두 실행되었을때
       });
   } else {
-    saveDataAndHandleResult(jsonUtil.dataJsonParse(isSaveFg, formData.value));
+    saveDataAndHandleResult(jsonUtil.dataJsonParse('no1', isSaveFg, formData.value));
   }
 };
 

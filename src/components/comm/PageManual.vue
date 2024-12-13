@@ -377,7 +377,7 @@ const saveDataDocBSection = () => {
       if (_content === '') {
         isSaveFgB = 'D';
       }
-      saveDataDocBhandleResult(jsonUtil.dataJsonParse(isSaveFgB, manualDocB.value));
+      saveDataDocBhandleResult(jsonUtil.dataJsonParse('no1', isSaveFgB, manualDocB.value));
       selectedDocBedit.value = false;
     })
     .onCancel(() => {})
@@ -409,7 +409,7 @@ const saveDataDocUSection = () => {
       if (_content === '') {
         isSaveFgU = 'D';
       }
-      saveDataDocUhandleResult(jsonUtil.dataJsonParse(isSaveFgU, manualDocU.value));
+      saveDataDocUhandleResult(jsonUtil.dataJsonParse('no1', isSaveFgU, manualDocU.value));
       selectedDocUedit.value = false;
     })
     .onCancel(() => {})

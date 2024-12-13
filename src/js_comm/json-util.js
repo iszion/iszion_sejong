@@ -1,5 +1,5 @@
 export default {
-  dataJsonParse(resIud, resFormData) {
+  dataJsonParse(resTag, resIud, resFormData) {
     // form json data 를 json data 파싱
     let jsonFormData = JSON.stringify(resFormData);
 
@@ -23,11 +23,11 @@ export default {
     } else if (resIud === 'D') {
       dataDel[0] = '{"mode":"D","data":' + jsonFormData + '}';
     }
-    let obj = this.jsonFiller(data, dataDel);
+    let obj = this.jsonFiller(resTag, data, dataDel);
     return JSON.stringify(obj).replace(/null/gi, '');
   },
 
-  jsonFiller(resObj, resObjDel) {
+  jsonFiller(resTag, resObj, resObjDel) {
     let jsonData = {};
 
     // 신규, 수정 자료 정리 부분
@@ -115,7 +115,7 @@ export default {
     }
 
     let jsonReturnData = {};
-    jsonReturnData.no1 = jsonData;
+    jsonReturnData[resTag] = jsonData;
 
     return jsonReturnData;
   },

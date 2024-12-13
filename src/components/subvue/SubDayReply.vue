@@ -229,7 +229,7 @@ const deleteDataSection = resNo => {
         seq: params.paramSeq,
         no: resNo,
       };
-      saveDataAndHandleResult(jsonUtil.dataJsonParse(isSaveFg, deleteData));
+      saveDataAndHandleResult(jsonUtil.dataJsonParse('no1', isSaveFg, deleteData));
     })
     .onCancel(() => {})
     .onDismiss(() => {
@@ -253,7 +253,7 @@ const saveDataSection = () => {
         // 확인/취소 모두 실행되었을때
       });
   } else {
-    saveDataAndHandleResult(jsonUtil.dataJsonParse(isSaveFg, formData.value));
+    saveDataAndHandleResult(jsonUtil.dataJsonParse('no1', isSaveFg, formData.value));
   }
 };
 

@@ -748,7 +748,7 @@ const handleDocCancel = () => {
           const tmpJsonD = '{"mode":"D","data": { "lineCd": "7011101", "lineNo": ' + uniqueLineNos.value[i] + ' } }';
           iuD.push(tmpJsonD);
         }
-        saveDataAndHandleResultCancel(jsonUtil.jsonFiller(iu, iuD))
+        saveDataAndHandleResultCancel(jsonUtil.jsonFiller('no1', iu, iuD))
           .then(res => {
             // 첨부파일 삭제부분
             if (res.data.rtn === '0') {
@@ -1002,7 +1002,7 @@ const deleteDataSection = () => {
         let tmpJson = '{"mode":"D","data":' + JSON.stringify(selectedRows.value[i]) + '}';
         iuD.push(tmpJson);
       }
-      saveDataAndHandleResult(jsonUtil.jsonFiller(iu, iuD))
+      saveDataAndHandleResult(jsonUtil.jsonFiller('no1', iu, iuD))
         .then(res => {
           if (res.data.rtn === '0') {
             const fileKey = '7011101_' + selectedRows.value[0].stdDay + '_' + selectedRows.value[0].salesCd + '_' + selectedRows.value[0].seq;
@@ -1035,7 +1035,7 @@ const saveDataSection = () => {
         // 확인/취소 모두 실행되었을때
       });
   } else {
-    saveDataAndHandleResult(jsonUtil.dataJsonParse(isSaveFg, formData.value))
+    saveDataAndHandleResult(jsonUtil.dataJsonParse('no1', isSaveFg, formData.value))
       .then(res => {
         // console.log('Response received: ', res);
       })

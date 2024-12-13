@@ -367,9 +367,9 @@ const evaResetProcess = resEvs => {
       });
   } else {
     if (resEvs === '2011101') {
-      saveDataAndHandleResult_2011101(jsonUtil.jsonFiller(iu, iuD));
+      saveDataAndHandleResult_2011101(jsonUtil.jsonFiller('no1', iu, iuD));
     } else {
-      saveDataAndHandleResult_2011201(jsonUtil.jsonFiller(iu, iuD));
+      saveDataAndHandleResult_2011201(jsonUtil.jsonFiller('no1', iu, iuD));
     }
     setTimeout(() => {
       getData();

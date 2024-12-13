@@ -130,7 +130,7 @@ const onDocSend = () => {
     tmpJson = '{"mode":"U","data":' + JSON.stringify(props.message[i]) + '}';
     iu.push(tmpJson);
   }
-  let jsonData = jsonUtil.jsonFiller(iu, iuD);
+  let jsonData = jsonUtil.jsonFiller('no1', iu, iuD);
   jsonData.lineCd = '7011101';
   console.log('data : ', JSON.stringify(jsonData));
   saveDataAndHandleResult(jsonData);

@@ -451,7 +451,7 @@ const deleteDataGroupSection = () => {
         let tmpJson = '{"mode":"D","data":' + JSON.stringify(selectedRows.value[i]) + '}';
         iuD.push(tmpJson);
       }
-      saveDataAndHandleResultGroup(jsonUtil.jsonFiller(iu, iuD));
+      saveDataAndHandleResultGroup(jsonUtil.jsonFiller('no1', iu, iuD));
 
       const selectedData = gridApiGroup.value.getSelectedRows();
       gridApiGroup.value.applyTransaction({ remove: selectedData });
@@ -488,7 +488,7 @@ const deleteDataSection = () => {
         let tmpJson = '{"mode":"D","data":' + JSON.stringify(selectedRows.value[i]) + '}';
         iuD.push(tmpJson);
       }
-      saveDataAndHandleResult(jsonUtil.jsonFiller(iu, iuD));
+      saveDataAndHandleResult(jsonUtil.jsonFiller('no1', iu, iuD));
 
       const selectedData = gridApi.value.getSelectedRows();
       gridApi.value.applyTransaction({ remove: selectedData });
@@ -533,7 +533,7 @@ const saveDataGroupSection = () => {
         // 확인/취소 모두 실행되었을때
       });
   } else {
-    saveDataAndHandleResultGroup(jsonUtil.jsonFiller(iu, iuD));
+    saveDataAndHandleResultGroup(jsonUtil.jsonFiller('no1', iu, iuD));
     setTimeout(() => {
       getGroupData();
     }, 500);
@@ -580,7 +580,7 @@ const saveDataSection = () => {
         // 확인/취소 모두 실행되었을때
       });
   } else {
-    saveDataAndHandleResult(jsonUtil.jsonFiller(iu, iuD));
+    saveDataAndHandleResult(jsonUtil.jsonFiller('no1', iu, iuD));
     setTimeout(() => {
       getSelectData();
     }, 500);

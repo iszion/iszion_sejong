@@ -136,7 +136,7 @@ const saveDataSection = () => {
     // console.log('form: ', JSON.stringify(formData.value));
     formData.value.regDay = formData.value.regDay.replace(/\//g, '');
     formData.value.oldRegDay = formData.value.oldRegDay.replace(/\//g, '');
-    saveEventDataAndHandleResult(jsonUtil.dataJsonParse(isSaveFg, formData.value));
+    saveEventDataAndHandleResult(jsonUtil.dataJsonParse('no1', isSaveFg, formData.value));
   }
 };
 onMounted(() => {
@@ -164,7 +164,7 @@ const deleteDataSection = () => {
       // console.log('oldRegDay1: ', formData.value.oldRegDay);
       formData.value.oldRegDay = formData.value.oldRegDay.replace(/\//g, '');
       // console.log('oldRegDay2: ', formData.value.oldRegDay);
-      saveEventDataAndHandleResult(jsonUtil.dataJsonParse(isSaveFg, formData.value));
+      saveEventDataAndHandleResult(jsonUtil.dataJsonParse('no1', isSaveFg, formData.value));
     })
     .onCancel(() => {})
     .onDismiss(() => {
@@ -219,7 +219,7 @@ const saveEventDataAndHandleResult = resFormData => {
 // ***** DataBase 연결부분 끝  *************************************//
 // **************************************************************//
 const dataTest = async () => {
-  console.log("###dataTest###")
+  console.log('###dataTest###');
   const response = await api.get('/api/sys/dataTest');
 };
 </script>

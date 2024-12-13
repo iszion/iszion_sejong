@@ -206,7 +206,7 @@ const passwdSave = () => {
   formData.newPasswd = form.value.newPassword;
   let tmpJson = '{"mode": "U","data":' + JSON.stringify(formData) + '}';
   iu.push(tmpJson);
-  saveDataAndHandleResult(jsonUtil.jsonFiller(iu, iuD)).then(val => {
+  saveDataAndHandleResult(jsonUtil.jsonFiller('no1', iu, iuD)).then(val => {
     if (val.rtn === '0') {
       isDialogVisible.value = false;
       logout();
@@ -219,7 +219,7 @@ const refreshToken = sessionStorage.getItem('refreshToken');
 
 const tokenData = ref({
   accessToken: accessToken,
-  refreshToken: refreshToken
+  refreshToken: refreshToken,
 });
 const logout = () => {
   api

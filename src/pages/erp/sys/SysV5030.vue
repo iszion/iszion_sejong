@@ -285,7 +285,7 @@ onMounted(() => {
       //		    // 신규항목 저장
       //		    let formData = { grop_id: data.node.id, grop_parent: data.node.parent, grop_nm: data.node.text, folder: '', icon: data.node.icon };
       //			selectFG = "I";
-      //			let paramData = dataJsonParse(selectFG, formData);
+      //			let paramData = dataJsonParse('no1', selectFG, formData);
       ////			saveCallProcess(paramData);
       // 수정 후 이벤트
     })
@@ -306,7 +306,7 @@ onMounted(() => {
       //			//변경항목 저장
       //			let formData = { grop_id: data.node.id, grop_parent: data.node.parent, seq: data.node.original.seq, grop_nm: data.node.text, folder: '', icon: data.node.icon };
       //			selectFG = "U";
-      //			let paramData = dataJsonParse(selectFG, formData);
+      //			let paramData = dataJsonParse('no1', selectFG, formData);
       ////			saveCallProcess(paramData);
       //
       ////			let cnt = 0;
@@ -324,7 +324,7 @@ onMounted(() => {
       ////		 		 iu1.push(JSON.stringify(tmpAry));
       ////	 		});
       ////		 	selectFG = "M";
-      ////			let obj = jsonfiller(iu1, iu1Del);
+      ////			let obj = jsonfiller('no1', iu1, iu1Del);
       ////			paramData = JSON.stringify(obj).replace(/null/gi, "");
       //////			console.log("paramData : " + JSON.stringify(paramData));
       ////		 	saveCallProcess(paramData);
@@ -345,7 +345,7 @@ onMounted(() => {
       //			//변경항목 저장
       //			let formData = { menu_id: data.node.id, menu_parent: data.node.parent, prog_nm: data.node.text, groupCd: groupCd, icon: data.node.icon };
       //			selectFG = "U";
-      //			let paramData = dataJsonParse(selectFG, formData);
+      //			let paramData = dataJsonParse('no1', selectFG, formData);
       //			console.log("move paramData : 	" + JSON.stringify(paramData));
       ////			saveCallProcess(paramData);
       //
@@ -364,7 +364,7 @@ onMounted(() => {
       //		 		 iu1.push(JSON.stringify(tmpAry));
       //	 		});
       //		 	selectFG = "M";
-      //			let obj = jsonfiller(iu1, iu1Del);
+      //			let obj = jsonfiller('no1', iu1, iu1Del);
       //			paramData = JSON.stringify(obj).replace(/null/gi, "");
       ////			console.log("paramData : " + JSON.stringify(paramData));
       //		 	saveCallProcess(paramData);
@@ -392,7 +392,7 @@ onMounted(() => {
           tmpAry = { mode: 'D', data: obj_data };
           iu1Del.push(JSON.stringify(tmpAry));
         });
-      let obj = jsonUtil.jsonFiller(iu1, iu1Del);
+      let obj = jsonUtil.jsonFiller('no1', iu1, iu1Del);
       console.log('del ::', iu1Del);
       let paramData = JSON.stringify(obj).replace(/null/gi, '');
       // deleteDataAndHandleResult(paramData);
@@ -494,7 +494,7 @@ const saveBtn = () => {
       tmpAry = '{"mode":"D","data":' + JSON.stringify(jsonData) + '}';
       iu1Del.push(tmpAry);
 
-      let obj = jsonUtil.jsonFiller(iu1, iu1Del);
+      let obj = jsonUtil.jsonFiller('no1', iu1, iu1Del);
 
       let paramData = JSON.stringify(obj).replace(/null/gi, '');
       // console.log('param:  ', JSON.stringify(paramData));

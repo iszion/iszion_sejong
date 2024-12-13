@@ -543,7 +543,7 @@ const deleteDataSection = () => {
       }
       // console.log('iu : ', JSON.stringify(iu));
       // console.log('iuD : ', JSON.stringify(iuD));
-      saveDataAndHandleResult(jsonUtil.jsonFiller(iu, iuD));
+      saveDataAndHandleResult(jsonUtil.jsonFiller('no1', iu, iuD));
     })
     .onCancel(() => {})
     .onDismiss(() => {
@@ -577,7 +577,7 @@ const saveDataSection = () => {
         // 확인/취소 모두 실행되었을때
       });
   } else {
-    saveDataAndHandleResult(jsonUtil.jsonFiller(iu, iuD));
+    saveDataAndHandleResult(jsonUtil.jsonFiller('no1', iu, iuD));
   }
 };
 

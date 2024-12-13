@@ -261,7 +261,7 @@ const deleteData = resM => {
         label: '확인',
         color: 'white',
         handler: () => {
-          saveDataGroupAndHandleResult(jsonUtil.dataJsonParse('D', resM)).then(val => {
+          saveDataGroupAndHandleResult(jsonUtil.dataJsonParse('no1', 'D', resM)).then(val => {
             if (val.rtn === '0') {
               const findIndex = rowData.rows.findIndex(m => m.uid === resM.uid);
               if (findIndex !== -1) {
@@ -286,7 +286,7 @@ const handleRowClick = (resCustCd, resCustNm) => {
 
 const saveDataGroupSection = resData => {
   resData.editable = false;
-  saveDataGroupAndHandleResult(jsonUtil.dataJsonParse(resData.iuD, resData)).then(val => {
+  saveDataGroupAndHandleResult(jsonUtil.dataJsonParse('no1', resData.iuD, resData)).then(val => {
     if (val.rtn === '0' && resData.iuD === 'I') {
       resData.iuD = 'U';
     }
@@ -420,7 +420,7 @@ const saveDataSection = () => {
         let tmpJson = '{"mode":"D","data":' + JSON.stringify(jsonData_D[i]) + '}';
         iuD.push(tmpJson);
       }
-      saveDataAndHandleResult(jsonUtil.jsonFiller(iu, iuD)).then(val => {
+      saveDataAndHandleResult(jsonUtil.jsonFiller('no1', iu, iuD)).then(val => {
         if (val.rtn === '0') {
           getDataSelected();
         }

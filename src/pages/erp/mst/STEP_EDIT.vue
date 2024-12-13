@@ -189,7 +189,7 @@ const deleteDataSection = () => {
         let tmpJson = '{"mode":"D","data":' + JSON.stringify(selectedRows.value[i]) + '}';
         iuD.push(tmpJson);
       }
-      saveDataAndHandleResult(jsonUtil.jsonFiller(iu, iuD));
+      saveDataAndHandleResult(jsonUtil.jsonFiller('no1', iu, iuD));
     })
     .onCancel(() => {})
     .onDismiss(() => {
@@ -209,7 +209,7 @@ const saveDataSection = () => {
     iu.push(tmpJson);
   }
   console.log('save : ', JSON.stringify(iu));
-  saveDataAndHandleResult(jsonUtil.jsonFiller(iu, iuD));
+  saveDataAndHandleResult(jsonUtil.jsonFiller('no1', viu, iuD));
 };
 
 // **************************************************************//

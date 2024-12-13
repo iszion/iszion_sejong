@@ -530,7 +530,7 @@ const saveDataUserSection = () => {
         // 확인/취소 모두 실행되었을때
       });
   } else {
-    saveDataUserAndHandleResult(jsonUtil.jsonFiller(iu, iuD));
+    saveDataUserAndHandleResult(jsonUtil.jsonFiller('no1', iu, iuD));
     setTimeout(() => {
       getDataUser();
     }, 500);

@@ -325,7 +325,7 @@ const saveDataDocSection = () => {
         // 확인/취소 모두 실행되었을때
       });
   } else {
-    saveDataDocAndHandleResult(jsonUtil.dataJsonParse(isSaveFg, formData.value));
+    saveDataDocAndHandleResult(jsonUtil.dataJsonParse('no1', isSaveFg, formData.value));
     selected.value = null;
   }
 };
@@ -347,7 +347,7 @@ const deleteDataDocSection = () => {
     // persistent: true,
   })
     .onOk(() => {
-      saveDataDocAndHandleResult(jsonUtil.dataJsonParse(isSaveFg, formData.value));
+      saveDataDocAndHandleResult(jsonUtil.dataJsonParse('no1', isSaveFg, formData.value));
       selected.value = null;
     })
     .onCancel(() => {})

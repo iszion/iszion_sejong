@@ -38,8 +38,8 @@
                     options-dense
                     class="q-pb-sm q-mr-lg"
                     label-color="orange"
-                    v-model="searchParam.itemDiv"
-                    :options="itemDivOptionsSearch"
+                    v-model="searchParam.prodDiv"
+                    :options="prodDivOptionsSearch"
                     option-value="commCd"
                     option-label="commNm"
                     option-disable="inactive"
@@ -56,8 +56,8 @@
                     options-dense
                     class="q-pb-sm q-mr-lg"
                     label-color="orange"
-                    v-model="searchParam.itemFg"
-                    :options="itemFgOptionsSearch"
+                    v-model="searchParam.prodFg"
+                    :options="prodFgOptionsSearch"
                     option-value="commCd"
                     option-label="commNm"
                     option-disable="inactive"
@@ -169,13 +169,13 @@
                     stack-label
                     :dense="dense"
                     class="col-xs-12 col-sm-3 text-subtitle1"
-                    v-model="formData.itemCd"
+                    v-model="formData.prodCd"
                     label="코드"
                     :label-color="$q.dark.isActive ? 'green' : 'blue'"
                     :disable="formDisable"
                   >
                     <template v-slot:append>
-                      <q-icon v-if="isSaveFg === 'I'" size="0.8em" name="sync" @click="getDataMaxItemCdCheck()" class="cursor-pointer q-pt-md">
+                      <q-icon v-if="isSaveFg === 'I'" size="0.8em" name="sync" @click="getDataMaxProdCdCheck()" class="cursor-pointer q-pt-md">
                         <q-tooltip class="bg-amber text-black shadow-4" anchor="top middle" self="bottom middle" :offset="[10, 10]">
                           <strong> 코드생성하기 </strong>
                         </q-tooltip>
@@ -188,8 +188,8 @@
                     stack-label
                     class="col-xs-12 col-sm-6"
                     :disable="formDisable"
-                    v-model="formData.itemDiv"
-                    :options="itemDivOptions"
+                    v-model="formData.prodDiv"
+                    :options="prodDivOptions"
                     label="도서분류"
                     :label-color="$q.dark.isActive ? 'green' : 'blue'"
                     option-value="commCd"
@@ -197,10 +197,10 @@
                     options-dense
                     emit-value
                     map-options
-                    @update:model-value="value => (formData.itemDivNm = itemDivOptions.find(option => option.commCd === value)?.commNm || '')"
+                    @update:model-value="value => (formData.prodDivNm = prodDivOptions.find(option => option.commCd === value)?.commNm || '')"
                   >
-                    <template v-slot:option="{ itemProps, opt, selected, toggleOption }">
-                      <q-item v-bind="itemProps">
+                    <template v-slot:option="{ prodProps, opt, selected, toggleOption }">
+                      <q-item v-bind="prodProps">
                         <q-item-section>
                           <q-item-label v-html="opt.commNm" />
                         </q-item-section>
@@ -216,8 +216,8 @@
                     stack-label
                     class="col-xs-12 col-sm-3"
                     :disable="formDisable"
-                    v-model="formData.itemFg"
-                    :options="itemFgOptions"
+                    v-model="formData.prodFg"
+                    :options="prodFgOptions"
                     label="구분"
                     :label-color="$q.dark.isActive ? 'green' : 'blue'"
                     option-value="commCd"
@@ -225,7 +225,7 @@
                     options-dense
                     emit-value
                     map-options
-                    @update:model-value="value => (formData.itemFgNm = itemFgOptions.find(option => option.commCd === value)?.commNm || '')"
+                    @update:model-value="value => (formData.prodFgNm = prodFgOptions.find(option => option.commCd === value)?.commNm || '')"
                   />
                 </div>
 
@@ -234,7 +234,7 @@
                     :dense="dense"
                     stack-label
                     class="col-12"
-                    v-model="formData.itemNm"
+                    v-model="formData.prodNm"
                     label="도서명"
                     :label-color="$q.dark.isActive ? 'green' : 'blue'"
                     :disable="formDisable"
@@ -326,7 +326,7 @@
                     stack-label
                     :dense="dense"
                     class="col-xs-12 col-sm-4"
-                    v-model="formData.bundleItemCd"
+                    v-model="formData.bundleProdCd"
                     label="묶음도서코드"
                     :label-color="$q.dark.isActive ? 'green' : 'blue'"
                     :disable="formDisable"
@@ -344,8 +344,8 @@
                     :disable="formDisable"
                   />
                   <div class="col-xs-12 col-sm-5 self-center">
-                    <q-radio keep-color v-model="formData.itemCl" label="국내" val="1" color="teal" :disable="formDisable" />
-                    <q-radio keep-color v-model="formData.itemCl" label="국외" val="2" color="orange" :disable="formDisable" />
+                    <q-radio keep-color v-model="formData.prodCl" label="국내" val="1" color="teal" :disable="formDisable" />
+                    <q-radio keep-color v-model="formData.prodCl" label="국외" val="2" color="orange" :disable="formDisable" />
                   </div>
                 </div>
 
@@ -533,14 +533,14 @@ const $q = useQuasar();
 const dense = ref(false);
 const isSaveFg = ref(null);
 
-const itemDivOptionsSearch = ref(null);
-const itemFgOptionsSearch = ref(null);
-const itemFgOptions = ref(null);
-const itemDivOptions = ref(null);
+const prodDivOptionsSearch = ref(null);
+const prodFgOptionsSearch = ref(null);
+const prodFgOptions = ref(null);
+const prodDivOptions = ref(null);
 
 const searchParam = reactive({
-  itemDiv: '',
-  itemFg: '',
+  prodDiv: '',
+  prodFg: '',
   word: '',
 });
 const statusEdit = reactive({
@@ -629,25 +629,25 @@ const columnDefs = reactive({
     },
     {
       headerName: '코드',
-      field: 'itemCd',
+      field: 'prodCd',
       minWidth: 80,
       maxWidth: 80,
       pinned: !$q.screen.xs && !$q.screen.sm ? 'left' : null,
     },
     {
       headerName: '도서명',
-      field: 'itemNm',
+      field: 'prodNm',
       minWidth: 250,
       pinned: !$q.screen.xs && !$q.screen.sm ? 'left' : null,
     },
     {
       headerName: '분류',
-      field: 'itemDivNm',
+      field: 'prodDivNm',
       minWidth: 150,
     },
     {
       headerName: '구분',
-      field: 'itemFgNm',
+      field: 'prodFgNm',
       minWidth: 80,
     },
     {
@@ -657,7 +657,7 @@ const columnDefs = reactive({
     },
     {
       headerName: '묶음코드',
-      field: 'bundleItemCd',
+      field: 'bundleProdCd',
       minWidth: 100,
     },
     {
@@ -811,14 +811,14 @@ const oldFormData = ref(null);
 const formData = ref(null);
 const formDataInitialize = () => {
   formData.value = {
-    itemCd: '',
-    itemDiv: '',
-    itemDivNm: '',
-    itemNm: '',
+    prodCd: '',
+    prodDiv: '',
+    prodDivNm: '',
+    prodNm: '',
     authorNm: '',
-    itemFg: '',
-    itemFgNm: '',
-    itemCl: '',
+    prodFg: '',
+    prodFgNm: '',
+    prodCl: '',
     isbn: '',
     iPrice: '0',
     oPrice: '0',
@@ -835,7 +835,7 @@ const formDataInitialize = () => {
     copyrightEday: '',
     agentCd: '',
     agentNm: '',
-    bundleItemCd: '',
+    bundleProdCd: '',
     namagerNm: '',
     remarks: '',
     makeDate: '',
@@ -851,7 +851,7 @@ const isShowSaveBtn = ref(false);
 const startFocus = ref(null);
 const secondFocus = ref(null);
 const addDataSection = () => {
-  getDataMaxItemCdCheck();
+  getDataMaxProdCdCheck();
   formDataInitialize();
   oldFormData.value = null;
   isShowStatusEdit.value = true;
@@ -861,7 +861,7 @@ const addDataSection = () => {
   isSaveFg.value = 'I';
   isShowSaveBtn.value = true;
   formDisable.value = false;
-  formData.value.itemCl = '1';
+  formData.value.prodCl = '1';
   formData.value.ebookYn = 'N';
   formData.value.useYn = 'N';
   formData.value.makeDate = commUtil.getToday();
@@ -894,7 +894,7 @@ const deleteDataSection = () => {
         let tmpJson = '{"mode":"D","data":' + JSON.stringify(selectedRows.value[i]) + '}';
         iuD.push(tmpJson);
       }
-      saveDataAndHandleResult(jsonUtil.jsonFiller(iu, iuD));
+      saveDataAndHandleResult(jsonUtil.jsonFiller('no1', iu, iuD));
     })
     .onCancel(() => {})
     .onDismiss(() => {
@@ -924,7 +924,7 @@ const saveDataSection = () => {
         // 확인/취소 모두 실행되었을때
       });
   } else {
-    saveDataAndHandleResult(jsonUtil.dataJsonParse(isSaveFg.value, formData.value));
+    saveDataAndHandleResult(jsonUtil.dataJsonParse('no1', isSaveFg.value, formData.value));
   }
 };
 
@@ -981,8 +981,8 @@ const getDataMaxPages = async () => {
   pagination.startRowNum = 0;
   try {
     const response = await api.post('/api/mst/mst2010_maxPages', {
-      paramItemDiv: searchParam.itemDiv,
-      paramItemFg: searchParam.itemFg,
+      paramProdDiv: searchParam.prodDiv,
+      paramProdFg: searchParam.prodFg,
       paramSearchValue: searchParam.word,
       paramPageRows: pagination.pageRows,
       paramStartRowNum: pagination.startRowNum,
@@ -998,8 +998,8 @@ const getDataMaxPages = async () => {
 const getData = async () => {
   try {
     const response = await api.post('/api/mst/mst2010_list', {
-      paramItemDiv: searchParam.itemDiv,
-      paramItemFg: searchParam.itemFg,
+      paramProdDiv: searchParam.prodDiv,
+      paramProdFg: searchParam.prodFg,
       paramSearchValue: searchParam.word,
       paramPageRows: pagination.pageRows,
       paramStartRowNum: pagination.startRowNum,
@@ -1013,19 +1013,19 @@ const getData = async () => {
 // ***** 사용자정보 목록 자료 가져오기 부분  *****************************//
 
 // ***** 자동코드처리 마지막 코드+1 가져오기 부분  *****************************//
-const getDataMaxItemCdCheck = async () => {
+const getDataMaxProdCdCheck = async () => {
   try {
     const response = await api.post('/api/mst/mst2010_max_codeCheck', {});
-    formData.value.itemCd = response.data.data[0].maxCd;
+    formData.value.prodCd = response.data.data[0].maxCd;
   } catch (error) {
     console.error('Error fetching users:', error);
   }
 };
 // ***** 사용자정보 선택된 자료 가져오기 부분  *****************************//
-const getDataSelect = async resItemCd => {
+const getDataSelect = async resProdCd => {
   try {
     const response = await api.post('/api/mst/mst2010_select', {
-      paramItemCd: resItemCd,
+      paramProdCd: resProdCd,
     });
     formData.value = response.data.data[0];
     // console.log('select data ::: ', JSON.stringify(formData.value));
@@ -1045,20 +1045,20 @@ async function getDataCommOption(resCommCd1) {
     const response = await api.post('/api/mst/comm_option_list', { paramCommCd1: resCommCd1 });
     switch (resCommCd1) {
       case '101':
-        itemDivOptionsSearch.value = [...response.data.data];
-        itemDivOptions.value = response.data.data;
-        itemDivOptionsSearch.value.unshift({ commCd: '', commNm: '전체' });
+        prodDivOptionsSearch.value = [...response.data.data];
+        prodDivOptions.value = response.data.data;
+        prodDivOptionsSearch.value.unshift({ commCd: '', commNm: '전체' });
         break;
       case '102':
-        itemFgOptionsSearch.value = [...response.data.data];
-        itemFgOptions.value = response.data.data;
-        itemFgOptionsSearch.value.unshift({ commCd: '', commNm: '전체' });
+        prodFgOptionsSearch.value = [...response.data.data];
+        prodFgOptions.value = response.data.data;
+        prodFgOptionsSearch.value.unshift({ commCd: '', commNm: '전체' });
         break;
       default:
-        itemDivOptionsSearch.value = [];
-        itemDivOptions.value = [];
-        itemFgOptionsSearch.value = [];
-        itemFgOptions.value = [];
+        prodDivOptionsSearch.value = [];
+        prodDivOptions.value = [];
+        prodFgOptionsSearch.value = [];
+        prodFgOptions.value = [];
     }
 
     // console.log('getData1: ', JSON.stringify(response.data.data));
@@ -1145,7 +1145,7 @@ const gridOptions = {
     isShowSaveBtn.value = false;
 
     if (selectedRows.value.length === 1) {
-      getDataSelect(selectedRows.value[0].itemCd).then(() => {
+      getDataSelect(selectedRows.value[0].prodCd).then(() => {
         isShowSaveBtn.value = true;
         isShowStatusEdit.value = true;
         statusEdit.icon = 'edit_note';
@@ -1194,13 +1194,13 @@ const gridOptions = {
   debug: false,
 };
 
-const byteCount = ref({ itemNm: 0, remarks: 0 });
+const byteCount = ref({ prodNm: 0, remarks: 0 });
 const updateByteCount = (ch, val, maxCnt) => {
   if (val) {
     switch (ch) {
-      case 'itemNm':
-        byteCount.value.itemNm = commUtil.textByteLength(val);
-        if (byteCount.value.itemNm > maxCnt) {
+      case 'prodNm':
+        byteCount.value.prodNm = commUtil.textByteLength(val);
+        if (byteCount.value.prodNm > maxCnt) {
           alert('한글 ' + maxCnt + '자 (한글 ' + Math.trunc(maxCnt / 2) + '자)까지 가능합니다.');
         }
         break;
@@ -1256,34 +1256,21 @@ function updateValue(key, value) {
 }
 
 /* *** 코드헬프부분 ** */
-const useDialog = ref(false);
 const openHelpAgentDialog = () => {
-  useDialog.value = true;
-  openHelpAgentDialog1();
-};
-
-const openHelpAgentDialog1 = () => {
-  if (useDialog.value) {
-    $q.dialog({
-      component: HelpAgent,
-      componentProps: {
-        paramValueNm: formData.value.agentNm,
-        paramCloseDay: commUtil.unFormatDate(formData.value.makeDate),
-      },
+  $q.dialog({
+    component: HelpAgent,
+    componentProps: {
+      paramValueNm: formData.value.agentNm,
+      paramCloseDay: commUtil.unFormatDate(formData.value.makeDate),
+    },
+  })
+    .onOk(res => {
+      console.log('res ::: ', res.valueCd, res.valueNm);
+      formData.value.agentCd = res.valueCd;
+      formData.value.agentNm = res.valueNm;
     })
-      .onOk(res => {
-        console.log('res ::: ', res.valueCd, res.valueNm);
-        formData.value.agentCd = res.valueCd;
-        formData.value.agentNm = res.valueNm;
-      })
-      .onCancel(() => {
-        console.log('Cancel');
-      })
-      .onDismiss(() => {
-        // console.log('Called on OK or Cancel');
-        useDialog.value = false;
-      });
-  }
+    .onCancel(() => {})
+    .onDismiss(() => {});
   secondFocus.value.focus();
 };
 </script>

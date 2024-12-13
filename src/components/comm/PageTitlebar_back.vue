@@ -361,7 +361,7 @@ const favoritesSaveSection = resData => {
   let jsonFormData = { userId: 'admin', location: 'fav', progNm: resData.label, progId: resData.progId, icon: resData.icon, type: 'file' };
   let tmpJson = '{"mode":"I","data":' + JSON.stringify(jsonFormData) + '}';
   iu.push(tmpJson);
-  saveDataAndHandleResult(jsonUtil.jsonFiller(iu, iuD));
+  saveDataAndHandleResult(jsonUtil.jsonFiller('no1', iu, iuD));
 };
 
 let tree = [];
@@ -411,7 +411,7 @@ const saveDataDocSection = () => {
     },
   })
     .onOk(() => {
-      saveDataDocUndHandleResult(jsonUtil.dataJsonParse(isSaveFg, menualDocU.value));
+      saveDataDocUndHandleResult(jsonUtil.dataJsonParse('no1', isSaveFg, menualDocU.value));
       selectedDocEdit.value = false;
     })
     .onCancel(() => {})
