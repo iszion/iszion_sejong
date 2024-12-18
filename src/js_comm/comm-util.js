@@ -16,7 +16,7 @@ export default {
   },
 
   unFormatDate(rawDate) {
-    return rawDate ? rawDate.replace(/-/g, '') : '';
+    return rawDate ? rawDate.replace(/\D/g, '') : '';
   },
 
   formatTime(rawTime) {
@@ -29,6 +29,10 @@ export default {
 
   unFormatTime(rawTime) {
     return rawTime ? rawTime.replace(/-/g, '') : '';
+  },
+
+  formatComma(num) {
+    return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
   },
 
   removeComma(value) {
@@ -66,6 +70,19 @@ export default {
   getDateWithZero(date) {
     // Convert the date to a string and use padStart to ensure it has at least 2 digits
     return date.toString().padStart(2, '0');
+  },
+
+  getTodaytime(datetime) {
+    const now = new Date();
+
+    const year = now.getFullYear(); // 연도
+    const month = String(now.getMonth() + 1).padStart(2, '0'); // 월 (0부터 시작하므로 +1 필요)
+    const date = String(now.getDate()).padStart(2, '0'); // 일
+    const hours = String(now.getHours()).padStart(2, '0'); // 시간
+    const minutes = String(now.getMinutes()).padStart(2, '0'); // 분
+    const seconds = String(now.getSeconds()).padStart(2, '0'); // 초
+
+    return `${year}-${month}-${date} ${hours}:${minutes}:${seconds}`;
   },
 
   formatDatetime(datetime) {

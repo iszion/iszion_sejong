@@ -293,7 +293,7 @@ import { api } from '/src/boot/axios';
 import notifySave from 'src/js_comm/notify-save';
 import jsonUtil from 'src/js_comm/json-util';
 
-import TestButtonVue from 'components/TestButton.vue';
+import CompButtonProg from 'components/CompButtonProg.vue';
 
 const $q = useQuasar();
 
@@ -440,7 +440,7 @@ const columnDefs = reactive({
       sortable: true,
       resizable: false,
       pinned: 'left',
-      cellRenderer: TestButtonVue,
+      cellRenderer: CompButtonProg,
       cellRendererParams: {
         // Pass the selectedValue and a callback function to update it
         updateSelectedValue: row => {

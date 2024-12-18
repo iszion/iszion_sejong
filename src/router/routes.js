@@ -14,6 +14,7 @@ const routes = [
       { path: 'aux5010', component: () => import('pages/erp/aux/AuxV5010.vue') },
 
       { path: 'sal1010', component: () => import('pages/erp/sal/SalV1010.vue') },
+      { path: 'sal1020', component: () => import('pages/erp/sal/SalV1020.vue') },
 
       { path: 'mst1010', component: () => import('pages/erp/mst/MstV1010.vue') },
       { path: 'mst2010', component: () => import('pages/erp/mst/MstV2010.vue') },

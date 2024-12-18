@@ -10,23 +10,22 @@
       <!--  end of contents list title bar -->
       <q-card-section>
         <div class="row q-col-gutter-x-sm">
-          <div class="col-3">
+          <div class="col-xs-12 col-sm-5 col-md-4 col-lg-3 col-xl-3">
             <q-date
               minimal
               style="width: 100%"
-              color="orange"
+              color="blue"
               mask="YYYY-MM-DD"
               v-model="currentDate"
               :events="eventDays"
-              :event-color="date => ($q.dark.isActive ? 'blue' : 'orange')"
+              :event-color="() => ($q.dark.isActive ? 'orange' : 'orange')"
               @update:model-value="onDateClick"
               @navigation="onNavigation"
               :default-year-month="currentYearMonth"
             />
           </div>
-          <div class="col-9">
-            <div class="row q-pb-sm">
-              <!--              @keyup.enter="handelGetData"-->
+          <div class="col-xs-12 col-sm-7 col-md-8 col-lg-9 col-xl-9">
+            <div class="row q-pb-xs q-pt-xs-sm q-pt-md-none">
               <q-input
                 stack-label
                 bottom-slots
@@ -35,28 +34,33 @@
                 label="검색"
                 dense
                 class="q-pb-none"
-                style="width: 120px"
+                style="width: 90px"
+                @keyup.enter="getDataSearch"
               >
                 <template v-slot:append>
                   <q-icon v-if="searchParam.word !== ''" name="close" @click="searchParam.word = ''" class="cursor-pointer" />
                 </template>
               </q-input>
               <q-space />
-              <div class="q-gutter-xs col-3 text-right">
-                <q-btn outline color="positive" dense @click="addDataSection"><q-icon name="add" size="xs" /> 신규 </q-btn>
-                <q-btn v-if="isShowSaveBtn" outline color="primary" dense @click="saveDataSection"><q-icon name="save" size="xs" /> 저장 </q-btn>
-                <q-btn v-if="isShowDeleteBtn" outline color="negative" dense @click="deleteDataSection">
-                  <q-icon name="delete" size="xs" /> 삭제</q-btn
-                >
+              <div class="q-gutter-xs text-right">
+                <q-btn outline color="positive" @click="addDataSection"><q-icon name="add" size="xs" /> 신규 </q-btn>
+                <q-btn v-if="isShowSaveBtn" outline color="primary" @click="saveDataSection"
+                  ><q-icon name="save" size="xs" /> 저장
+                  <q-badge v-show="delRowsCount > 0" color="red" floating>{{ delRowsCount }}</q-badge>
+                </q-btn>
+                <q-btn v-if="isShowDeleteBtn" outline color="negative" @click="deleteDataSection">
+                  <q-icon name="delete" size="xs" /> 전체삭제
+                  <q-badge color="red" floating>{{ selectedRows.header.length }}</q-badge>
+                </q-btn>
               </div>
             </div>
             <!--            <div :style="contentZoneStyle">-->
-            <div style="height: 230px">
+            <div style="height: 244px">
               <ag-grid-vue
-                ref="myGridHead"
+                ref="myGridHeader"
                 style="width: 100%; height: 100%"
                 :class="$q.dark.isActive ? 'ag-theme-alpine-dark' : 'ag-theme-alpine'"
-                :grid-options="gridOptionsHead"
+                :grid-options="gridOptionsHeader"
               >
               </ag-grid-vue>
             </div>
@@ -75,96 +79,107 @@
         </q-chip>
         <q-toggle dense left-label v-model="searchParam.calcuFg" color="pink" icon="calculate" label="자동계산" />
       </q-bar>
-      <q-card-section>
-        <div class="row">
-          <div class="col-7 q-gutter-y-md">
-            <div class="row q-col-gutter-x-lg">
-              <q-input
-                stack-label
-                :dense="dense"
-                class="col-3 text-subtitle1"
-                v-model="formData.buyDay"
-                type="date"
-                label="매입일자"
-                :label-color="$q.dark.isActive ? 'green' : 'blue'"
-                :disable="formDisable"
+      <q-card-section class="q-py-none">
+        <div class="row q-col-gutter-x-lg">
+          <q-input
+            stack-label
+            :dense="dense"
+            class="col-2 text-subtitle1"
+            v-model="formData.buyDay"
+            type="date"
+            label="매입일자"
+            :label-color="$q.dark.isActive ? 'green' : 'blue'"
+            :disable="formDisable"
+          />
+          <div class="col-1"></div>
+          <q-input
+            stack-label
+            :dense="dense"
+            class="col-1 text-subtitle1"
+            v-model="formData.seq"
+            label="전표번호"
+            fill-mask
+            :label-color="$q.dark.isActive ? 'green' : 'blue'"
+            :disable="formDisable"
+          >
+            <template v-slot:append>
+              <q-icon v-if="isSaveFg === 'I'" size="0.8em" name="sync" @click="getDataMaxSeqCheck()" class="cursor-pointer q-pt-md">
+                <q-tooltip class="bg-amber text-black shadow-4" anchor="top middle" self="bottom middle" :offset="[10, 10]">
+                  <strong> 코드생성하기 </strong>
+                </q-tooltip>
+              </q-icon>
+            </template>
+          </q-input>
+        </div>
+        <div class="row q-col-gutter-x-lg">
+          <q-input
+            ref="startFocus"
+            :dense="dense"
+            stack-label
+            class="col-3 text-subtitle1"
+            v-model="formData.custNm"
+            label="입고처"
+            :label-color="$q.dark.isActive ? 'green' : 'blue'"
+            :disable="formDisable"
+            @keyup.enter.prevent="openHelpCustDialog"
+          >
+            <template v-slot:append>
+              <q-icon
+                size="0.8em"
+                v-if="formData.custNm !== ''"
+                name="close"
+                @click="
+                  formData.custNm = '';
+                  formData.custCd = '';
+                "
+                class="cursor-pointer q-pt-md"
               />
-              <q-input
-                stack-label
-                :dense="dense"
-                class="col-3 text-subtitle1"
-                v-model="formData.seq"
-                label="전표번호"
-                fill-mask
-                :label-color="$q.dark.isActive ? 'green' : 'blue'"
-                :disable="formDisable"
-              >
-                <template v-slot:append>
-                  <q-icon v-if="isSaveFg === 'I'" size="0.8em" name="sync" @click="getDataMaxSeqCheck()" class="cursor-pointer q-pt-md">
-                    <q-tooltip class="bg-amber text-black shadow-4" anchor="top middle" self="bottom middle" :offset="[10, 10]">
-                      <strong> 코드생성하기 </strong>
-                    </q-tooltip>
-                  </q-icon>
-                </template>
-              </q-input>
-            </div>
-            <div class="row q-col-gutter-x-lg">
-              <q-input
-                ref="startFocus"
-                :dense="dense"
-                stack-label
-                class="col-5 text-subtitle1"
-                v-model="formData.custNm"
-                label="입고처"
-                :label-color="$q.dark.isActive ? 'green' : 'blue'"
-                :disable="formDisable"
-                @keyup.enter.prevent="getDataHelpCust"
-              >
-                <template v-slot:append>
-                  <q-icon size="0.8em" v-if="formData.custNm !== ''" name="close" @click="formData.custNm = ''" class="cursor-pointer q-pt-md" />
-                  <q-icon size="0.8em" name="search" @click="openHelpCustDialog" class="cursor-pointer q-pt-md" />
-                </template>
-              </q-input>
-              <q-input
-                stack-label
-                :dense="dense"
-                class="col-2 text-subtitle1"
-                v-model="formData.custCd"
-                label="코드"
-                :label-color="$q.dark.isActive ? 'green' : 'blue'"
-                readonly
-              />
-            </div>
-          </div>
-
-          <div class="col-5">
-            <q-input
-              ref="secondFocus"
-              stack-label
-              :dense="dense"
-              :disable="formDisable"
-              v-model="formData.remarks"
-              label="참고사항"
-              :label-color="$q.dark.isActive ? 'green' : 'blue'"
-              clearable
-              :hint="`${byteCount.remarks} / 200(한글100)자 까지 입력하실 수 있습니다.`"
-              @update:model-value="updateByteCount('remarks', formData.remarks, 200)"
-              @keyup.enter.prevent="nextGridEdit"
-            />
-          </div>
+              <q-icon size="0.8em" name="search" @click="openHelpCustDialog" class="cursor-pointer q-pt-md" />
+            </template>
+          </q-input>
+          <q-input
+            stack-label
+            :dense="dense"
+            class="col-1 text-subtitle1"
+            v-model="formData.custCd"
+            label="코드"
+            :label-color="$q.dark.isActive ? 'green' : 'blue'"
+            readonly
+          />
+          <div class="col-1"></div>
+          <q-input
+            ref="secondFocus"
+            stack-label
+            class="col-5"
+            :dense="dense"
+            :disable="formDisable"
+            v-model="formData.remarks"
+            label="참고사항"
+            :label-color="$q.dark.isActive ? 'green' : 'blue'"
+            clearable
+            :hint="`${byteCount.remarks} / 200(한글100)자 까지 입력하실 수 있습니다.`"
+            @update:model-value="updateByteCount('remarks', formData.remarks, 200)"
+            @keyup.enter.prevent="nextGridEdit"
+          />
         </div>
       </q-card-section>
 
-      <q-separator />
+      <!--      <q-separator />-->
       <!--  end of contents list (우측 화면)  -->
 
+      <q-card-actions class="justify-end">
+        <div class="row q-gutter-x-sm">
+          <q-btn dense outline color="primary" icon="add" label="라인추가" :disable="!isShowSaveBtn" @click="addDataDetailsRowSection('next')" />
+          <q-btn dense outline color="negative" icon="remove" label="라인제거" :disable="removeRowsCount <= 0" @click="removeSelectedRow" />
+        </div>
+      </q-card-actions>
       <q-card-section class="q-pa-xs">
         <div :style="contentZoneStyle">
           <ag-grid-vue
-            ref="myGrid"
+            ref="myGridDetails"
             style="width: 100%; height: 100%"
             :class="$q.dark.isActive ? 'ag-theme-alpine-dark' : 'ag-theme-alpine'"
-            :grid-options="gridOptions"
+            :grid-options="gridOptionsDetails"
           >
           </ag-grid-vue>
         </div>
@@ -212,6 +227,8 @@ const statusEdit = reactive({
 
 const formDisable = ref(true);
 
+const selectedRows = reactive({ header: [], details: [] });
+
 const contentZoneHeight = ref(500);
 const handleResize = () => {
   contentZoneHeight.value = window.innerHeight;
@@ -220,7 +237,7 @@ const contentZoneStyle = computed(() => ({
   height: `${contentZoneHeight.value - 700}px`,
 }));
 
-const rowData = reactive({ head: [], rows: [] });
+const rowData = reactive({ header: [], details: [] });
 const rowDataOrdBack = ref([]);
 
 const dateFormatter = params => {
@@ -248,7 +265,9 @@ onBeforeMount(() => {
   formDataInitialize();
   currentYearMonth.value = commUtil.getTodayYear() + '/' + commUtil.getTodayMonth();
   getDataCommOption('302').then(() => {
-    getEventData(commUtil.getTodayYear(), commUtil.getTodayMonth()).then(() => {});
+    getEventData(commUtil.getTodayYear(), commUtil.getTodayMonth()).then(() => {
+      onDateClick(currentDate.value);
+    });
   });
 });
 
@@ -279,21 +298,14 @@ const onDateClick = resSelectedDate => {
     selectedDate.day = `${day}`;
     selectedDate.date = `${year}${month.padStart(2, '0')}${day.padStart(2, '0')}`;
     getData();
+    formScreenReset();
   }
 };
 
 function onNavigation(event) {
   viewDateYYMM.year = event.year;
   viewDateYYMM.month = event.month;
-  getEventData(event.year, event.month).then(() => {
-    // rowData.rows = [];
-    // myGrid.value.api.setGridOption('rowData', rowData.rows);
-    // formDisable.value = true;
-    // uploadDisable.value = true;
-    // isShowSaveBtn.value = false;
-    // isShowDeleteBtn.value = false;
-    // resetFormData();
-  });
+  getEventData(event.year, event.month).then(() => {});
 }
 
 const menuLabel = ref('');
@@ -303,7 +315,7 @@ onMounted(() => {
   menuLabel.value = window.history.state.label;
 });
 
-const columnDefsHead = ref([
+const columnDefsHeader = ref([
   {
     headerName: '#',
     minWidth: 60,
@@ -405,7 +417,7 @@ const columnDefsHead = ref([
 ]);
 
 const buyFgOptions = ref([]);
-const columnDefs = ref([
+const columnDefsDetails = ref([
   {
     headerName: 'No',
     field: '',
@@ -416,6 +428,9 @@ const columnDefs = ref([
     pinned: !$q.screen.xs && !$q.screen.sm ? 'left' : null,
     valueGetter: function (params) {
       // Customize row numbers as needed
+      if (params.node.rowPinned) {
+        return null; // Do not display a number for pinned rows
+      }
       return params.node.rowIndex + 1;
     },
   },
@@ -490,8 +505,8 @@ const columnDefs = ref([
   {
     headerName: '수량',
     field: 'qty',
-    minWidth: 100,
-    maxWidth: 100,
+    minWidth: 80,
+    maxWidth: 80,
     valueFormatter: params => {
       if (params.value != null) {
         return new Intl.NumberFormat('ko-KR', {
@@ -564,8 +579,8 @@ const columnDefs = ref([
   {
     headerName: '비율',
     field: 'buyYul',
-    minWidth: 100,
-    maxWidth: 100,
+    minWidth: 80,
+    maxWidth: 80,
     valueFormatter: params => {
       if (params.value != null) {
         return new Intl.NumberFormat('ko-KR', {
@@ -591,8 +606,8 @@ const columnDefs = ref([
   {
     headerName: '금액',
     field: 'amt',
-    minWidth: 100,
-    maxWidth: 100,
+    minWidth: 120,
+    maxWidth: 120,
     valueFormatter: params => {
       if (params.value != null) {
         return new Intl.NumberFormat('ko-KR', {
@@ -648,26 +663,50 @@ const isShowSaveBtn = ref(false);
 const startFocus = ref(null);
 const secondFocus = ref(null);
 const addDataSection = () => {
-  getDataMaxSeqCheck();
-  formDataInitialize();
-  oldFormData.value = null;
-  isShowStatusEdit.value = true;
-  statusEdit.icon = 'edit';
-  statusEdit.message = '신규입력모드 입니다';
-  statusEdit.color = 'primary';
-  isSaveFg.value = 'I';
-  isShowSaveBtn.value = true;
-  formDisable.value = false;
-  formData.value.buyDay = currentDate.value;
+  if (currentDate.value) {
+    getDataMaxSeqCheck().then(valMaxSeq => {
+      myGridHeader.value.api.deselectAll();
+      setTimeout(() => {
+        formDataInitialize();
+        oldFormData.value = null;
+        isShowStatusEdit.value = true;
+        statusEdit.icon = 'edit';
+        statusEdit.message = '신규입력모드 입니다';
+        statusEdit.color = 'primary';
+        isSaveFg.value = 'I';
+        isShowSaveBtn.value = true;
+        formDisable.value = false;
+        formData.value.seq = valMaxSeq;
+        formData.value.buyDay = currentDate.value;
 
-  rowData.rows = [];
-  myGrid.value.api.setRowData([]);
-  // myGrid.value.api.showLoadingOverlay(); // 로딩 오버레이 표시
-  myGrid.value.api.hideOverlay(); // 로딩 오버레이 제거
+        rowData.details = [];
+        myGridDetails.value.api.setRowData([]);
+        myGridDetails.value.api.hideOverlay(); // 로딩 오버레이 제거
 
-  setTimeout(() => {
-    startFocus.value.focus();
-  }, 100);
+        setTimeout(() => {
+          startFocus.value.focus();
+        }, 100);
+      });
+    }, 100);
+  } else {
+    $q.notify({
+      message: '일자를 선택하세요',
+      position: 'center',
+      progress: true,
+      color: 'orange',
+      avatar: 'https://cdn.quasar.dev/img/boy-avatar.png',
+      actions: [
+        {
+          icon: 'close',
+          color: 'white',
+          round: true,
+          handler: () => {
+            /* ... */
+          },
+        },
+      ],
+    });
+  }
 };
 const deleteDataSection = () => {
   $q.dialog({
@@ -685,15 +724,19 @@ const deleteDataSection = () => {
     // persistent: true,
   })
     .onOk(() => {
-      isSaveFg.value = 'D';
-
       let iu = [];
       let iuD = [];
-      for (let i = 0; i < selectedRows.value.length; i++) {
-        let tmpJson = '{"mode":"D","data":' + JSON.stringify(selectedRows.value[i]) + '}';
+      for (let i = 0; i < selectedRows.header.length; i++) {
+        let tmpJson = '{"mode":"D","data":' + JSON.stringify(selectedRows.header[i]) + '}';
         iuD.push(tmpJson);
       }
-      saveDataAndHandleResult(jsonUtil.jsonFiller('no1', iu, iuD));
+      saveDataAndHandleResult(jsonUtil.jsonFiller('no1', iu, iuD)).then(val => {
+        if (val.rtn === '0') {
+          getEventData(commUtil.getTodayYear(), commUtil.getTodayMonth()).then(() => {
+            onDateClick(currentDate.value);
+          });
+        }
+      });
     })
     .onCancel(() => {})
     .onDismiss(() => {
@@ -702,10 +745,8 @@ const deleteDataSection = () => {
 };
 const saveDataSection = () => {
   formData.value.buyDay = commUtil.unFormatDate(formData.value.buyDay);
-  // console.log('formData : ', JSON.stringify(formData.value));
-  // console.log('oldFormData : ', JSON.stringify(oldFormData.value));
 
-  if (isEqual(formData.value, oldFormData.value) && isEqual(rowData.rows, rowDataOrdBack.value)) {
+  if (isEqual(formData.value, oldFormData.value) && isEqual(rowData.details, rowDataOrdBack.value) && selectedRows.details.length === 0) {
     $q.dialog({
       dark: true,
       title: '안내',
@@ -718,51 +759,123 @@ const saveDataSection = () => {
         // 확인/취소 모두 실행되었을때
       });
   } else {
-    const obj_no1 = jsonUtil.dataJsonParse('no1', isSaveFg.value, formData.value);
-    const _obj_no1 = obj_no1.slice(1, -1); // 앞뒤 {} 제거
-    // console.log('no1 : ', _obj_no1);
+    if (isSaveFg.value === 'U' && formData.value.buyDay !== oldFormData.value.buyDay) {
+      saveDataInsertDelete();
+    } else {
+      // Detail 자료 분류작업
+      let iu = [];
+      let iuD = [];
 
-    let iu = [];
-    let iuD = [];
-    for (let i = 0; i < rowData.rows.length; i++) {
-      if (!isEmpty(rowData.rows[i].prodCd)) {
-        if (rowData.rows[i].iuD === 'I' || rowData.rows[i].iuD === 'U') {
-          rowData.rows[i]['buyDay'] = commUtil.unFormatDate(formData.value.buyDay);
-          rowData.rows[i]['custCd'] = formData.value.custCd;
-          let tmpJson = '{"mode": "' + rowData.rows[i].iuD + '","data":' + JSON.stringify(rowData.rows[i]) + '}';
-          iu.push(tmpJson);
+      // 신규 수정 자료정리
+      for (let i = 0; i < rowData.details.length; i++) {
+        if (!isEmpty(rowData.details[i].prodCd)) {
+          if (rowData.details[i].iuD === 'I' || rowData.details[i].iuD === 'U') {
+            rowData.details[i]['buyDay'] = commUtil.unFormatDate(formData.value.buyDay);
+            rowData.details[i]['custCd'] = formData.value.custCd;
+            let tmpJson = '{"mode": "' + rowData.details[i].iuD + '","data":' + JSON.stringify(rowData.details[i]) + '}';
+            iu.push(tmpJson);
+          }
         }
       }
-    }
-    const obj_no2 = JSON.stringify(JsonUtil.jsonFiller('no2', iu, iuD));
-    const _obj_no2 = obj_no2.slice(1, -1); // 앞뒤 {} 제거
-    // console.log('no2 : ', _obj_no2);
 
-    const saveData = '{' + _obj_no1 + ',' + _obj_no2 + '}'; // 제거된 object 하나로 묶기
-    // console.log('saveData : ', saveData);
-    saveDataAndHandleResult(saveData);
+      // 삭제 자료정리
+      for (let i = 0; i < selectedRows.details.length; i++) {
+        if (selectedRows.details[i].iuD === 'R' || selectedRows.details[i].iuD === 'U') {
+          let tmpJson = '{"mode": "' + 'D' + '","data":' + JSON.stringify(selectedRows.details[i]) + '}';
+          iuD.push(tmpJson);
+        }
+      }
+
+      // Header 자료 정리
+      const obj_no1 = jsonUtil.dataJsonParse('no1', isSaveFg.value, formData.value);
+      const _obj_no1 = obj_no1.slice(1, -1); // 앞뒤 {} 제거
+
+      // Detail 자료 정리
+      const obj_no2 = JSON.stringify(JsonUtil.jsonFiller('no2', iu, iuD));
+      const _obj_no2 = obj_no2.slice(1, -1); // 앞뒤 {} 제거
+
+      const saveData = '{' + _obj_no1 + ',' + _obj_no2 + '}'; // 제거된 object 하나로 묶기
+      saveDataAndHandleResult(saveData).then(val => {
+        if (val.rtn === '0') {
+          getEventData(commUtil.getTodayYear(), commUtil.getTodayMonth()).then(() => {
+            onDateClick(currentDate.value);
+          });
+        }
+      });
+    }
   }
 };
 
-const selectedRows = ref([]);
+const saveDataInsertDelete = () => {
+  // 새로운 일자 Insert 처리부분
+  // Detail 자료 분류작업
+  let iu = [];
+  let iuD = [];
+
+  // 신규 수정 자료정리
+  for (let i = 0; i < rowData.details.length; i++) {
+    if (!isEmpty(rowData.details[i].prodCd)) {
+      if (rowData.details[i].iuD === 'R' || rowData.details[i].iuD === 'U') {
+        rowData.details[i]['buyDay'] = commUtil.unFormatDate(formData.value.buyDay);
+        rowData.details[i]['custCd'] = formData.value.custCd;
+        let tmpJson = '{"mode": "I", "data":' + JSON.stringify(rowData.details[i]) + '}';
+        iu.push(tmpJson);
+      }
+    }
+  }
+
+  // 삭제 자료정리
+  for (let i = 0; i < selectedRows.details.length; i++) {
+    if (selectedRows.details[i].iuD === 'R' || selectedRows.details[i].iuD === 'U') {
+      let tmpJson = '{"mode": "' + 'D' + '","data":' + JSON.stringify(selectedRows.details[i]) + '}';
+      iuD.push(tmpJson);
+    }
+  }
+
+  // Header 자료 정리
+  let obj_no1 = jsonUtil.dataJsonParse('no1', 'I', formData.value);
+  let _obj_no1 = obj_no1.slice(1, -1); // 앞뒤 {} 제거
+
+  // Detail 자료 정리
+  let obj_no2 = JSON.stringify(JsonUtil.jsonFiller('no2', iu, iuD));
+  let _obj_no2 = obj_no2.slice(1, -1); // 앞뒤 {} 제거
+
+  let saveData = '{' + _obj_no1 + ',' + _obj_no2 + '}'; // 제거된 object 하나로 묶기
+  saveDataAndHandleResult(saveData).then(val => {
+    if (val.rtn === '0') {
+      // 기존 일자 Delete 처리부분
+      // Header 자료 정리
+      saveData = jsonUtil.dataJsonParse('no1', 'D', oldFormData.value);
+
+      saveDataAndHandleResult(saveData).then(val => {
+        if (val.rtn === '0') {
+          getEventData(commUtil.getTodayYear(), commUtil.getTodayMonth()).then(() => {
+            onDateClick(currentDate.value);
+          });
+        }
+      });
+    }
+  });
+};
 
 // **************************************************************//
 // ***** DataBase 연결부분    *************************************//
 // **************************************************************//
 
 // ***** 자료저장 및 삭제 처리부분 *****************************//
-const saveDataAndHandleResult = resFormData => {
-  api
-    .post('/api/sal/sal1010_save', resFormData)
-    .then(res => {
-      let saveStatus = {};
-      saveStatus.rtn = res.data.rtn;
-      saveStatus.rtnMsg = res.data.rtnMsg;
-      notifySave.notifyView(saveStatus);
-    })
-    .catch(error => {
-      console.log('error: ', error);
-    });
+const saveDataAndHandleResult = async resFormData => {
+  try {
+    const res = await api.post('/api/sal/sal1010_save', resFormData);
+    let saveStatus = {
+      rtn: res.data.rtn,
+      rtnMsg: res.data.rtnMsg,
+    };
+    notifySave.notifyView(saveStatus);
+    return saveStatus;
+  } catch (error) {
+    console.log('error: ', error);
+    throw error; // 에러 발생 시 에러를 던져 호출자에서 처리할 수 있도록 함
+  }
 };
 
 // ***** 사용자정보 목록 자료 가져오기 부분  *****************************//
@@ -772,7 +885,6 @@ const getEventData = async (resYear, resMonth) => {
       paramYear: resYear,
       paramMonth: resMonth,
     });
-    // console.log('evendData : ', JSON.stringify(response.data));
     eventDays.value.splice(0);
     for (let i = 0; i < response.data.data.length; i++) {
       let tmpDay = response.data.data[i].eventDay.replace(/(\d{4})(\d{2})(\d{2})/, '$1/$2/$3');
@@ -783,57 +895,26 @@ const getEventData = async (resYear, resMonth) => {
   }
 };
 
+const getDataSearch = async () => {
+  try {
+    const response = await api.post('/api/sal/sal1010_list_search', {
+      paramYyMm: currentYearMonth.value.replace(/\//g, ''), // 모든 `/`를 제거
+      paramValueNm: searchParam.word,
+    });
+    rowData.header = response.data.data;
+    myGridHeader.value.api.setGridOption('rowData', rowData.header);
+  } catch (error) {
+    console.error('Error fetching users:', error);
+  }
+};
+
 const getData = async () => {
   try {
-    const response = await api.post('/api/sal/sal1010_list', {
+    const response = await api.post('/api/sal/sal1010_list_header', {
       paramBuyDay: commUtil.unFormatDate(currentDate.value),
     });
-    rowData.head = response.data.data;
-    myGridHead.value.api.setGridOption('rowData', rowData.head);
-  } catch (error) {
-    console.error('Error fetching users:', error);
-  }
-};
-// ***** 사용자정보 목록 자료 가져오기 부분  *****************************//
-
-// ***** Help코드 자료체크 가져오기 부분  *****************************//
-// const helpData = ref({
-//   custCd: null,
-//   custNm: null,
-// });
-const getDataHelpCust = async event => {
-  try {
-    const response = await api.post('/api/mst/helpCust_list', {
-      paramValueNm: formData.value.custNm,
-      paramAll: 'N',
-    });
-    if (response.data.data.length === 1) {
-      formData.value.custCd = response.data.data[0].custCd;
-      formData.value.custNm = response.data.data[0].custNm;
-      setTimeout(() => {
-        secondFocus.value.focus();
-      }, 200);
-    } else {
-      openHelpCustDialog();
-    }
-  } catch (error) {
-    console.error('Error fetching users:', error);
-  }
-};
-
-const getDataHelpProd = async resValue => {
-  try {
-    const response = await api.post('/api/mst/helpProd_list', {
-      paramValueNm: resValue,
-      paramAll: 'N',
-    });
-    // console.log('helpData : ', JSON.stringify(response.data));
-    console.log('getHelpData reading... ');
-    if (response.data.data.length === 1) {
-      return response.data.data[0];
-    } else {
-      return null;
-    }
+    rowData.header = response.data.data;
+    myGridHeader.value.api.setGridOption('rowData', rowData.header);
   } catch (error) {
     console.error('Error fetching users:', error);
   }
@@ -843,7 +924,7 @@ const getDataHelpProd = async resValue => {
 const getDataMaxSeqCheck = async () => {
   try {
     const response = await api.post('/api/sal/sal1010_maxSeqCheck', {});
-    formData.value.seq = response.data.data[0].maxSeq;
+    return response.data.data[0].maxSeq;
   } catch (error) {
     console.error('Error fetching users:', error);
   }
@@ -852,11 +933,11 @@ const getDataMaxSeqCheck = async () => {
 // ***** 사용자정보 선택된 자료 가져오기 부분  *****************************//
 const getDataSelect = async resData => {
   try {
-    const response = await api.post('/api/sal/sal1010_select', {
+    const response = await api.post('/api/sal/sal1010_select_header', {
       paramBuyDay: commUtil.unFormatDate(resData.buyDay),
+      paramSeq: resData.seq,
     });
     formData.value = response.data.data[0];
-    // console.log('select data ::: ', JSON.stringify(formData.value));
     oldFormData.value = JSON.parse(JSON.stringify(formData.value)); // 초기자료 저장
     formData.value.buyDay = commUtil.formatDate(response.data.data[0].buyDay);
   } catch (error) {
@@ -865,14 +946,14 @@ const getDataSelect = async resData => {
 };
 const getDataSelectList = async resData => {
   try {
-    const response = await api.post('/api/sal/sal1010_select_list', {
+    const response = await api.post('/api/sal/sal1010_select_list_details', {
       paramBuyDay: commUtil.unFormatDate(resData.buyDay),
       paramSeq: resData.seq,
     });
-    rowData.rows = response.data.data;
+    rowData.details = response.data.data;
     rowDataOrdBack.value = JSON.parse(JSON.stringify(response.data.data));
-    myGrid.value.api.setGridOption('rowData', rowData.rows);
-    myGrid.value.api.setGridOption('pinnedBottomRowData', [calculateTotal()]);
+    myGridDetails.value.api.setGridOption('rowData', rowData.details);
+    myGridDetails.value.api.setGridOption('pinnedBottomRowData', [calculateTotal()]);
   } catch (error) {
     console.error('Error fetching users:', error);
   }
@@ -889,8 +970,6 @@ async function getDataCommOption(resCommCd1) {
       default:
         buyFgOptions.value = [];
     }
-
-    console.log('getData1: ', JSON.stringify(response.data.data));
   } catch (error) {
     console.error('Error fetching users:', error);
   }
@@ -899,10 +978,10 @@ async function getDataCommOption(resCommCd1) {
 // ***** DataBase 연결부분 끝  *************************************//
 // **************************************************************//
 
-const myGridHead = ref(null);
-const gridOptionsHead = {
-  columnDefs: columnDefsHead.value,
-  rowData: rowData.head,
+const myGridHeader = ref(null);
+const gridOptionsHeader = {
+  columnDefs: columnDefsHeader.value,
+  rowData: rowData.header,
   defaultColDef: {
     flex: 1,
     sortable: true,
@@ -956,20 +1035,7 @@ const gridOptionsHead = {
   },
   onRowClicked: function (event) {
     // console.log('onRowClicked');
-    getDataSelect(event.data).then(() => {
-      getDataSelectList(event.data).then(() => {
-        isSaveFg.value = 'U';
-        isShowSaveBtn.value = true;
-        isShowStatusEdit.value = true;
-        statusEdit.icon = 'edit_note';
-        statusEdit.message = '수정/삭제모드 입니다';
-        statusEdit.color = 'accent';
-        formDisable.value = false;
-
-        // selectedRows.value = [];
-        // myGridHead.value.api.deselectAll();
-      });
-    });
+    handleRowHeaderClick(event.data);
   },
   onCellClicked: function (event) {
     // console.log('onCellClicked');
@@ -980,22 +1046,23 @@ const gridOptionsHead = {
   },
   onSelectionChanged: function (event) {
     // console.log('onSelectionChanged1');
-    selectedRows.value = event.api.getSelectedRows();
+    selectedRows.header = event.api.getSelectedRows();
     isShowDeleteBtn.value = false;
 
-    if (selectedRows.value.length > 0) {
-      isSaveFg.value = 'D';
-      isShowSaveBtn.value = false;
-      isShowDeleteBtn.value = true;
-      isShowStatusEdit.value = true;
-      statusEdit.icon = 'delete';
-      statusEdit.message = '삭제모드 입니다';
-      statusEdit.color = 'negative';
-      formDisable.value = true;
-      formDataInitialize();
+    if (selectedRows.header.length === 0) {
+      formScreenReset();
 
-      rowData.rows = [];
-      myGrid.value.api.setRowData([]);
+      rowData.details = [];
+      myGridDetails.value.api.setRowData([]);
+    } else if (selectedRows.header.length === 1) {
+      handleRowHeaderClick(selectedRows.header[0]);
+      isShowDeleteBtn.value = true;
+    } else {
+      isShowDeleteBtn.value = true;
+      formScreenReset();
+
+      rowData.details = [];
+      myGridDetails.value.api.setRowData([]);
     }
   },
   onSortChanged: function (event) {
@@ -1022,6 +1089,29 @@ const gridOptionsHead = {
   debug: false,
 };
 
+const formScreenReset = () => {
+  isSaveFg.value = '';
+  isShowSaveBtn.value = false;
+  isShowStatusEdit.value = false;
+  formDisable.value = true;
+  formDataInitialize();
+  rowData.details = [];
+  myGridDetails.value.api.setGridOption('rowData', rowData.details);
+  myGridDetails.value.api.setGridOption('pinnedBottomRowData', [calculateTotal()]);
+};
+const handleRowHeaderClick = data => {
+  getDataSelect(data).then(() => {
+    getDataSelectList(data).then(() => {
+      isSaveFg.value = 'U';
+      isShowSaveBtn.value = true;
+      isShowStatusEdit.value = true;
+      statusEdit.icon = 'edit_note';
+      statusEdit.message = '수정/삭제모드 입니다';
+      statusEdit.color = 'accent';
+      formDisable.value = false;
+    });
+  });
+};
 // *********************************
 // rows 전체 합 구하는 부분
 const calculateTotal = () => {
@@ -1031,7 +1121,7 @@ const calculateTotal = () => {
     amt: 0,
   };
 
-  rowData.rows.forEach(row => {
+  rowData.details.forEach(row => {
     totalRow.qty += row.qty || 0;
     totalRow.amt += row.amt || 0;
   });
@@ -1051,10 +1141,12 @@ const columnFocusMap = {
   amt: 'remarks',
 };
 
-const myGrid = ref(null);
-const gridOptions = {
-  columnDefs: columnDefs.value,
-  rowData: rowData.rows,
+const removeRowsCount = ref(0);
+const delRowsCount = ref(0);
+const myGridDetails = ref(null);
+const gridOptionsDetails = {
+  columnDefs: columnDefsDetails.value,
+  rowData: rowData.details,
   defaultColDef: {
     flex: 1,
     sortable: false,
@@ -1116,67 +1208,30 @@ const gridOptions = {
     // console.log('cellEditingStopped : ', event.column.colId);
 
     if (event.column.colId === 'prodNm' && eventKey.value === 'Enter') {
-      getDataHelpProd(event.data.prodNm).then(res => {
-        if (res) {
-          event.node.setDataValue('prodCd', res.prodCd);
-          event.node.setDataValue('prodNm', res.prodNm);
-          event.node.setDataValue('price', res.sPrice);
-          console.log('res : ', JSON.stringify(res));
-        } else {
-          // 중복 이벤트 방지
-          if (processedEventKey === eventKey.value) {
-            // console.log('res : 같음');
-            processedEventKey = null;
-            return;
-          }
-          processedEventKey = eventKey.value;
-          // console.log('res : 끝');
-          // 중복 이벤트 방지 끝
-          openHelpProdDialog(event);
-        }
-      });
+      //     // 중복 이벤트 방지
+      if (processedEventKey === eventKey.value) {
+        processedEventKey = null;
+        return;
+      }
+      processedEventKey = eventKey.value;
+      // 중복 이벤트 방지 끝
+      openHelpProdDialog(event);
+      // }
+      // });
     }
     if (event.column.colId === 'remarks' && (eventKey.value === 'Enter' || eventKey.value === 'Tab')) {
       processedEventKey = null;
-      addDataRowSection(event);
-      // 새로운 행 추가
-      // const newRow = {
-      //   buyDay: formData.value.buyDay,
-      //   seq: formData.value.seq,
-      //   cnt: maxCnt.value,
-      //   custCd: formData.value.custCd,
-      //   divCd: '1',
-      //   buyFg: '',
-      //   prodCd: '',
-      //   prodNm: '',
-      //   qty: 0,
-      //   price: 0,
-      //   amt: 0,
-      //   buyYul: 0,
-      //   remarks: '',
-      //   iuD: 'I',
-      // };
-      // event.api.applyTransaction({ add: [newRow] });
-      //
-      // // 추가된 행의 buyFg 필드로 포커스 이동
-      // const newRowIndex = event.api.getDisplayedRowCount() - 1;
-      // event.api.startEditingCell({
-      //   rowIndex: newRowIndex,
-      //   colKey: 'buyFg',
-      // });
-      // event.event.preventDefault();
+      addDataDetailsRowSection('next');
     }
 
     const nextColumn = columnFocusMap[event.column.colId];
     if (nextColumn) {
-      // console.log('colId : ', `row ${event.column.colId}`);
-      myGrid.value.api.setFocusedCell(event.node.rowIndex, nextColumn);
+      myGridDetails.value.api.setFocusedCell(event.node.rowIndex, nextColumn);
     }
   },
   onRowClicked: function (event) {
     // console.log('onRowClicked');
     // selectedRows.value = event.api.getSelectedRows();
-    // console.log('sel: ', JSON.stringify(selectedRows.value));
   },
   onCellClicked: function (event) {
     // console.log('onCellClicked');
@@ -1192,35 +1247,18 @@ const gridOptions = {
   },
   onSelectionChanged: function (event) {
     // console.log('onSelectionChanged1');
-    selectedRows.value = event.api.getSelectedRows();
+    selectedRows.details = event.api.getSelectedRows();
     isShowStatusEdit.value = false;
-    isShowDeleteBtn.value = selectedRows.value.length > 0;
-    isShowSaveBtn.value = false;
+    // isShowSaveBtn.value = selectedRows.details.length > 0;
+    removeRowsCount.value = selectedRows.details.filter(row => row.iuD === 'I').length;
+    delRowsCount.value = selectedRows.details.filter(row => row.iuD !== 'I').length;
 
-    if (selectedRows.value.length === 1) {
-      // getDataSelect(selectedRows.value[0].custCd).then(() => {
-      //   isShowSaveBtn.value = true;
-      //   isShowStatusEdit.value = true;
-      //   statusEdit.icon = 'edit_note';
-      //   statusEdit.message = '수정/삭제모드 입니다';
-      //   statusEdit.color = 'accent';
-      //   isSaveFg.value = 'U';
-      //   formDisable.value = false;
-      // });
-    } else if (selectedRows.value.length > 1) {
-      isSaveFg.value = 'D';
-      isShowStatusEdit.value = true;
-      statusEdit.icon = 'delete';
-      statusEdit.message = '삭제모드 입니다';
-      statusEdit.color = 'negative';
-      formDisable.value = true;
-      formDataInitialize();
-    } else {
-      formDataInitialize();
-      isShowStatusEdit.value = false;
-      isSaveFg.value = '';
-      formDisable.value = true;
-    }
+    // const selRow = selectedRows.details.filter(row => row.iuD !== 'I');
+    // rowData.details = rowData.details.filter(row => !delRow.some(del => del.iuD === row.iuD));
+
+    // 그리드에 변경된 데이터 적용
+    // event.api.setRowData(rowData.details);
+    // selectedRows.details = selRow;
   },
   onSortChanged: function (event) {
     // console.log('onSortChanged');
@@ -1228,7 +1266,7 @@ const gridOptions = {
   pinnedBottomRowData: [calculateTotal()],
   onCellValueChanged: function (event) {
     // console.log('onCellValueChanged');
-    if (event.column.colId === 'qty' || event.column.colId === 'price') {
+    if (searchParam.calcuFg && (event.column.colId === 'qty' || event.column.colId === 'price')) {
       const qty = parseFloat(event.data.qty) || 0;
       const price = parseFloat(event.data.price) || 0;
       event.data.amt = qty * price; // Calculate the new amount
@@ -1243,7 +1281,7 @@ const gridOptions = {
     if (!isEqual(event.data, backData[0]) && event.data.iuD === 'R') {
       event.data.iuD = 'U';
     }
-    // console.log('rowData :: ', JSON.stringify(rowData.rows));
+    // console.log('rowData :: ', JSON.stringify(rowData.details));
 
     event.api.setGridOption('pinnedBottomRowData', [calculateTotal()]); // 자동 합계구하기
   },
@@ -1293,7 +1331,7 @@ const updateByteCount = (ch, val, maxCnt) => {
   }
 };
 
-// 포맷된 값을 관리하는 computed
+// 3  자리수 마다 콤마 포맷된 값을 관리하는 computed
 const formattedLimitAmt = formattedValue('limitAmt');
 
 function formattedValue(key) {
@@ -1324,12 +1362,14 @@ const openHelpCustDialog = () => {
     },
   })
     .onOk(res => {
-      formData.value.custCd = res.valueCd;
-      formData.value.custNm = res.valueNm;
+      formData.value.custCd = res.custCd;
+      formData.value.custNm = res.custNm;
+      setTimeout(() => {
+        secondFocus.value.focus();
+      }, 200);
     })
     .onCancel(() => {})
     .onDismiss(() => {});
-  secondFocus.value.focus();
 };
 
 const openHelpProdDialog = event => {
@@ -1345,21 +1385,21 @@ const openHelpProdDialog = event => {
       event.node.setDataValue('prodNm', res.prodNm);
       event.node.setDataValue('prodCd', res.prodCd);
       event.node.setDataValue('price', res.sPrice);
+      myGridDetails.value.api.setFocusedCell(event.node.rowIndex, 'qty');
     })
     .onCancel(() => {})
     .onDismiss(() => {});
-  myGrid.value.api.setFocusedCell(event.node.rowIndex, 'qty');
 };
 
-/** **** 그리드 편집부분 ****/
+/** **** 그리드 Detail 편집부분 ****/
 const maxCnt = ref(0);
 const rowIndex = ref(0);
-const addDataRowSection = event => {
+const addDataDetailsRowSection = event => {
   let newRowIndex;
-  if (event === null) {
+  if (event === 'first') {
     newRowIndex = 0;
   } else {
-    newRowIndex = event.api.getDisplayedRowCount();
+    newRowIndex = myGridDetails.value.api.getDisplayedRowCount();
   }
   // const addIndex = rowIndex.value;
   const newItems = {
@@ -1378,17 +1418,32 @@ const addDataRowSection = event => {
     remarks: '',
     iuD: 'I',
   };
-  rowData.rows.splice(newRowIndex, 0, newItems);
+  rowData.details.splice(newRowIndex, 0, newItems);
   // Refresh the grid
-  myGrid.value.api.setRowData(rowData.rows);
+  myGridDetails.value.api.setRowData(rowData.details);
   // 첫컬럼에 focus
-  myGrid.value.api.setFocusedCell(newRowIndex, 'buyFg');
-  console.log('rowData1 :: ', JSON.stringify(rowData.rows));
+  myGridDetails.value.api.setFocusedCell(newRowIndex, 'buyFg');
 };
 
 const nextGridEdit = () => {
   rowIndex.value = 0;
-  addDataRowSection(null);
+  addDataDetailsRowSection('first');
+};
+
+const removeSelectedRow = () => {
+  const selectedNodes = myGridDetails.value.api.getSelectedNodes();
+  // const selectedData = selectedNodes.map(node => node.data).filter(data => data.iuD === 'I');
+  const selectedData = selectedNodes.map(node => node.data).filter(data => data.iuD === 'I');
+
+  console.log('selectedData : ', JSON.stringify(selectedData));
+
+  // 선택된 행을 제거
+  // rowData.details = rowData.details.filter(row => !selectedData.includes(row));
+  rowData.details = rowData.details.filter(row => !selectedData.some(selected => JSON.stringify(selected) === JSON.stringify(row)));
+  console.log('rowData : ', JSON.stringify(rowData.details));
+
+  // 그리드 데이터 갱신
+  myGridDetails.value.api.setRowData(rowData.details);
 };
 </script>
 
