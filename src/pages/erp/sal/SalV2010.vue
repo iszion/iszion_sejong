@@ -26,6 +26,23 @@
           </div>
           <div class="col-xs-12 col-sm-7 col-md-8 col-lg-9 col-xl-9">
             <div class="row q-pb-xs q-pt-xs-sm q-pt-md-none">
+              <q-select
+                stack-label
+                dense
+                options-dense
+                class="q-px-md"
+                label-color="orange"
+                v-model="searchParam.divCd"
+                :options="searchParam.divCdOptions"
+                option-value="commCd"
+                option-label="commNm"
+                option-disable="inactive"
+                emit-value
+                map-options
+                style="min-width: 100px"
+                label="구분"
+                @update:model-value="getData"
+              />
               <q-input
                 stack-label
                 bottom-slots
@@ -85,9 +102,9 @@
             stack-label
             :dense="dense"
             class="col-2 text-subtitle1"
-            v-model="formData.buyDay"
+            v-model="formData.dealDay"
             type="date"
-            label="매입일자"
+            label="출고일"
             :label-color="$q.dark.isActive ? 'green' : 'blue'"
             :disable="formDisable"
           />
@@ -110,6 +127,23 @@
               </q-icon>
             </template>
           </q-input>
+          <div class="col-1" />
+          <q-select
+            stack-label
+            options-dense
+            class="col-1"
+            :disable="formDisable"
+            :label-color="$q.dark.isActive ? 'green' : 'blue'"
+            v-model="formData.divCd"
+            :options="searchParam.divCdOptions"
+            option-value="commCd"
+            option-label="commNm"
+            option-disable="inactive"
+            emit-value
+            map-options
+            style="min-width: 100px"
+            label="구분"
+          />
         </div>
         <div class="row q-col-gutter-x-lg">
           <q-input
@@ -118,7 +152,7 @@
             stack-label
             class="col-3 text-subtitle1"
             v-model="formData.custNm"
-            label="입고처"
+            label="출고처"
             :label-color="$q.dark.isActive ? 'green' : 'blue'"
             :disable="formDisable"
             @keyup.enter.prevent="openHelpCustDialog"
@@ -146,7 +180,41 @@
             :label-color="$q.dark.isActive ? 'green' : 'blue'"
             readonly
           />
-          <div class="col-1"></div>
+
+          <q-select
+            stack-label
+            options-dense
+            class="col-1"
+            :disable="formDisable"
+            :label-color="$q.dark.isActive ? 'green' : 'blue'"
+            v-model="formData.custsCd"
+            :options="custsCdOptions"
+            option-value="custsCd"
+            option-label="custsNm"
+            option-disable="inactive"
+            emit-value
+            map-options
+            style="min-width: 100px"
+            label="지점명"
+          />
+
+          <q-select
+            stack-label
+            options-dense
+            class="col-1"
+            :disable="formDisable"
+            :label-color="$q.dark.isActive ? 'green' : 'blue'"
+            v-model="formData.custSeq"
+            :options="custSeqOptions"
+            option-value="value"
+            option-label="label"
+            option-disable="inactive"
+            emit-value
+            map-options
+            style="min-width: 100px"
+            label="주문차수"
+          />
+
           <q-input
             ref="secondFocus"
             stack-label
@@ -167,8 +235,53 @@
       <!--      <q-separator />-->
       <!--  end of contents list (우측 화면)  -->
 
-      <q-card-actions class="justify-end">
-        <div class="row q-gutter-x-sm">
+      <q-card-actions class="row">
+        <div v-if="!formDisable" class="q-gutter-x-sm self-end">
+          <span class="text-subtitle2" :class="$q.dark.isActive ? 'text-green' : 'text-blue'">
+            현매
+            <q-badge outline align="middle" color="teal"
+              ><span :class="$q.dark.isActive ? 'text-white' : 'text-black'">{{ formData.yulWt }}%</span></q-badge
+            >
+          </span>
+          <span class="text-subtitle2" :class="$q.dark.isActive ? 'text-green' : 'text-blue'"
+            >매절
+            <q-badge outline align="middle" color="teal"
+              ><span :class="$q.dark.isActive ? 'text-white' : 'text-black'">{{ formData.yulMj }}%</span></q-badge
+            >
+          </span>
+          <span class="text-subtitle2" :class="$q.dark.isActive ? 'text-green' : 'text-blue'"
+            >현매
+            <q-badge outline align="middle" color="teal"
+              ><span :class="$q.dark.isActive ? 'text-white' : 'text-black'">{{ formData.yulHm }}%</span></q-badge
+            >
+          </span>
+          <span class="text-subtitle2" :class="$q.dark.isActive ? 'text-green' : 'text-blue'"
+            >납품
+            <q-badge outline align="middle" color="teal"
+              ><span :class="$q.dark.isActive ? 'text-white' : 'text-black'">{{ formData.yulNp }}%</span></q-badge
+            >
+          </span>
+          <span class="text-subtitle2" :class="$q.dark.isActive ? 'text-green' : 'text-blue'"
+            >행사
+            <q-badge outline align="middle" color="teal"
+              ><span :class="$q.dark.isActive ? 'text-white' : 'text-black'">{{ formData.yulHs }}%</span></q-badge
+            >
+          </span>
+          <span class="text-subtitle2" :class="$q.dark.isActive ? 'text-green' : 'text-blue'"
+            >신간
+            <q-badge outline align="middle" color="teal"
+              ><span :class="$q.dark.isActive ? 'text-white' : 'text-black'">{{ formData.yulSg }}%</span></q-badge
+            >
+          </span>
+          <span class="text-subtitle2" :class="$q.dark.isActive ? 'text-green' : 'text-blue'"
+            >기타
+            <q-badge outline align="middle" color="teal"
+              ><span :class="$q.dark.isActive ? 'text-white' : 'text-black'">{{ formData.yulGt }}%</span></q-badge
+            >
+          </span>
+        </div>
+        <q-space />
+        <div class="text-right q-gutter-x-sm">
           <q-btn dense outline color="primary" icon="add" label="라인추가" :disable="!isShowSaveBtn" @click="addDataDetailsRowSection('next')" />
           <q-btn dense outline color="negative" icon="remove" label="라인제거" :disable="removeRowsCount <= 0" @click="removeSelectedRow" />
         </div>
@@ -212,9 +325,11 @@ import JsonUtil from 'src/js_comm/json-util';
 const $q = useQuasar();
 const dense = ref(false);
 const isSaveFg = ref(null);
-
+const custsCdOptions = ref([]);
+const custSeqOptions = ref([]);
 const searchParam = reactive({
-  divCd: '',
+  divCd: '1',
+  divCdOptions: [],
   useYn: 'N',
   word: '',
   calcuFg: true,
@@ -255,8 +370,18 @@ onBeforeUnmount(() => {
 
 onBeforeMount(() => {
   formDataInitialize();
+  custSeqOptions.value = [{ label: '', value: '' }];
+  for (let i = 1; i < 100; i++) {
+    let tmpJson = {
+      value: i.toString().padStart(2, '0'),
+      label: i.toString().padStart(2, '0') + '차',
+    };
+    custSeqOptions.value.push(tmpJson);
+  }
+  // console.log('aa : ', JSON.stringify(custSeqOptions.value));
+
   currentYearMonth.value = commUtil.getTodayYear() + '/' + commUtil.getTodayMonth();
-  getDataCommOption('302').then(() => {
+  getDataCommOption('401').then(() => {
     getEventData(commUtil.getTodayYear(), commUtil.getTodayMonth()).then(() => {
       onDateClick(currentDate.value);
     });
@@ -329,8 +454,8 @@ const columnDefsHeader = ref([
     pinned: !$q.screen.xs && !$q.screen.sm ? 'left' : null,
   },
   {
-    headerName: '입고일',
-    field: 'buyDay',
+    headerName: '출고일',
+    field: 'dealDay',
     pinned: !$q.screen.xs && !$q.screen.sm ? 'left' : null,
     valueFormatter: dateFormatter,
     minWidth: 120,
@@ -343,7 +468,7 @@ const columnDefsHeader = ref([
     maxWidth: 100,
   },
   {
-    headerName: '입고처',
+    headerName: '출고처',
     field: 'custNm',
     minWidth: 150,
   },
@@ -356,7 +481,7 @@ const columnDefsHeader = ref([
 
   {
     headerName: '건수',
-    field: 'totSeq',
+    field: 'sumCnt',
     minWidth: 80,
     maxWidth: 80,
     valueFormatter: params => {
@@ -379,7 +504,7 @@ const columnDefsHeader = ref([
   },
   {
     headerName: '수량',
-    field: 'totQty',
+    field: 'sumQty',
     minWidth: 110,
     maxWidth: 110,
     valueFormatter: params => {
@@ -408,7 +533,7 @@ const columnDefsHeader = ref([
   },
 ]);
 
-const buyFgOptions = ref([]);
+const dealFgOptions = ref([]);
 const columnDefsDetails = ref([
   {
     headerName: 'No',
@@ -439,7 +564,7 @@ const columnDefsDetails = ref([
   },
   {
     headerName: '구분',
-    field: 'buyFg',
+    field: 'dealFg',
     cellEditor: 'agSelectCellEditor',
     maxWidth: 70,
     minWidth: 70,
@@ -449,15 +574,15 @@ const columnDefsDetails = ref([
     },
     cellEditorParams: () => {
       return {
-        values: buyFgOptions.value.map(option => option.commCd), // 최신 값을 동적으로 반영
+        values: dealFgOptions.value.map(option => option.commCd), // 최신 값을 동적으로 반영
       };
     },
     cellRenderer: params => {
-      const option = buyFgOptions.value.find(opt => opt.commCd === params.value);
+      const option = dealFgOptions.value.find(opt => opt.commCd === params.value);
       return option ? option.commNm : params.value;
     },
     valueFormatter: params => {
-      const option = buyFgOptions.value.find(opt => opt.commCd === params.value);
+      const option = dealFgOptions.value.find(opt => opt.commCd === params.value);
       return option ? option.commNm : params.value;
     },
   },
@@ -570,7 +695,7 @@ const columnDefsDetails = ref([
   },
   {
     headerName: '비율',
-    field: 'buyYul',
+    field: 'yul',
     minWidth: 80,
     maxWidth: 80,
     valueFormatter: params => {
@@ -638,12 +763,26 @@ const formData = ref(null);
 
 const formDataInitialize = () => {
   formData.value = {
-    buyDay: '',
+    dealDay: '',
     seq: '',
+    divCd: '',
     custCd: '',
     custNm: '',
-    divCd: '1',
+    custsCd: '',
+    custSeq: '',
     remakrs: '',
+    koupRetuenDay: '',
+    receiptYn: '',
+    receiptDatetime: '',
+    yulWt: '',
+    yulMj: '',
+    yulHm: '',
+    yulNp: '',
+    yulTb: '',
+    yulHd: '',
+    yulHs: '',
+    yulSg: '',
+    yulGt: '',
     iuD: 'I',
   };
 };
@@ -669,7 +808,8 @@ const addDataSection = () => {
         isShowSaveBtn.value = true;
         formDisable.value = false;
         formData.value.seq = valMaxSeq;
-        formData.value.buyDay = currentDate.value;
+        formData.value.dealDay = currentDate.value;
+        formData.value.divCd = searchParam.divCd;
 
         rowData.details = [];
         myGridDetails.value.api.setRowData([]);
@@ -736,7 +876,7 @@ const deleteDataSection = () => {
     });
 };
 const saveDataSection = () => {
-  formData.value.buyDay = commUtil.unFormatDate(formData.value.buyDay);
+  formData.value.dealDay = commUtil.unFormatDate(formData.value.dealDay);
 
   if (isEqual(formData.value, oldFormData.value) && isEqual(rowData.details, rowDataOrdBack.value) && selectedRows.details.length === 0) {
     $q.dialog({
@@ -751,7 +891,7 @@ const saveDataSection = () => {
         // 확인/취소 모두 실행되었을때
       });
   } else {
-    if (isSaveFg.value === 'U' && formData.value.buyDay !== oldFormData.value.buyDay) {
+    if (isSaveFg.value === 'U' && formData.value.dealDay !== oldFormData.value.dealDay) {
       saveDataInsertDelete();
     } else {
       // Detail 자료 분류작업
@@ -762,7 +902,7 @@ const saveDataSection = () => {
       for (let i = 0; i < rowData.details.length; i++) {
         if (!isEmpty(rowData.details[i].prodCd)) {
           if (rowData.details[i].iuD === 'I' || rowData.details[i].iuD === 'U') {
-            rowData.details[i]['buyDay'] = commUtil.unFormatDate(formData.value.buyDay);
+            rowData.details[i]['dealDay'] = commUtil.unFormatDate(formData.value.dealDay);
             rowData.details[i]['custCd'] = formData.value.custCd;
             let tmpJson = '{"mode": "' + rowData.details[i].iuD + '","data":' + JSON.stringify(rowData.details[i]) + '}';
             iu.push(tmpJson);
@@ -808,7 +948,7 @@ const saveDataInsertDelete = () => {
   for (let i = 0; i < rowData.details.length; i++) {
     if (!isEmpty(rowData.details[i].prodCd)) {
       if (rowData.details[i].iuD === 'R' || rowData.details[i].iuD === 'U') {
-        rowData.details[i]['buyDay'] = commUtil.unFormatDate(formData.value.buyDay);
+        rowData.details[i]['dealDay'] = commUtil.unFormatDate(formData.value.dealDay);
         rowData.details[i]['custCd'] = formData.value.custCd;
         let tmpJson = '{"mode": "I", "data":' + JSON.stringify(rowData.details[i]) + '}';
         iu.push(tmpJson);
@@ -857,7 +997,7 @@ const saveDataInsertDelete = () => {
 // ***** 자료저장 및 삭제 처리부분 *****************************//
 const saveDataAndHandleResult = async resFormData => {
   try {
-    const res = await api.post('/api/sal/sal1010_save', resFormData);
+    const res = await api.post('/api/sal/sal2010_save', resFormData);
     let saveStatus = {
       rtn: res.data.rtn,
       rtnMsg: res.data.rtnMsg,
@@ -873,7 +1013,7 @@ const saveDataAndHandleResult = async resFormData => {
 // ***** 사용자정보 목록 자료 가져오기 부분  *****************************//
 const getEventData = async (resYear, resMonth) => {
   try {
-    const response = await api.post('/api/sal/sal1010_list_event', {
+    const response = await api.post('/api/sal/sal2010_list_event', {
       paramYear: resYear,
       paramMonth: resMonth,
     });
@@ -889,7 +1029,7 @@ const getEventData = async (resYear, resMonth) => {
 
 const getDataSearch = async () => {
   try {
-    const response = await api.post('/api/sal/sal1010_list_search', {
+    const response = await api.post('/api/sal/sal2010_list_search', {
       paramYyMm: currentYearMonth.value.replace(/\//g, ''), // 모든 `/`를 제거
       paramValueNm: searchParam.word,
     });
@@ -902,8 +1042,9 @@ const getDataSearch = async () => {
 
 const getData = async () => {
   try {
-    const response = await api.post('/api/sal/sal1010_list_header', {
-      paramBuyDay: commUtil.unFormatDate(currentDate.value),
+    const response = await api.post('/api/sal/sal2010_list_header', {
+      paramDealDay: commUtil.unFormatDate(currentDate.value),
+      paramDivCd: searchParam.divCd,
     });
     rowData.header = response.data.data;
     myGridHeader.value.api.setGridOption('rowData', rowData.header);
@@ -915,8 +1056,8 @@ const getData = async () => {
 // ***** 자동코드처리 마지막 코드+1 가져오기 부분  *****************************//
 const getDataMaxSeqCheck = async () => {
   try {
-    const response = await api.post('/api/sal/sal1010_maxSeqCheck', {
-      paramBuyDay: commUtil.unFormatDate(currentDate.value),
+    const response = await api.post('/api/sal/sal2010_maxSeqCheck', {
+      paramDealDay: commUtil.unFormatDate(currentDate.value),
     });
     return response.data.data[0].maxSeq;
   } catch (error) {
@@ -927,21 +1068,22 @@ const getDataMaxSeqCheck = async () => {
 // ***** 사용자정보 선택된 자료 가져오기 부분  *****************************//
 const getDataSelect = async resData => {
   try {
-    const response = await api.post('/api/sal/sal1010_select_header', {
-      paramBuyDay: commUtil.unFormatDate(resData.buyDay),
+    const response = await api.post('/api/sal/sal2010_select_header', {
+      paramDealDay: commUtil.unFormatDate(resData.dealDay),
       paramSeq: resData.seq,
     });
     formData.value = response.data.data[0];
     oldFormData.value = JSON.parse(JSON.stringify(formData.value)); // 초기자료 저장
-    formData.value.buyDay = commUtil.formatDate(response.data.data[0].buyDay);
+    formData.value.dealDay = commUtil.formatDate(response.data.data[0].dealDay);
+    console.log('aa : ', JSON.stringify(formData.value));
   } catch (error) {
     console.error('Error fetching users:', error);
   }
 };
 const getDataSelectList = async resData => {
   try {
-    const response = await api.post('/api/sal/sal1010_select_list_details', {
-      paramBuyDay: commUtil.unFormatDate(resData.buyDay),
+    const response = await api.post('/api/sal/sal2010_select_list_details', {
+      paramDealDay: commUtil.unFormatDate(resData.dealDay),
       paramSeq: resData.seq,
     });
     rowData.details = response.data.data;
@@ -954,15 +1096,32 @@ const getDataSelectList = async resData => {
 };
 // ***** 사용자정보 선택된 자료 가져오기 부분  *****************************//
 
+async function getDataCustsOption(resCustCd) {
+  try {
+    const response = await api.post('/api/mst/custs_option_list', { paramCustCd: resCustCd });
+    custsCdOptions.value = response.data.data;
+  } catch (error) {
+    console.error('Error fetching users:', error);
+  }
+}
+
 async function getDataCommOption(resCommCd1) {
   try {
     const response = await api.post('/api/mst/comm_option_list', { paramCommCd1: resCommCd1 });
     switch (resCommCd1) {
-      case '302':
-        buyFgOptions.value = response.data.data;
+      case '401':
+        searchParam.divCdOptions = response.data.data;
+        // console.log('option1 : ', JSON.stringify(searchParam.divCdOptions));
+        // 코드를 마지막 1자리만 사용
+        searchParam.divCdOptions.forEach(obj => {
+          if (obj.commCd.length > 0) {
+            obj.commCd = obj.commCd.slice(-1); // Extract the last digit of `cd`
+          }
+        });
+        // console.log('option2 : ', JSON.stringify(searchParam.divCdOptions));
         break;
       default:
-        buyFgOptions.value = [];
+        searchParam.divCdOptions = [];
     }
   } catch (error) {
     console.error('Error fetching users:', error);
@@ -1096,13 +1255,15 @@ const formScreenReset = () => {
 const handleRowHeaderClick = data => {
   getDataSelect(data).then(() => {
     getDataSelectList(data).then(() => {
-      isSaveFg.value = 'U';
-      isShowSaveBtn.value = true;
-      isShowStatusEdit.value = true;
-      statusEdit.icon = 'edit_note';
-      statusEdit.message = '수정/삭제모드 입니다';
-      statusEdit.color = 'accent';
-      formDisable.value = false;
+      getDataCustsOption(data.custCd).then(() => {
+        isSaveFg.value = 'U';
+        isShowSaveBtn.value = true;
+        isShowStatusEdit.value = true;
+        statusEdit.icon = 'edit_note';
+        statusEdit.message = '수정/삭제모드 입니다';
+        statusEdit.color = 'accent';
+        formDisable.value = false;
+      });
     });
   });
 };
@@ -1127,11 +1288,11 @@ const calculateTotal = () => {
 let processedEventKey = null;
 const eventKey = ref(null);
 const columnFocusMap = {
-  buyFg: 'prodNm',
+  dealFg: 'prodNm',
   prodNm: 'qty',
   qty: 'price',
-  price: 'buyYul',
-  buyYul: 'amt',
+  price: 'yul',
+  yul: 'amt',
   amt: 'remarks',
 };
 
@@ -1167,9 +1328,9 @@ const gridOptionsDetails = {
   getRowHeight: function (param) {
     // 고정된 행의 높이
     if (param.node.rowPinned) {
-      return 45;
+      return 40;
     }
-    return 40;
+    return 35;
   },
   // GRID READY 이벤트, 사이즈 자동조정
   onGridReady: function (event) {
@@ -1352,13 +1513,25 @@ const openHelpCustDialog = () => {
     componentProps: {
       paramValueNm: formData.value.custNm,
       paramUseYn: 'N',
-      paramCloseDay: commUtil.unFormatDate(formData.value.buyDay),
+      paramCloseDay: commUtil.unFormatDate(formData.value.dealDay),
     },
   })
     .onOk(res => {
       formData.value.custCd = res.custCd;
       formData.value.custNm = res.custNm;
+
+      formData.value.yulWt = res.yulWt;
+      formData.value.yulMj = res.yulMj;
+      formData.value.yulHm = res.yulHm;
+      formData.value.yulNp = res.yulNp;
+      formData.value.yulTb = res.yulTb;
+      formData.value.yulHd = res.yulHd;
+      formData.value.yulHs = res.yulHs;
+      formData.value.yulSg = res.yulSg;
+      formData.value.yulGt = res.yulGt;
+
       setTimeout(() => {
+        getDataCustsOption(res.custCd);
         secondFocus.value.focus();
       }, 200);
     })
@@ -1372,7 +1545,7 @@ const openHelpProdDialog = event => {
     componentProps: {
       paramValueNm: event.data.prodNm,
       paramUseYn: 'N',
-      paramCloseDay: commUtil.unFormatDate(formData.value.buyDay),
+      paramCloseDay: commUtil.unFormatDate(formData.value.dealDay),
     },
   })
     .onOk(res => {
@@ -1397,18 +1570,18 @@ const addDataDetailsRowSection = event => {
   }
   // const addIndex = rowIndex.value;
   const newItems = {
-    buyDay: formData.value.buyDay,
+    dealDay: formData.value.dealDay,
     seq: formData.value.seq,
     cnt: maxCnt.value,
     custCd: formData.value.custCd,
     divCd: '1',
-    buyFg: '',
+    dealFg: '',
     prodCd: '',
     prodNm: '',
     qty: 0,
     price: 0,
     amt: 0,
-    buyYul: 0,
+    yul: 0,
     remarks: '',
     iuD: 'I',
   };
@@ -1416,7 +1589,7 @@ const addDataDetailsRowSection = event => {
   // Refresh the grid
   myGridDetails.value.api.setRowData(rowData.details);
   // 첫컬럼에 focus
-  myGridDetails.value.api.setFocusedCell(newRowIndex, 'buyFg');
+  myGridDetails.value.api.setFocusedCell(newRowIndex, 'dealFg');
 };
 
 const nextGridEdit = () => {
