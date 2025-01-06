@@ -15,6 +15,14 @@ export default {
     }
   },
 
+  formatDateSel(rawDate, sel) {
+    if (rawDate) {
+      return `${rawDate.slice(0, 4)}${sel}${rawDate.slice(4, 6)}${sel}${rawDate.slice(6)}`;
+    } else {
+      return '';
+    }
+  },
+
   unFormatDate(rawDate) {
     return rawDate ? rawDate.replace(/\D/g, '') : '';
   },
@@ -67,9 +75,9 @@ export default {
     return new Date(year, month + 1, 0).getDate();
   },
 
-  getDateWithZero(date) {
-    // Convert the date to a string and use padStart to ensure it has at least 2 digits
-    return date.toString().padStart(2, '0');
+  // 숫자앞에 0 붙이기
+  getDataWithZero(obj, len) {
+    return String(obj).padStart(len, '0');
   },
 
   getTodaytime(datetime) {

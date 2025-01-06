@@ -121,7 +121,7 @@
             label="입고처"
             :label-color="$q.dark.isActive ? 'green' : 'blue'"
             :disable="formDisable"
-            @keyup.enter.prevent="openHelpCustDialog"
+            @keyup.enter.prevent="openHelpCustDialog(formData.custNm)"
           >
             <template v-slot:append>
               <q-icon
@@ -134,7 +134,7 @@
                 "
                 class="cursor-pointer q-pt-md"
               />
-              <q-icon size="0.8em" name="search" @click="openHelpCustDialog" class="cursor-pointer q-pt-md" />
+              <q-icon size="0.8em" name="search" @click="openHelpCustDialog('')" class="cursor-pointer q-pt-md" />
             </template>
           </q-input>
           <q-input
@@ -643,7 +643,7 @@ const formDataInitialize = () => {
     custCd: '',
     custNm: '',
     divCd: '1',
-    remakrs: '',
+    remarks: '',
     iuD: 'I',
   };
 };
@@ -1346,11 +1346,11 @@ function updateValue(key, value) {
 // 포맷된 값을 관리하는 computed 끝
 
 /* *** 코드헬프부분 ** */
-const openHelpCustDialog = () => {
+const openHelpCustDialog = resNm => {
   $q.dialog({
     component: HelpCust,
     componentProps: {
-      paramValueNm: formData.value.custNm,
+      paramValueNm: resNm,
       paramUseYn: 'N',
       paramCloseDay: commUtil.unFormatDate(formData.value.buyDay),
     },

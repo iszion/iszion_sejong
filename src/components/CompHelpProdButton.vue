@@ -1,6 +1,6 @@
 <template>
   <div>
-    <q-btn dense no-caps color="secondary" @click="buttonClick" class="text-body2" style="width: 70px">
+    <q-btn dense no-caps color="secondary" @click="buttonClick('')" class="text-body2" style="width: 70px">
       <q-icon name="search" size="xs" class="q-pt-xs" />
       {{ value.prodCd }}
     </q-btn>
@@ -20,17 +20,18 @@ const { updateSelectedValue } = props.params;
 // console.log("props: ", props.params);
 const value = ref(props.params.data);
 
-const buttonClick = () => {
+const buttonClick = resNm => {
   // Update the selected value using the callback function from props
   // updateSelectedValue(value);
-  openHelpProdDialog();
+  // openHelpProdDialog(props.params.data.prodNm);
+  openHelpProdDialog(resNm);
 };
 
-const openHelpProdDialog = () => {
+const openHelpProdDialog = resNm => {
   $q.dialog({
     component: HelpProd,
     componentProps: {
-      paramValueNm: props.params.data.prodNm,
+      paramValueNm: resNm,
       paramUseYn: 'N',
       paramCloseDay: '00000000',
     },

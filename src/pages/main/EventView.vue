@@ -220,7 +220,7 @@ const saveEventDataAndHandleResult = resFormData => {
 // **************************************************************//
 const dataTest = async () => {
   console.log('###dataTest###');
-  const response = await api.get('/api/sys/dataTest');
+  const response = await api.post('/api/coup/dataTest');
 };
 </script>
 

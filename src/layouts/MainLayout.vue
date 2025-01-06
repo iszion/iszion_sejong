@@ -209,7 +209,7 @@
 </template>
 
 <script setup>
-import { onBeforeMount, onMounted, reactive, ref } from 'vue';
+import { onBeforeMount, onMounted, reactive, ref, watch } from 'vue';
 import FooterBar from 'layouts/FooterBar.vue';
 import { QIcon, useQuasar, SessionStorage, QBtn } from 'quasar';
 import { useI18n } from 'vue-i18n';
@@ -253,6 +253,8 @@ const resetFilter = () => {
 };
 
 const selectMenu = m => {
+  getMenuTreeReset();
+
   // console.log('m ; ', m);
   setTimeout(() => {
     selected.value = null;
@@ -622,6 +624,34 @@ const addFavorites = () => {
       // 확인/취소 모두 실행되었을때
     });
 };
+
+// 메뉴리스트 저장부분
+// 로컬스토리지 키
+const EXPANDED_KEY = 'treeExpanded';
+const SELECTED_KEY = 'treeSelected';
+
+// 로컬스토리지에서 상태 로드
+const getMenuTreeReset = () => {
+  const savedExpanded = $q.localStorage.getItem(EXPANDED_KEY);
+  const savedSelected = $q.localStorage.getItem(SELECTED_KEY);
+
+  if (savedExpanded) {
+    treeExpanded.value = savedExpanded;
+  }
+  if (savedSelected) {
+    selected.value = savedSelected;
+  }
+};
+
+// 상태가 변경될 때 로컬스토리지에 저장
+watch(treeExpanded, newVal => {
+  $q.localStorage.set(EXPANDED_KEY, newVal);
+});
+
+watch(selected, newVal => {
+  $q.localStorage.set(SELECTED_KEY, newVal);
+});
+// 메뉴리스트 저장부분 끝
 </script>
 
 <style scoped lang="sass"></style>

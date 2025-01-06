@@ -16,6 +16,10 @@ const routes = [
       { path: 'sal1010', component: () => import('pages/erp/sal/SalV1010.vue') },
       { path: 'sal1020', component: () => import('pages/erp/sal/SalV1020.vue') },
       { path: 'sal2010', component: () => import('pages/erp/sal/SalV2010.vue') },
+      { path: 'sal2020', component: () => import('pages/erp/sal/SalV2020.vue') },
+      { path: 'sal2030', component: () => import('pages/erp/sal/SalV2030.vue') },
+      { path: 'sal2110', component: () => import('pages/erp/sal/SalV2110.vue') },
+      { path: 'sal2120', component: () => import('pages/erp/sal/SalV2120.vue') },
 
       { path: 'mst1010', component: () => import('pages/erp/mst/MstV1010.vue') },
       { path: 'mst2010', component: () => import('pages/erp/mst/MstV2010.vue') },

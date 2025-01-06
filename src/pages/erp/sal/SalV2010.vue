@@ -18,7 +18,7 @@
               mask="YYYY-MM-DD"
               v-model="currentDate"
               :events="eventDays"
-              :event-color="() => ($q.dark.isActive ? 'orange' : 'orange')"
+              :event-color="() => ($q.dark.isActive ? 'tear' : 'orange')"
               @update:model-value="onDateClick"
               @navigation="onNavigation"
               :default-year-month="currentYearMonth"
@@ -61,11 +61,11 @@
               <q-space />
               <div class="q-gutter-xs text-right">
                 <q-btn outline color="positive" @click="addDataSection"><q-icon name="add" size="xs" /> 신규 </q-btn>
-                <q-btn v-if="isShowSaveBtn" outline color="primary" @click="saveDataSection"
+                <q-btn v-if="isShowSaveBtn" outline color="primary" :disable="isReceipt.yn" @click="saveDataSection"
                   ><q-icon name="save" size="xs" /> 저장
                   <q-badge v-show="delRowsCount > 0" color="red" floating>{{ delRowsCount }}</q-badge>
                 </q-btn>
-                <q-btn v-if="isShowDeleteBtn" outline color="negative" @click="deleteDataSection">
+                <q-btn v-if="isShowDeleteBtn" outline color="negative" :disable="isReceipt.yn" @click="deleteDataSection">
                   <q-icon name="delete" size="xs" /> 전체삭제
                   <q-badge color="red" floating>{{ selectedRows.header.length }}</q-badge>
                 </q-btn>
@@ -94,7 +94,7 @@
         <q-chip v-if="isShowStatusEdit" size="sm" outline :color="statusEdit.color" class="q-px-md">
           <q-icon :name="statusEdit.icon" class="q-mr-sm" size="15px" /> {{ statusEdit.message }}
         </q-chip>
-        <q-toggle dense left-label v-model="searchParam.calcuFg" color="pink" icon="calculate" label="자동계산" />
+        <q-toggle dense left-label v-model="isReceipt.yn" color="pink" :icon="isReceipt.yn ? 'lock' : 'lock_open'" label="접수완료" />
       </q-bar>
       <q-card-section class="q-py-none">
         <div class="row q-col-gutter-x-lg">
@@ -107,6 +107,7 @@
             label="출고일"
             :label-color="$q.dark.isActive ? 'green' : 'blue'"
             :disable="formDisable"
+            :readonly="isReceipt.yn"
           />
           <div class="col-1"></div>
           <q-input
@@ -118,6 +119,7 @@
             fill-mask
             :label-color="$q.dark.isActive ? 'green' : 'blue'"
             :disable="formDisable"
+            :readonly="isReceipt.yn"
           >
             <template v-slot:append>
               <q-icon v-if="isSaveFg === 'I'" size="0.8em" name="sync" @click="getDataMaxSeqCheck()" class="cursor-pointer q-pt-md">
@@ -131,8 +133,9 @@
           <q-select
             stack-label
             options-dense
-            class="col-1"
+            class="col-1 text-subtitle1"
             :disable="formDisable"
+            :readonly="isReceipt.yn"
             :label-color="$q.dark.isActive ? 'green' : 'blue'"
             v-model="formData.divCd"
             :options="searchParam.divCdOptions"
@@ -155,7 +158,8 @@
             label="출고처"
             :label-color="$q.dark.isActive ? 'green' : 'blue'"
             :disable="formDisable"
-            @keyup.enter.prevent="openHelpCustDialog"
+            :readonly="isReceipt.yn"
+            @keyup.enter.prevent="openHelpCustDialog(formData.custNm)"
           >
             <template v-slot:append>
               <q-icon
@@ -165,10 +169,12 @@
                 @click="
                   formData.custNm = '';
                   formData.custCd = '';
+                  formData.custsCd = '';
+                  formData.custSeq = '';
                 "
                 class="cursor-pointer q-pt-md"
               />
-              <q-icon size="0.8em" name="search" @click="openHelpCustDialog" class="cursor-pointer q-pt-md" />
+              <q-icon size="0.8em" name="search" @click="openHelpCustDialog('')" class="cursor-pointer q-pt-md" />
             </template>
           </q-input>
           <q-input
@@ -182,10 +188,12 @@
           />
 
           <q-select
+            ref="secondFocus1"
             stack-label
             options-dense
-            class="col-1"
+            class="col-1 text-subtitle1"
             :disable="formDisable"
+            :readonly="isReceipt.yn"
             :label-color="$q.dark.isActive ? 'green' : 'blue'"
             v-model="formData.custsCd"
             :options="custsCdOptions"
@@ -196,13 +204,15 @@
             map-options
             style="min-width: 100px"
             label="지점명"
+            @update:model-value="handleUpdateCustsSeqSet"
           />
 
           <q-select
             stack-label
             options-dense
-            class="col-1"
+            class="col-1 text-subtitle1"
             :disable="formDisable"
+            :readonly="isReceipt.yn"
             :label-color="$q.dark.isActive ? 'green' : 'blue'"
             v-model="formData.custSeq"
             :options="custSeqOptions"
@@ -216,17 +226,18 @@
           />
 
           <q-input
-            ref="secondFocus"
+            ref="secondFocus2"
             stack-label
-            class="col-5"
+            class="col-4"
             :dense="dense"
             :disable="formDisable"
+            :readonly="isReceipt.yn"
             v-model="formData.remarks"
             label="참고사항"
             :label-color="$q.dark.isActive ? 'green' : 'blue'"
             clearable
-            :hint="`${byteCount.remarks} / 200(한글100)자 까지 입력하실 수 있습니다.`"
-            @update:model-value="updateByteCount('remarks', formData.remarks, 200)"
+            :hint="`${byteCount.remarks} / 50(한글25)자 까지 입력하실 수 있습니다.`"
+            @update:model-value="updateByteCount('remarks', formData.remarks, 50)"
             @keyup.enter.prevent="nextGridEdit"
           />
         </div>
@@ -281,9 +292,30 @@
           </span>
         </div>
         <q-space />
+        <div v-if="!formDisable && isSaveFg !== 'I' && isReceipt.date" class="q-gutter-x-sm self-end">
+          <q-chip class="glossy" square color="pink" text-color="white" icon="numbers"> 접수건수 : {{ isReceipt.cnt }}건</q-chip>
+          <q-chip class="glossy" square color="pink" text-color="white" icon="event"> 접수시간 : {{ isReceipt.date }}</q-chip>
+        </div>
+        <q-space />
         <div class="text-right q-gutter-x-sm">
-          <q-btn dense outline color="primary" icon="add" label="라인추가" :disable="!isShowSaveBtn" @click="addDataDetailsRowSection('next')" />
-          <q-btn dense outline color="negative" icon="remove" label="라인제거" :disable="removeRowsCount <= 0" @click="removeSelectedRow" />
+          <q-btn
+            dense
+            outline
+            color="primary"
+            icon="add"
+            label="라인추가"
+            :disable="!isShowSaveBtn || isReceipt.yn"
+            @click="addDataDetailsRowSection('next')"
+          />
+          <q-btn
+            dense
+            outline
+            color="negative"
+            icon="remove"
+            label="라인제거"
+            :disable="removeRowsCount <= 0 || isReceipt.yn"
+            @click="removeSelectedRow"
+          />
         </div>
       </q-card-actions>
       <q-card-section class="q-pa-xs">
@@ -319,7 +351,6 @@ import commUtil from 'src/js_comm/comm-util';
 import HelpCust from 'components/subvue/HelpCust.vue';
 import HelpProd from 'components/subvue/HelpProd.vue';
 import CompHelpProdButton from 'components/CompHelpProdButton.vue';
-import { createRouter as Vue } from 'vue-router/dist/vue-router.esm-browser.prod';
 import JsonUtil from 'src/js_comm/json-util';
 
 const $q = useQuasar();
@@ -382,8 +413,10 @@ onBeforeMount(() => {
 
   currentYearMonth.value = commUtil.getTodayYear() + '/' + commUtil.getTodayMonth();
   getDataCommOption('401').then(() => {
-    getEventData(commUtil.getTodayYear(), commUtil.getTodayMonth()).then(() => {
-      onDateClick(currentDate.value);
+    getDataCommOption('402').then(() => {
+      getEventData(commUtil.getTodayYear(), commUtil.getTodayMonth()).then(() => {
+        onDateClick(currentDate.value);
+      });
     });
   });
 });
@@ -432,6 +465,16 @@ onMounted(() => {
   menuLabel.value = window.history.state.label;
 });
 
+const handleUpdateCustsSeqSet = () => {
+  getDataCustSeqCheck(formData.value).then(val => {
+    formData.value.custSeq = val;
+
+    setTimeout(() => {
+      secondFocus2.value.focus();
+    }, 200);
+  });
+};
+
 const columnDefsHeader = ref([
   {
     headerName: '#',
@@ -466,15 +509,24 @@ const columnDefsHeader = ref([
     field: 'seq',
     minWidth: 100,
     maxWidth: 100,
+    pinned: !$q.screen.xs && !$q.screen.sm ? 'left' : null,
   },
   {
     headerName: '출고처',
     field: 'custNm',
     minWidth: 150,
+    pinned: !$q.screen.xs && !$q.screen.sm ? 'left' : null,
+  },
+
+  {
+    headerName: '지점명',
+    field: 'custsCd',
+    minWidth: 120,
+    maxWidth: 120,
   },
   {
-    headerName: '코드',
-    field: 'custCd',
+    headerName: '차수',
+    field: 'custSeq',
     minWidth: 80,
     maxWidth: 80,
   },
@@ -527,11 +579,56 @@ const columnDefsHeader = ref([
   },
 
   {
+    headerName: '금액',
+    field: 'sumAmt',
+    minWidth: 120,
+    maxWidth: 120,
+    valueFormatter: params => {
+      if (params.value != null) {
+        return new Intl.NumberFormat('ko-KR', {
+          // style: 'currency',
+          // currency: 'KRW',
+          minimumFractionDigits: 0,
+          maximumFractionDigits: 0,
+        }).format(params.value);
+      }
+      return '';
+    },
+    cellClass: 'ag-right-aligned-cell',
+    cellStyle: () => {
+      return {
+        color: $q.dark.isActive ? 'orange' : 'teal',
+      };
+    },
+  },
+
+  {
     headerName: '기타사항',
     field: 'remarks',
     minWidth: 200,
   },
 ]);
+
+const updateFields = params => {
+  const rowData = params.data; // 현재 행 데이터
+  const resDealFg = rowData.dealFg; // 선택된 dealFg 값
+
+  // yul 필드 값 계산
+  const checkYul = checkYulReset(resDealFg); // checkYulReset 메서드 호출
+  rowData.yul = checkYul;
+
+  // amt 필드 값 계산
+  const qty = parseFloat(rowData.qty) || 0; // 수량
+  const price = parseFloat(rowData.price) || 0; // 단가
+  rowData.amt = qty * (price * (checkYul / 100)); // 금액 계산
+  console.log('qty : ', qty, price, rowData.amt, checkYul);
+
+  params.api.refreshCells({
+    // 변경된 셀 갱신
+    rowNodes: [params.node],
+    columns: ['yul', 'amt'],
+  });
+};
 
 const dealFgOptions = ref([]);
 const columnDefsDetails = ref([
@@ -568,7 +665,7 @@ const columnDefsDetails = ref([
     cellEditor: 'agSelectCellEditor',
     maxWidth: 70,
     minWidth: 70,
-    editable: params => !params.node.rowPinned, // 합계 Pinned 행에서는 편집 불가
+    editable: params => !params.node.rowPinned && !isReceipt.value.yn, // 합계 Pinned 행에서는 편집 불가
     cellClassRules: {
       'pinned-row': params => params.node.rowPinned, // 합계 스타일 지정
     },
@@ -590,7 +687,7 @@ const columnDefsDetails = ref([
     headerName: '도서명',
     field: 'prodNm',
     minWidth: 150,
-    editable: params => !params.node.rowPinned, // 합계 Pinned 행에서는 편집 불가
+    editable: params => !params.node.rowPinned && !isReceipt.value.yn, // 합계 Pinned 행에서는 편집 불가
     cellClassRules: {
       'pinned-row': params => params.node.rowPinned, // 합계 스타일 지정
     },
@@ -641,7 +738,7 @@ const columnDefsDetails = ref([
         color: $q.dark.isActive ? 'orange' : 'teal',
       };
     },
-    editable: params => !params.node.rowPinned, // 합계 Pinned 행에서는 편집 불가
+    editable: params => !params.node.rowPinned && !isReceipt.value.yn, // 합계 Pinned 행에서는 편집 불가
     cellClassRules: {
       'pinned-row': params => params.node.rowPinned, // 합계 스타일 지정
     },
@@ -678,7 +775,7 @@ const columnDefsDetails = ref([
         color: $q.dark.isActive ? 'orange' : 'teal',
       };
     },
-    editable: params => !params.node.rowPinned, // 합계 Pinned 행에서는 편집 불가
+    editable: params => !params.node.rowPinned && !isReceipt.value.yn, // 합계 Pinned 행에서는 편집 불가
     cellClassRules: {
       'pinned-row': params => params.node.rowPinned, // 합계 스타일 지정
     },
@@ -715,7 +812,7 @@ const columnDefsDetails = ref([
         color: $q.dark.isActive ? 'orange' : 'teal',
       };
     },
-    editable: params => !params.node.rowPinned, // 합계 Pinned 행에서는 편집 불가
+    editable: params => !params.node.rowPinned && !isReceipt.value.yn, // 합계 Pinned 행에서는 편집 불가
     cellClassRules: {
       'pinned-row': params => params.node.rowPinned, // 합계 스타일 지정
     },
@@ -742,7 +839,7 @@ const columnDefsDetails = ref([
         color: $q.dark.isActive ? 'orange' : 'teal',
       };
     },
-    editable: params => !params.node.rowPinned, // 합계 Pinned 행에서는 편집 불가
+    editable: params => !params.node.rowPinned && !isReceipt.value.yn, // 합계 Pinned 행에서는 편집 불가
     cellClassRules: {
       'pinned-row': params => params.node.rowPinned, // 합계 스타일 지정
     },
@@ -751,7 +848,18 @@ const columnDefsDetails = ref([
     headerName: '기타사항',
     field: 'remarks',
     minWidth: 200,
-    editable: params => !params.node.rowPinned, // 합계 Pinned 행에서는 편집 불가
+    editable: params => !params.node.rowPinned && !isReceipt.value.yn, // 합계 Pinned 행에서는 편집 불가
+    cellClassRules: {
+      'pinned-row': params => params.node.rowPinned, // 합계 스타일 지정
+    },
+  },
+  {
+    headerName: '반품일',
+    field: 'returnDay',
+    valueFormatter: dateFormatter,
+    minWidth: 120,
+    maxWidth: 120,
+    editable: params => !params.node.rowPinned && !isReceipt.value.yn, // 합계 Pinned 행에서는 편집 불가
     cellClassRules: {
       'pinned-row': params => params.node.rowPinned, // 합계 스타일 지정
     },
@@ -770,10 +878,10 @@ const formDataInitialize = () => {
     custNm: '',
     custsCd: '',
     custSeq: '',
-    remakrs: '',
-    koupRetuenDay: '',
+    remarks: '',
+    coupRetuenDay: '',
     receiptYn: '',
-    receiptDatetime: '',
+    receiptDate: '00000000',
     yulWt: '',
     yulMj: '',
     yulHm: '',
@@ -792,8 +900,10 @@ const isShowDeleteBtn = ref(false);
 const isShowSaveBtn = ref(false);
 
 const startFocus = ref(null);
-const secondFocus = ref(null);
+const secondFocus1 = ref(null);
+const secondFocus2 = ref(null);
 const addDataSection = () => {
+  isReceipt.value.yn = false;
   if (currentDate.value) {
     getDataMaxSeqCheck().then(valMaxSeq => {
       myGridHeader.value.api.deselectAll();
@@ -1064,6 +1174,19 @@ const getDataMaxSeqCheck = async () => {
     console.error('Error fetching users:', error);
   }
 };
+// ***** 자동코드처리 마지막 코드+1 가져오기 부분  *****************************//
+const getDataCustSeqCheck = async resData => {
+  try {
+    const response = await api.post('/api/sal/sal2010_cust_seq_check', {
+      paramDealDay: commUtil.unFormatDate(resData.dealDay),
+      paramCustCd: resData.custCd,
+      paramCustsCd: resData.custsCd,
+    });
+    return commUtil.getDataWithZero(response.data.data[0].custSeq, 2);
+  } catch (error) {
+    console.error('Error fetching users:', error);
+  }
+};
 
 // ***** 사용자정보 선택된 자료 가져오기 부분  *****************************//
 const getDataSelect = async resData => {
@@ -1080,6 +1203,11 @@ const getDataSelect = async resData => {
     console.error('Error fetching users:', error);
   }
 };
+const isReceipt = ref({
+  yn: false,
+  cnt: 0,
+  date: null,
+});
 const getDataSelectList = async resData => {
   try {
     const response = await api.post('/api/sal/sal2010_select_list_details', {
@@ -1090,6 +1218,16 @@ const getDataSelectList = async resData => {
     rowDataOrdBack.value = JSON.parse(JSON.stringify(response.data.data));
     myGridDetails.value.api.setGridOption('rowData', rowData.details);
     myGridDetails.value.api.setGridOption('pinnedBottomRowData', [calculateTotal()]);
+
+    isReceipt.value.yn = rowData.details.some(row => row.receiptYn === 'Y');
+    isReceipt.value.cnt = rowData.details.filter(row => row.receiptYn === 'Y').length;
+
+    const isReceipt_data = rowData.details.filter(row => row.receiptYn === 'Y');
+    if (isReceipt_data.length > 0) {
+      isReceipt.value.date = commUtil.formatDatetime(isReceipt_data[0].receiptDate);
+    } else {
+      isReceipt.value.date = null; // Handle case where no matching data is found
+    }
   } catch (error) {
     console.error('Error fetching users:', error);
   }
@@ -1120,8 +1258,11 @@ async function getDataCommOption(resCommCd1) {
         });
         // console.log('option2 : ', JSON.stringify(searchParam.divCdOptions));
         break;
+      case '402':
+        dealFgOptions.value = response.data.data;
+        break;
       default:
-        searchParam.divCdOptions = [];
+        dealFgOptions.value = [];
     }
   } catch (error) {
     console.error('Error fetching users:', error);
@@ -1402,18 +1543,23 @@ const gridOptionsDetails = {
   },
   onSelectionChanged: function (event) {
     // console.log('onSelectionChanged1');
-    selectedRows.details = event.api.getSelectedRows();
-    isShowStatusEdit.value = false;
-    // isShowSaveBtn.value = selectedRows.details.length > 0;
-    removeRowsCount.value = selectedRows.details.filter(row => row.iuD === 'I').length;
-    delRowsCount.value = selectedRows.details.filter(row => row.iuD !== 'I').length;
+    if (!isReceipt.value.yn) {
+      selectedRows.details = event.api.getSelectedRows();
+      isShowStatusEdit.value = false;
+      // isShowSaveBtn.value = selectedRows.details.length > 0;
+      removeRowsCount.value = selectedRows.details.filter(row => row.iuD === 'I').length;
+      delRowsCount.value = selectedRows.details.filter(row => row.iuD !== 'I').length;
 
-    // const selRow = selectedRows.details.filter(row => row.iuD !== 'I');
-    // rowData.details = rowData.details.filter(row => !delRow.some(del => del.iuD === row.iuD));
+      // const selRow = selectedRows.details.filter(row => row.iuD !== 'I');
+      // rowData.details = rowData.details.filter(row => !delRow.some(del => del.iuD === row.iuD));
 
-    // 그리드에 변경된 데이터 적용
-    // event.api.setRowData(rowData.details);
-    // selectedRows.details = selRow;
+      // 그리드에 변경된 데이터 적용
+      // event.api.setRowData(rowData.details);
+      // selectedRows.details = selRow;
+    } else {
+      selectedRows.details = [];
+      event.api.deselectAll();
+    }
   },
   onSortChanged: function (event) {
     // console.log('onSortChanged');
@@ -1421,14 +1567,26 @@ const gridOptionsDetails = {
   pinnedBottomRowData: [calculateTotal()],
   onCellValueChanged: function (event) {
     // console.log('onCellValueChanged');
-    if (searchParam.calcuFg && (event.column.colId === 'qty' || event.column.colId === 'price')) {
-      const qty = parseFloat(event.data.qty) || 0;
-      const price = parseFloat(event.data.price) || 0;
-      event.data.amt = qty * price; // Calculate the new amount
+    if (event.column.colId === 'dealFg' || event.column.colId === 'qty' || event.column.colId === 'price' || event.column.colId === 'yul') {
+      const rowData = event.data; // 현재 행 데이터
+      const resDealFg = rowData.dealFg; // 선택된 dealFg 값
+
+      if (event.column.colId === 'dealFg') {
+        // yul 필드 값 계산
+        rowData.yul = checkYulReset(resDealFg); // checkYulReset 메서드 호출
+      }
+
+      // amt 필드 값 계산
+      const qty = parseFloat(rowData.qty) || 0; // 수량
+      const price = parseFloat(rowData.price) || 0; // 단가
+      const yul = parseFloat(rowData.yul) || 0; // 단가
+      rowData.amt = qty * (price * (yul / 100)); // 금액 계산
+      console.log('qty : ', qty, price, rowData.amt, yul);
+
       event.api.refreshCells({
+        // 변경된 셀 갱신
         rowNodes: [event.node],
-        force: true,
-        columns: ['amt'], // Refresh the 'amt' column
+        columns: ['yul', 'amt'],
       });
     }
 
@@ -1507,11 +1665,11 @@ function updateValue(key, value) {
 // 포맷된 값을 관리하는 computed 끝
 
 /* *** 코드헬프부분 ** */
-const openHelpCustDialog = () => {
+const openHelpCustDialog = resNm => {
   $q.dialog({
     component: HelpCust,
     componentProps: {
-      paramValueNm: formData.value.custNm,
+      paramValueNm: resNm,
       paramUseYn: 'N',
       paramCloseDay: commUtil.unFormatDate(formData.value.dealDay),
     },
@@ -1530,10 +1688,18 @@ const openHelpCustDialog = () => {
       formData.value.yulSg = res.yulSg;
       formData.value.yulGt = res.yulGt;
 
-      setTimeout(() => {
-        getDataCustsOption(res.custCd);
-        secondFocus.value.focus();
-      }, 200);
+      getDataCustsOption(res.custCd).then(() => {
+        getDataCustSeqCheck(formData.value).then(val => {
+          formData.value.custSeq = val;
+          setTimeout(() => {
+            if (custsCdOptions.value.length > 0) {
+              secondFocus1.value.focus();
+            } else {
+              secondFocus2.value.focus();
+            }
+          }, 200);
+        });
+      });
     })
     .onCancel(() => {})
     .onDismiss(() => {});
@@ -1582,6 +1748,9 @@ const addDataDetailsRowSection = event => {
     price: 0,
     amt: 0,
     yul: 0,
+    returnDay: '',
+    receiptYn: 'N',
+    receiptDate: '00000000',
     remarks: '',
     iuD: 'I',
   };
@@ -1611,6 +1780,37 @@ const removeSelectedRow = () => {
 
   // 그리드 데이터 갱신
   myGridDetails.value.api.setRowData(rowData.details);
+};
+
+const checkYulReset = resDealFg => {
+  let checkYul = 0;
+  switch (resDealFg) {
+    case '4021101':
+      checkYul = formData.value.yulWt;
+      break;
+    case '4021102':
+      checkYul = formData.value.yulMj;
+      break;
+    case '4021103':
+      checkYul = formData.value.yulHm;
+      break;
+    case '4021104':
+      checkYul = formData.value.yulNp;
+      break;
+    case '4021108':
+      checkYul = formData.value.yulHs;
+      break;
+    case '4021109':
+      checkYul = formData.value.yulSg;
+      break;
+    case '4021199':
+      checkYul = formData.value.yulGt;
+      break;
+    default:
+      checkYul = 0;
+      break;
+  }
+  return checkYul;
 };
 </script>
 
