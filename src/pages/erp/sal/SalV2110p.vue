@@ -26,49 +26,51 @@
         </q-card-actions>
         <q-card-section class="q-pt-none">
           <!-- 여기서 rowData.rows를 사용하여 테이블 또는 내용을 표시 -->
-          <div id="printZone">
-            <div class="row">
-              <span class="text-h5">{{ props.messages.titleNm }}</span>
-              <q-space />
-              <span class="text-subtitle1 text-bold self-end">출고기간 : {{ props.messages.dealDayFrom }} ~ {{ props.messages.dealDayTo }}</span>
-            </div>
+          <q-scroll-area style="height: 100vh">
+            <div id="printZone">
+              <div class="row">
+                <span class="text-h5">{{ props.messages.titleNm }}</span>
+                <q-space />
+                <span class="text-subtitle1 text-bold self-end">출고기간 : {{ props.messages.dealDayFrom }} ~ {{ props.messages.dealDayTo }}</span>
+              </div>
 
-            <table>
-              <tr>
-                <th rowspan="1" colspan="1">No</th>
-                <th rowspan="1" colspan="1">출고일</th>
-                <th rowspan="1" colspan="1">출고처</th>
-                <th rowspan="1" colspan="1">전표번호</th>
-                <th rowspan="1" colspan="1">구분</th>
-                <th rowspan="1" colspan="1">도서명</th>
-                <th rowspan="1" colspan="1">수량</th>
-                <th rowspan="1" colspan="1">단가</th>
-                <th rowspan="1" colspan="1">금액</th>
-                <th rowspan="1" colspan="1">비율</th>
-                <th rowspan="1" colspan="1">지점명</th>
-                <th rowspan="1" colspan="1">기타사항</th>
-              </tr>
-              <tr v-for="(data, index) in props.messages.rowData || []" :key="index">
-                <td>{{ data.rowNum }}</td>
-                <td>{{ commUtil.formatDate(data.dealDay) }}</td>
-                <td>{{ data.custNm }}</td>
-                <td>{{ data.seq }} - {{ data.cnt }}</td>
-                <td>{{ data.dealFgNm }}</td>
-                <td>{{ data.prodNm }}</td>
-                <td>{{ commUtil.formatComma(data.qty) }}</td>
-                <td>{{ commUtil.formatComma(data.price) }}</td>
-                <td>{{ commUtil.formatComma(data.amt) }}</td>
-                <td>{{ data.buyYul }}</td>
-                <td>{{ data.custsCd }}</td>
-                <td>{{ data.remarks }}</td>
-              </tr>
-            </table>
-            <div class="row">
-              <span class="text-subtitle2">주식회사 세종서적</span>
-              <q-space />
-              <span class="text-subtitle2">Printed {{ commUtil.getTodaytime() }}</span>
+              <table>
+                <tr>
+                  <th rowspan="1" colspan="1">No</th>
+                  <th rowspan="1" colspan="1">출고일</th>
+                  <th rowspan="1" colspan="1">출고처</th>
+                  <th rowspan="1" colspan="1">전표번호</th>
+                  <th rowspan="1" colspan="1">구분</th>
+                  <th rowspan="1" colspan="1">도서명</th>
+                  <th rowspan="1" colspan="1">수량</th>
+                  <th rowspan="1" colspan="1">단가</th>
+                  <th rowspan="1" colspan="1">금액</th>
+                  <th rowspan="1" colspan="1">비율</th>
+                  <th rowspan="1" colspan="1">지점명</th>
+                  <th rowspan="1" colspan="1">기타사항</th>
+                </tr>
+                <tr v-for="(data, index) in props.messages.rowData || []" :key="index">
+                  <td>{{ data.rowNum }}</td>
+                  <td>{{ commUtil.formatDate(data.dealDay) }}</td>
+                  <td>{{ data.custNm }}</td>
+                  <td>{{ data.seq }} - {{ data.cnt }}</td>
+                  <td>{{ data.dealFgNm }}</td>
+                  <td>{{ data.prodNm }}</td>
+                  <td>{{ commUtil.formatComma(data.qty) }}</td>
+                  <td>{{ commUtil.formatComma(data.price) }}</td>
+                  <td>{{ commUtil.formatComma(data.amt) }}</td>
+                  <td>{{ data.buyYul }}</td>
+                  <td>{{ data.custsCd }}</td>
+                  <td>{{ data.remarks }}</td>
+                </tr>
+              </table>
+              <div class="row">
+                <span class="text-subtitle2">주식회사 세종서적</span>
+                <q-space />
+                <span class="text-subtitle2">Printed {{ commUtil.getTodaytime() }}</span>
+              </div>
             </div>
-          </div>
+          </q-scroll-area>
         </q-card-section>
       </q-card>
     </q-card>

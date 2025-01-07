@@ -20,6 +20,11 @@ const routes = [
       { path: 'sal2030', component: () => import('pages/erp/sal/SalV2030.vue') },
       { path: 'sal2110', component: () => import('pages/erp/sal/SalV2110.vue') },
       { path: 'sal2120', component: () => import('pages/erp/sal/SalV2120.vue') },
+      { path: 'sal2130', component: () => import('pages/erp/sal/SalV2130.vue') },
+      { path: 'sal2140', component: () => import('pages/erp/sal/SalV2140.vue') },
+      { path: 'sal2150', component: () => import('pages/erp/sal/SalV2150.vue') },
+      { path: 'sal2160', component: () => import('pages/erp/sal/SalV2160.vue') },
+      { path: 'sal2170', component: () => import('pages/erp/sal/SalV2170.vue') },
 
       { path: 'mst1010', component: () => import('pages/erp/mst/MstV1010.vue') },
       { path: 'mst2010', component: () => import('pages/erp/mst/MstV2010.vue') },

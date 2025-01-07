@@ -36,58 +36,28 @@
 
               <table>
                 <tr>
-                  <th rowspan="2" colspan="1">거래일자</th>
-                  <th rowspan="2" colspan="1">업체명</th>
-                  <th rowspan="2" colspan="1">코드</th>
-                  <th rowspan="2" colspan="1">구분</th>
-                  <th rowspan="1" colspan="2">입고</th>
-                  <th rowspan="1" colspan="4">출고</th>
-                  <th rowspan="2" colspan="1">재고조정</th>
-                  <th rowspan="2" colspan="1">재고</th>
-                  <th rowspan="2" colspan="1">비고</th>
+                  <th rowspan="1" colspan="1">지점명</th>
+                  <th rowspan="1" colspan="1">도서명</th>
+                  <th rowspan="1" colspan="1">출고수량</th>
+                  <th rowspan="1" colspan="1">증정수량</th>
+                  <th rowspan="1" colspan="1">반품수량</th>
+                  <th rowspan="1" colspan="1">폐기수량</th>
+                  <th rowspan="1" colspan="1">조정수량</th>
+                  <th rowspan="1" colspan="1">출고금액</th>
+                  <th rowspan="1" colspan="1">반품금액</th>
                 </tr>
-                <tr>
-                  <th rowspan="1" colspan="1">입고</th>
-                  <th rowspan="1" colspan="1">재생</th>
-                  <th rowspan="1" colspan="1">출고</th>
-                  <th rowspan="1" colspan="1">증정</th>
-                  <th rowspan="1" colspan="1">반품</th>
-                  <th rowspan="1" colspan="1">폐기</th>
-                </tr>
+
                 <tr v-for="(data, index) in props.messages.rowData || []" :key="index">
-                  <td v-if="data.saleYm === '총계'">총계</td>
-                  <td v-else-if="data.saleDay === '월계'">월계</td>
-                  <td v-else-if="data.custNm === '일계'">일계</td>
-                  <td v-else>{{ commUtil.formatDate(data.saleDay) }}</td>
+                  <td>{{ data.prodCd === '지점계' ? '' : data.custsCd }}</td>
 
-                  <td v-if="data.saleYm === '총계'"></td>
-                  <td v-else-if="data.saleDay === '월계'"></td>
-                  <td v-else-if="data.custNm === '일계'"></td>
-                  <td v-else>{{ data.custNm }}</td>
-
-                  <td v-if="data.saleYm === '총계'"></td>
-                  <td v-else-if="data.saleDay === '월계'"></td>
-                  <td v-else-if="data.custNm === '일계'"></td>
-                  <td v-else>{{ data.custCd }}</td>
-
-                  <td v-if="data.saleYm === '총계'"></td>
-                  <td v-else-if="data.saleDay === '월계'"></td>
-                  <td v-else-if="data.custNm === '일계'"></td>
-                  <td v-else>{{ data.fgNm }}</td>
-
-                  <td>{{ commUtil.formatComma(data.iQty) }}</td>
-                  <td>{{ commUtil.formatComma(data.ibQty) }}</td>
+                  <td>{{ data.prodCd === '지점계' ? (data.custsCd === '총계' ? '총계' : '지점계') : data.prodNm }}</td>
                   <td>{{ commUtil.formatComma(data.oQty) }}</td>
                   <td>{{ commUtil.formatComma(data.ojQty) }}</td>
                   <td>{{ commUtil.formatComma(data.obQty) }}</td>
                   <td>{{ commUtil.formatComma(data.oxQty) }}</td>
                   <td>{{ commUtil.formatComma(data.ozQty) }}</td>
-                  <td>{{ commUtil.formatComma(data.jQty) }}</td>
-
-                  <td v-if="data.saleYm === '총계'"></td>
-                  <td v-else-if="data.saleDay === '월계'"></td>
-                  <td v-else-if="data.custNm === '일계'"></td>
-                  <td v-else>{{ data.remarks }}</td>
+                  <td>{{ commUtil.formatComma(data.oAmt) }}</td>
+                  <td>{{ commUtil.formatComma(data.obAmt) }}</td>
                 </tr>
               </table>
               <div class="row">
@@ -132,7 +102,7 @@ const isPrintReport = () => {
   printJS({
     printable: 'printZone',
     type: 'html',
-    css: ['/css/print/sal2120.css', '/css/quasar.css'],
+    css: ['/css/print/sal2170.css', '/css/quasar.css'],
     scanStyles: false,
   });
 };
@@ -164,32 +134,35 @@ const isExcelDownload = () => {
 };
 const headerGroup = reactive({
   header: [],
-  headProps: ['saleDay', 'custNm', 'custCd', 'fgNm', 'iQty', 'ibQty', 'oQty', 'ojQty', 'obQty', 'oxQty', 'ozQty', 'jQty', 'remarks'],
+  headProps: ['custsCd', 'prodNm', 'prodCd', 'oQty', 'ojQty', 'obQty', 'oxQty', 'ozQty', 'oAmt', 'obAmt'],
   headRow1: [
-    { name: '거래일자', rowspan: 2, colspan: 1, key: 'dealDay' },
-    { name: '업체명', rowspan: 2, colspan: 1, key: 'custNm' },
-    { name: '코드', rowspan: 2, colspan: 1, key: 'custCd' },
-    { name: '구분', rowspan: 2, colspan: 1, key: 'fgNm' },
-    { name: '입고', rowspan: 1, colspan: 2 },
-    { name: '출고', rowspan: 1, colspan: 4 },
-    { name: '재고조정', rowspan: 2, colspan: 1, key: 'price' },
-    { name: '재고', rowspan: 2, colspan: 1, key: 'amt' },
-    { name: '비고', rowspan: 2, colspan: 1, key: 'remarks' },
+    { name: '지점명', rowspan: 1, colspan: 1, key: 'custsCd' },
+    { name: '도서명', rowspan: 1, colspan: 1, key: 'prodNm' },
+    { name: '코드', rowspan: 1, colspan: 1, key: 'prodCd' },
+    { name: '출고수량', rowspan: 1, colspan: 1, key: 'oQty' },
+    { name: '증정수량', rowspan: 1, colspan: 1, key: 'ojQty' },
+    { name: '반품수량', rowspan: 1, colspan: 1, key: 'obQty' },
+    { name: '폐기수량', rowspan: 1, colspan: 1, key: 'oxQty' },
+    { name: '조정수정', rowspan: 1, colspan: 1, key: 'ozQty' },
+    { name: '출고금액', rowspan: 1, colspan: 1, key: 'oAmt' },
+    { name: '반품금액', rowspan: 1, colspan: 1, key: 'obAmt' },
   ],
-  headRow2: [
-    { name: '입고', rowspan: 1, colspan: 1, key: 'iQty' },
-    { name: '재생', rowspan: 1, colspan: 1, key: 'ibQty' },
-    { name: '출고', rowspan: 1, colspan: 1, key: 'oQty' },
-    { name: '증정', rowspan: 1, colspan: 1, key: 'ojQty' },
-    { name: '반품', rowspan: 1, colspan: 1, key: 'obQty' },
-    { name: '폐기', rowspan: 1, colspan: 1, key: 'oxQty' },
-  ],
+  // headRow2: [
+  //   { name: '소속', rowspan: 1, colspan: 1, key: 'deptNm' },
+  //   { name: '직급', rowspan: 1, colspan: 1, key: 'titlNm' },
+  //   { name: '목표내용', rowspan: 1, colspan: 1, key: 'targetDoc' },
+  //   { name: '성과내용', rowspan: 1, colspan: 1, key: 'workDoc' },
+  //   { name: '평가점수', rowspan: 1, colspan: 1, key: 'selfPoint' },
+  //   { name: '환산점수', rowspan: 1, colspan: 1, key: 'selfPointX' },
+  //   { name: '평가점수', rowspan: 1, colspan: 1, key: 'markPoint' },
+  //   { name: '환산점수', rowspan: 1, colspan: 1, key: 'markPointX' },
+  // ],
 });
 
 const excelDownload = () => {
   headerGroup.header = [];
   headerGroup.header.push(headerGroup.headRow1);
-  headerGroup.header.push(headerGroup.headRow2);
+  // headerGroup.header.push(headerGroup.headRow2);
 
   let options = {
     header: headerGroup.header,
@@ -245,7 +218,11 @@ const excelExport = (data, options) => {
     let isExcelWrite = true;
     for (let cellkey of visibleHeadProps.value) {
       // 조건에 맞는 자료는 제외하는 부분
-      if (cellkey === 'custNm' && (row[cellkey] === '일계' || row[cellkey] === undefined)) {
+      if (cellkey === 'custsCd' && row[cellkey] === '총계') {
+        isExcelWrite = false;
+        break; // CNT가 undefined인 경우 해당 row를 건너뜀
+      }
+      if (cellkey === 'prodCd' && row[cellkey] === '지점계') {
         isExcelWrite = false;
         break; // CNT가 undefined인 경우 해당 row를 건너뜀
       }
@@ -301,5 +278,5 @@ const excelExport = (data, options) => {
 </script>
 
 <style scoped>
-@import 'src/css/print/sal2120.css';
+@import 'src/css/print/sal2170.css';
 </style>

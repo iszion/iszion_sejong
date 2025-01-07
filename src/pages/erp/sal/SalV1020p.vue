@@ -26,47 +26,49 @@
         </q-card-actions>
         <q-card-section class="q-pt-none">
           <!-- 여기서 rowData.rows를 사용하여 테이블 또는 내용을 표시 -->
-          <div id="printZone">
-            <div class="row">
-              <span class="text-h5">매입자료 현황</span>
-              <q-space />
-              <span class="text-subtitle1 text-bold self-end">기준기간 : {{ props.messages.buyDayFrom }} ~ {{ props.messages.buyDayTo }}</span>
-            </div>
+          <q-scroll-area style="height: 100vh">
+            <div id="printZone">
+              <div class="row">
+                <span class="text-h5">매입자료 현황</span>
+                <q-space />
+                <span class="text-subtitle1 text-bold self-end">기준기간 : {{ props.messages.buyDayFrom }} ~ {{ props.messages.buyDayTo }}</span>
+              </div>
 
-            <table>
-              <tr>
-                <th rowspan="1" colspan="1">No</th>
-                <th rowspan="1" colspan="1">입고일</th>
-                <th rowspan="1" colspan="1">전표번호</th>
-                <th rowspan="1" colspan="1">입고처</th>
-                <th rowspan="1" colspan="1">구분</th>
-                <th rowspan="1" colspan="1">품명</th>
-                <th rowspan="1" colspan="1">수량</th>
-                <th rowspan="1" colspan="1">단가</th>
-                <th rowspan="1" colspan="1">금액</th>
-                <th rowspan="1" colspan="1">비율</th>
-                <th rowspan="1" colspan="1">기타사항</th>
-              </tr>
-              <tr v-for="(data, index) in props.messages.rowData || []" :key="index">
-                <td>{{ data.rowNum }}</td>
-                <td>{{ commUtil.formatDate(data.buyDay) }}</td>
-                <td>{{ data.seq }} - {{ data.cnt }}</td>
-                <td>{{ data.custNm }}</td>
-                <td>{{ data.buyFgNm }}</td>
-                <td>{{ data.prodNm }}</td>
-                <td>{{ commUtil.formatComma(data.qty) }}</td>
-                <td>{{ commUtil.formatComma(data.price) }}</td>
-                <td>{{ commUtil.formatComma(data.amt) }}</td>
-                <td>{{ data.buyYul }}</td>
-                <td>{{ data.remarks }}</td>
-              </tr>
-            </table>
-            <div class="row">
-              <span class="text-subtitle2">주식회사 세종서적</span>
-              <q-space />
-              <span class="text-subtitle2">{{ commUtil.getTodaytime() }}</span>
+              <table>
+                <tr>
+                  <th rowspan="1" colspan="1">No</th>
+                  <th rowspan="1" colspan="1">입고일</th>
+                  <th rowspan="1" colspan="1">전표번호</th>
+                  <th rowspan="1" colspan="1">입고처</th>
+                  <th rowspan="1" colspan="1">구분</th>
+                  <th rowspan="1" colspan="1">품명</th>
+                  <th rowspan="1" colspan="1">수량</th>
+                  <th rowspan="1" colspan="1">단가</th>
+                  <th rowspan="1" colspan="1">금액</th>
+                  <th rowspan="1" colspan="1">비율</th>
+                  <th rowspan="1" colspan="1">기타사항</th>
+                </tr>
+                <tr v-for="(data, index) in props.messages.rowData || []" :key="index">
+                  <td>{{ data.rowNum }}</td>
+                  <td>{{ commUtil.formatDate(data.buyDay) }}</td>
+                  <td>{{ data.seq }} - {{ data.cnt }}</td>
+                  <td>{{ data.custNm }}</td>
+                  <td>{{ data.buyFgNm }}</td>
+                  <td>{{ data.prodNm }}</td>
+                  <td>{{ commUtil.formatComma(data.qty) }}</td>
+                  <td>{{ commUtil.formatComma(data.price) }}</td>
+                  <td>{{ commUtil.formatComma(data.amt) }}</td>
+                  <td>{{ data.buyYul }}</td>
+                  <td>{{ data.remarks }}</td>
+                </tr>
+              </table>
+              <div class="row">
+                <span class="text-subtitle2">주식회사 세종서적</span>
+                <q-space />
+                <span class="text-subtitle2">{{ commUtil.getTodaytime() }}</span>
+              </div>
             </div>
-          </div>
+          </q-scroll-area>
         </q-card-section>
       </q-card>
     </q-card>

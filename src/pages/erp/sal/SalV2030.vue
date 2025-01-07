@@ -562,7 +562,7 @@ const columnDefsSel = ref([
   },
   {
     headerName: '업체반품일',
-    field: 'coupReturnDay',
+    field: 'returnDay',
     valueFormatter: dateFormatter,
     minWidth: 120,
     maxWidth: 120,
@@ -779,6 +779,7 @@ const gridOptions = {
     }
     return { 'text-align': 'left' };
   },
+  headerHeight: 40, // 헤더 행 높이를 50px로 설정
   getRowHeight: function (param) {
     // 고정된 행의 높이
     if (param.node.rowPinned) {
@@ -903,6 +904,7 @@ const gridOptionsSel = {
     }
     return { 'text-align': 'left' };
   },
+  headerHeight: 40, // 헤더 행 높이를 50px로 설정
   getRowHeight: function (param) {
     // 고정된 행의 높이
     if (param.node.rowPinned) {

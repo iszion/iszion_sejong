@@ -538,6 +538,7 @@ const myGridOptions = {
     // buyDay가 undefined이면 행 배경색 변경 및 "합계" 삽입
     return null; // 기본 스타일
   },
+  headerHeight: 40, // 헤더 행 높이를 50px로 설정
   getRowHeight: function (event) {
     // 고정된 행의 높이
     if (event.node.rowPinned) {

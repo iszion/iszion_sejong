@@ -56,12 +56,14 @@
           <q-input
             v-if="!$q.screen.xs"
             stack-label
-            class="col-3 text-subtitle1"
             v-model="searchValue.custNm"
             label="출고처"
             label-color="orange"
             @keyup.enter.prevent="openHelpCustDialog(searchValue.custNm)"
           >
+            <template v-slot:prepend>
+              <q-btn dense flat class="q-mt-md text-bold" icon="search" size="md" :label="searchValue.custCd" @click="openHelpCustDialog('')" />
+            </template>
             <template v-slot:append>
               <q-icon
                 size="0.8em"
@@ -70,10 +72,10 @@
                 @click="
                   searchValue.custNm = '';
                   searchValue.custCd = '';
+                  handelGetData();
                 "
                 class="cursor-pointer q-pt-md"
               />
-              <q-icon size="0.8em" name="search" @click="openHelpCustDialog('')" class="cursor-pointer q-pt-md" />
             </template>
           </q-input>
 
@@ -634,6 +636,7 @@ const myGridOptions = {
     // dealDay가 undefined이면 행 배경색 변경 및 "합계" 삽입
     return null; // 기본 스타일
   },
+  headerHeight: 40, // 헤더 행 높이를 50px로 설정
   getRowHeight: function (event) {
     // 고정된 행의 높이
     if (event.node.rowPinned) {
