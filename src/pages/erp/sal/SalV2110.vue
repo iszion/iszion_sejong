@@ -166,12 +166,9 @@ import { AgGridVue } from 'ag-grid-vue3';
 import { computed, onBeforeMount, onBeforeUnmount, onMounted, reactive, ref, watch } from 'vue';
 import { api } from 'boot/axios';
 import { date, QBtn, QIcon, QToggle, SessionStorage, useQuasar } from 'quasar';
-import { useYearInfoStore } from 'src/store/setYearInfo';
 import SalV2110p from 'pages/erp/sal/SalV2110p.vue';
 import commUtil from 'src/js_comm/comm-util';
 import HelpCust from 'components/subvue/HelpCust.vue';
-
-const storeYear = useYearInfoStore();
 
 const rowData = reactive({ rows: [], rowsSum: [] });
 const isDialogVisible = ref(false);

@@ -31,39 +31,43 @@
               <div class="row">
                 <span class="text-h5">{{ props.messages.titleNm }}</span>
                 <q-space />
-                <span class="text-subtitle1 text-bold self-end">출고기간 : {{ props.messages.dealDayFrom }} ~ {{ props.messages.dealDayTo }}</span>
+                <span class="text-subtitle1 text-bold self-end">출고기간 : {{ props.messages.stdYearMonth }}</span>
               </div>
 
               <table>
                 <tr>
-                  <th rowspan="1" colspan="1">No</th>
-                  <th rowspan="1" colspan="1">반품일</th>
-                  <th rowspan="1" colspan="1">반품처</th>
-                  <th rowspan="1" colspan="1">전표번호</th>
-                  <th rowspan="1" colspan="1">구분</th>
-                  <th rowspan="1" colspan="1">도서명</th>
-                  <th rowspan="1" colspan="1">수량</th>
-                  <th rowspan="1" colspan="1">단가</th>
-                  <th rowspan="1" colspan="1">금액</th>
-                  <th rowspan="1" colspan="1">비율</th>
-                  <th rowspan="1" colspan="1">서범반품일</th>
-                  <th rowspan="1" colspan="1">지점명</th>
-                  <th rowspan="1" colspan="1">기타사항</th>
+                  <th rowspan="1" colspan="1">거래처명</th>
+                  <th rowspan="1" colspan="1">코드</th>
+                  <th rowspan="1" colspan="1">출고수량</th>
+                  <th rowspan="1" colspan="1">출고금액</th>
+                  <th rowspan="1" colspan="1">증정수량</th>
+                  <th rowspan="1" colspan="1">반품수량</th>
+                  <th rowspan="1" colspan="1">반품금액</th>
+                  <th rowspan="1" colspan="1">판매금액</th>
+                  <th rowspan="1" colspan="1">총게산서금액</th>
                 </tr>
+
                 <tr v-for="(data, index) in props.messages.rowData || []" :key="index">
-                  <td>{{ data.rowNum }}</td>
-                  <td>{{ commUtil.formatDate(data.dealDay) }}</td>
                   <td>{{ data.custNm }}</td>
-                  <td>{{ data.seq }} - {{ data.cnt }}</td>
-                  <td>{{ data.dealFgNm }}</td>
-                  <td>{{ data.prodNm }}</td>
-                  <td>{{ commUtil.formatComma(data.qty) }}</td>
-                  <td>{{ commUtil.formatComma(data.price) }}</td>
-                  <td>{{ commUtil.formatComma(data.amt) }}</td>
-                  <td>{{ data.yul }}</td>
-                  <td>{{ commUtil.formatDate(data.returnDay) }}</td>
-                  <td>{{ data.custsCd }}</td>
-                  <td>{{ data.remarks }}</td>
+                  <td>{{ data.custCd }}</td>
+                  <td>{{ commUtil.formatComma(data.oQty) }}</td>
+                  <td>{{ commUtil.formatComma(data.oAmt) }}</td>
+                  <td>{{ commUtil.formatComma(data.jQty) }}</td>
+                  <td>{{ commUtil.formatComma(data.bQty) }}</td>
+                  <td>{{ commUtil.formatComma(data.bAmt) }}</td>
+                  <td>{{ commUtil.formatComma(data.sAmt) }}</td>
+                  <td>{{ commUtil.formatComma(data.sAmt) }}</td>
+                </tr>
+
+                <tr>
+                  <td colspan="2" rowspan="1">{{ props.messages.totalRow.custNm }}</td>
+                  <td>{{ commUtil.formatComma(props.messages.totalRow.oQty) }}</td>
+                  <td>{{ commUtil.formatComma(props.messages.totalRow.oAmt) }}</td>
+                  <td>{{ commUtil.formatComma(props.messages.totalRow.jQty) }}</td>
+                  <td>{{ commUtil.formatComma(props.messages.totalRow.bQty) }}</td>
+                  <td>{{ commUtil.formatComma(props.messages.totalRow.bAmt) }}</td>
+                  <td>{{ commUtil.formatComma(props.messages.totalRow.sAmt) }}</td>
+                  <td>{{ commUtil.formatComma(props.messages.totalRow.sAmt) }}</td>
                 </tr>
               </table>
               <div class="row">
@@ -91,9 +95,9 @@ const emit = defineEmits(['close']);
 const props = defineProps({
   messages: {
     rowData: Array,
+    totalRow: Object,
     titleNm: String,
-    buyDayFrom: String,
-    buyDayTo: String,
+    stdYearMonth: String,
   },
 });
 
@@ -106,7 +110,7 @@ const isPrintReport = () => {
   printJS({
     printable: 'printZone',
     type: 'html',
-    css: ['/css/print/sal2130.css', '/css/quasar.css'],
+    css: ['/css/print/sal2180.css', '/css/quasar.css'],
     scanStyles: false,
   });
 };
@@ -138,39 +142,17 @@ const isExcelDownload = () => {
 };
 const headerGroup = reactive({
   header: [],
-  headProps: [
-    'dealDay',
-    'seq',
-    'cnt',
-    'custNm',
-    'custCd',
-    'dealFgNm',
-    'prodNm',
-    'prodCd',
-    'qty',
-    'price',
-    'amt',
-    'yul',
-    'returnDay',
-    'custsCd',
-    'remarks',
-  ],
+  headProps: ['custNm', 'custCd', 'oQty', 'oAmt', 'jQty', 'bQty', 'bAmt', 'sAmt', 'sAmt'],
   headRow1: [
-    { name: '반품일', rowspan: 1, colspan: 1, key: 'dealDay' },
-    { name: '전표번호', rowspan: 1, colspan: 1, key: 'seq' },
-    { name: 'seq', rowspan: 1, colspan: 1, key: 'cnt' },
-    { name: '반품처', rowspan: 1, colspan: 1, key: 'custNm' },
+    { name: '거래처명', rowspan: 1, colspan: 1, key: 'custNm' },
     { name: '코드', rowspan: 1, colspan: 1, key: 'custCd' },
-    { name: '구분', rowspan: 1, colspan: 1, key: 'dealFgNm' },
-    { name: '도서명', rowspan: 1, colspan: 1, key: 'prodNm' },
-    { name: '코드', rowspan: 1, colspan: 1, key: 'prodCd' },
-    { name: '수량', rowspan: 1, colspan: 1, key: 'qty' },
-    { name: '단가', rowspan: 1, colspan: 1, key: 'price' },
-    { name: '금액', rowspan: 1, colspan: 1, key: 'amt' },
-    { name: '비율', rowspan: 1, colspan: 1, key: 'yul' },
-    { name: '서점반품일', rowspan: 1, colspan: 1, key: 'returnDay' },
-    { name: '지점명', rowspan: 1, colspan: 1, key: 'custsCd' },
-    { name: '기타사항', rowspan: 1, colspan: 1, key: 'remarks' },
+    { name: '출고수량', rowspan: 1, colspan: 1, key: 'oQty' },
+    { name: '출고금액', rowspan: 1, colspan: 1, key: 'oAmt' },
+    { name: '증정수량', rowspan: 1, colspan: 1, key: 'jQty' },
+    { name: '반품수량', rowspan: 1, colspan: 1, key: 'bQty' },
+    { name: '반품금액', rowspan: 1, colspan: 1, key: 'obAmt' },
+    { name: '판매금액', rowspan: 1, colspan: 1, key: 'sAmt' },
+    { name: '총계산서금액', rowspan: 1, colspan: 1, key: 'sAmt' },
   ],
   // headRow2: [
   //   { name: '소속', rowspan: 1, colspan: 1, key: 'deptNm' },
@@ -243,10 +225,14 @@ const excelExport = (data, options) => {
     let isExcelWrite = true;
     for (let cellkey of visibleHeadProps.value) {
       // 조건에 맞는 자료는 제외하는 부분
-      if (cellkey === 'cnt' && row[cellkey] === undefined) {
-        isExcelWrite = false;
-        break; // CNT가 undefined인 경우 해당 row를 건너뜀
-      }
+      // if (cellkey === 'custsCd' && row[cellkey] === '총계') {
+      //   isExcelWrite = false;
+      //   break; // CNT가 undefined인 경우 해당 row를 건너뜀
+      // }
+      // if (cellkey === 'prodCd' && row[cellkey] === '지점계') {
+      //   isExcelWrite = false;
+      //   break; // CNT가 undefined인 경우 해당 row를 건너뜀
+      // }
       // 조건에 맞는 자료는 제외하는 부분 끝
 
       let td = document.createElement('td');
@@ -299,5 +285,5 @@ const excelExport = (data, options) => {
 </script>
 
 <style scoped>
-@import 'src/css/print/sal2130.css';
+@import 'src/css/print/sal2180.css';
 </style>

@@ -154,12 +154,9 @@ import { computed, onBeforeMount, onBeforeUnmount, onMounted, reactive, ref, wat
 import { api } from 'boot/axios';
 import * as XLSX from 'xlsx';
 import { date, QBtn, QIcon, QToggle, SessionStorage, useQuasar } from 'quasar';
-import { useYearInfoStore } from 'src/store/setYearInfo';
 import commUtil from 'src/js_comm/comm-util';
 import HelpCust from 'components/subvue/HelpCust.vue';
 import HelpProd from 'components/subvue/HelpProd.vue';
-
-const storeYear = useYearInfoStore();
 
 const rowData = reactive({ rows: [], rowsSub: [] });
 const isDialogVisible = ref(false);

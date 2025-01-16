@@ -40,6 +40,9 @@ export default {
   },
 
   formatComma(num) {
+    if (typeof num !== 'number' || isNaN(num)) {
+      return ''; // 숫자가 아니면 공백 반환
+    }
     return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
   },
 

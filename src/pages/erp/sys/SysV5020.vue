@@ -371,8 +371,8 @@ onMounted(() => {
       // 삭제 후 이벤트
     })
     .bind('delete_node.jstree', function (e, data) {
-      console.log('delete data old : 	' + data.node);
-      console.log('delete data : 		' + data.node.id + ' = ' + data.node.parent + ' = ' + data.node.text);
+      // console.log('delete data old : 	' + data.node);
+      // console.log('delete data : 		' + data.node.id + ' = ' + data.node.parent + ' = ' + data.node.text);
 
       let tmpAry;
       let iu1 = [];
@@ -388,12 +388,12 @@ onMounted(() => {
         .each((index, elem) => {
           let obj_data = {};
           obj_data.menuId = elem.id;
-          console.log('del id : ' + elem.id);
+          // console.log('del id : ' + elem.id);
           tmpAry = { mode: 'D', data: obj_data };
           iu1Del.push(JSON.stringify(tmpAry));
         });
       let obj = jsonUtil.jsonFiller('no1', iu1, iu1Del);
-      console.log('del ::', iu1Del);
+      // console.log('del ::', iu1Del);
       let paramData = JSON.stringify(obj).replace(/null/gi, '');
       // deleteDataAndHandleResult(paramData);
     });
@@ -581,11 +581,11 @@ const progReloadBtn = () => {
 // ***** 메뉴 목록 가져오기 부분 **********************************//
 const menuReloadBtn = () => {
   menu_tree_data.value = [];
-  console.log('menuReloadBtn');
+  // console.log('menuReloadBtn');
   api
     .post('/api/sys/sys5020_menu_list', { paramSelectedGroup: selectedGroup.value })
     .then(res => {
-      console.log('res :::: ', res.data);
+      // console.log('res :::: ', res.data);
       if (res.data.data.length > 0) {
         menu_tree_data.value = res.data.data;
 
@@ -634,7 +634,6 @@ const getGroupData = async () => {
 
 // ***** 자료저장 및 삭제 처리부분 *****************************//
 const saveData = async resFormData => {
-  console.log('saveData:: ', JSON.stringify(resFormData));
   let saveStatus = 0;
   try {
     await api
@@ -655,7 +654,6 @@ const saveData = async resFormData => {
 };
 
 const deleteData = async resFormData => {
-  console.log('deleteData:: ', JSON.stringify(resFormData));
   let saveStatus = 2; // 삭제성공
   try {
     await api
@@ -684,7 +682,7 @@ const deleteData = async resFormData => {
 
 // ***** 검색 선택 처리 부분 ***********************************//
 const handleSelectedGroup = resSelectedGroup => {
-  console.log('selected group: ', resSelectedGroup);
+  // console.log('selected group: ', resSelectedGroup);
   menuReloadBtn();
 };
 // ***** 검색 선택 자동 처리 부분 끝 *****************************//

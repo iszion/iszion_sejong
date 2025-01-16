@@ -80,9 +80,7 @@ import { defineProps, defineEmits, reactive, ref } from 'vue';
 import printJS from 'print-js';
 import * as XLSX from 'xlsx';
 import { QBtn, QIcon, useQuasar } from 'quasar';
-import { useYearInfoStore } from 'src/store/setYearInfo';
 import commUtil from 'src/js_comm/comm-util';
-const storeYear = useYearInfoStore();
 const $q = useQuasar();
 
 const emit = defineEmits(['close']);

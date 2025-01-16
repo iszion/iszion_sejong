@@ -26,7 +26,7 @@
         </q-card-actions>
         <q-card-section class="q-pt-none">
           <!-- 여기서 rowData.rows를 사용하여 테이블 또는 내용을 표시 -->
-          <q-scroll-area style="height: 100vh">
+          <q-scroll-area style="height: 89vh">
             <div id="printZone">
               <div class="row">
                 <span class="text-h5">{{ props.messages.titleNm }}</span>
@@ -37,33 +37,42 @@
               <table>
                 <tr>
                   <th rowspan="1" colspan="1">No</th>
-                  <th rowspan="1" colspan="1">반품일</th>
-                  <th rowspan="1" colspan="1">반품처</th>
-                  <th rowspan="1" colspan="1">전표번호</th>
+                  <th rowspan="1" colspan="1">입금일자</th>
+                  <th rowspan="1" colspan="1">입금처</th>
+                  <th rowspan="1" colspan="1">현잔액</th>
+                  <th rowspan="1" colspan="1">입금액</th>
                   <th rowspan="1" colspan="1">구분</th>
-                  <th rowspan="1" colspan="1">도서명</th>
-                  <th rowspan="1" colspan="1">수량</th>
-                  <th rowspan="1" colspan="1">단가</th>
-                  <th rowspan="1" colspan="1">금액</th>
-                  <th rowspan="1" colspan="1">비율</th>
-                  <th rowspan="1" colspan="1">서범반품일</th>
-                  <th rowspan="1" colspan="1">지점명</th>
+                  <th rowspan="1" colspan="1">만기일</th>
+                  <th rowspan="1" colspan="1">유형</th>
+                  <th rowspan="1" colspan="1">발행처</th>
+                  <th rowspan="1" colspan="1">발행금액</th>
                   <th rowspan="1" colspan="1">기타사항</th>
                 </tr>
-                <tr v-for="(data, index) in props.messages.rowData || []" :key="index">
+                <tr v-for="(data, index) in props.messages.rowData.rows || []" :key="index">
                   <td>{{ data.rowNum }}</td>
-                  <td>{{ commUtil.formatDate(data.dealDay) }}</td>
+                  <td>{{ commUtil.formatDate(data.accDay) }}</td>
                   <td>{{ data.custNm }}</td>
-                  <td>{{ data.seq }} - {{ data.cnt }}</td>
-                  <td>{{ data.dealFgNm }}</td>
-                  <td>{{ data.prodNm }}</td>
-                  <td>{{ commUtil.formatComma(data.qty) }}</td>
-                  <td>{{ commUtil.formatComma(data.price) }}</td>
+                  <td>{{ commUtil.formatComma(data.wAmt) }}</td>
                   <td>{{ commUtil.formatComma(data.amt) }}</td>
-                  <td>{{ data.yul }}</td>
-                  <td>{{ commUtil.formatDate(data.returnDay) }}</td>
-                  <td>{{ data.custsCd }}</td>
+                  <td>{{ data.accFgNm }}</td>
+                  <td>{{ commUtil.formatDate(data.endDay) }}</td>
+                  <td>{{ data.divCdNm }}</td>
+                  <td>{{ data.pubComp }}</td>
+                  <td>{{ commUtil.formatComma(data.billAmt) }}</td>
                   <td>{{ data.remarks }}</td>
+                </tr>
+                <tr class="bg-grey3">
+                  <td></td>
+                  <td></td>
+                  <td>{{ props.messages.rowData.rowsSum[0].custNm }}</td>
+                  <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].wAmt) }}</td>
+                  <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].amt) }}</td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].billAmt) }}</td>
+                  <td></td>
                 </tr>
               </table>
               <div class="row">
@@ -90,7 +99,7 @@ const $q = useQuasar();
 const emit = defineEmits(['close']);
 const props = defineProps({
   messages: {
-    rowData: Array,
+    rowData: Object,
     titleNm: String,
     buyDayFrom: String,
     buyDayTo: String,
@@ -106,7 +115,7 @@ const isPrintReport = () => {
   printJS({
     printable: 'printZone',
     type: 'html',
-    css: ['/css/print/sal2130.css', '/css/quasar.css'],
+    css: ['/css/print/sal3210.css', '/css/quasar.css'],
     scanStyles: false,
   });
 };
@@ -138,49 +147,26 @@ const isExcelDownload = () => {
 };
 const headerGroup = reactive({
   header: [],
-  headProps: [
-    'dealDay',
-    'seq',
-    'cnt',
-    'custNm',
-    'custCd',
-    'dealFgNm',
-    'prodNm',
-    'prodCd',
-    'qty',
-    'price',
-    'amt',
-    'yul',
-    'returnDay',
-    'custsCd',
-    'remarks',
-  ],
+  headProps: ['accDay', 'custNm', 'custCd', 'wAmt', 'amt', 'accFgNm', 'endDay', 'divCdNm', 'pubAmt', 'billAmt', 'remarks'],
   headRow1: [
-    { name: '반품일', rowspan: 1, colspan: 1, key: 'dealDay' },
-    { name: '전표번호', rowspan: 1, colspan: 1, key: 'seq' },
-    { name: 'seq', rowspan: 1, colspan: 1, key: 'cnt' },
-    { name: '반품처', rowspan: 1, colspan: 1, key: 'custNm' },
+    { name: '입금일', rowspan: 1, colspan: 1, key: 'accDay' },
+    { name: '입금처', rowspan: 1, colspan: 1, key: 'custNm' },
     { name: '코드', rowspan: 1, colspan: 1, key: 'custCd' },
-    { name: '구분', rowspan: 1, colspan: 1, key: 'dealFgNm' },
-    { name: '도서명', rowspan: 1, colspan: 1, key: 'prodNm' },
-    { name: '코드', rowspan: 1, colspan: 1, key: 'prodCd' },
-    { name: '수량', rowspan: 1, colspan: 1, key: 'qty' },
-    { name: '단가', rowspan: 1, colspan: 1, key: 'price' },
-    { name: '금액', rowspan: 1, colspan: 1, key: 'amt' },
-    { name: '비율', rowspan: 1, colspan: 1, key: 'yul' },
-    { name: '서점반품일', rowspan: 1, colspan: 1, key: 'returnDay' },
-    { name: '지점명', rowspan: 1, colspan: 1, key: 'custsCd' },
+    { name: '현잔액', rowspan: 1, colspan: 1, key: 'wAmt' },
+    { name: '입금액', rowspan: 1, colspan: 1, key: 'amt' },
+    { name: '구분', rowspan: 1, colspan: 1, key: 'accFgNm' },
+    { name: '만기일', rowspan: 1, colspan: 1, key: 'endDay' },
+    { name: '유형', rowspan: 1, colspan: 1, key: 'divCdNm' },
+    { name: '발행처', rowspan: 1, colspan: 1, key: 'pubComp' },
+    { name: '발행금액', rowspan: 1, colspan: 1, key: 'billAmt' },
     { name: '기타사항', rowspan: 1, colspan: 1, key: 'remarks' },
   ],
   // headRow2: [
-  //   { name: '소속', rowspan: 1, colspan: 1, key: 'deptNm' },
-  //   { name: '직급', rowspan: 1, colspan: 1, key: 'titlNm' },
-  //   { name: '목표내용', rowspan: 1, colspan: 1, key: 'targetDoc' },
-  //   { name: '성과내용', rowspan: 1, colspan: 1, key: 'workDoc' },
-  //   { name: '평가점수', rowspan: 1, colspan: 1, key: 'selfPoint' },
-  //   { name: '환산점수', rowspan: 1, colspan: 1, key: 'selfPointX' },
-  //   { name: '평가점수', rowspan: 1, colspan: 1, key: 'markPoint' },
-  //   { name: '환산점수', rowspan: 1, colspan: 1, key: 'markPointX' },
+  //   { name: '출고수량', rowspan: 1, colspan: 1, key: 'oQty' },
+  //   { name: '출고금액', rowspan: 1, colspan: 1, key: 'oAmt' },
+  //   { name: '증정수량', rowspan: 1, colspan: 1, key: 'ojQty' },
+  //   { name: '반품수량', rowspan: 1, colspan: 1, key: 'obQty' },
+  //   { name: '반품금액', rowspan: 1, colspan: 1, key: 'obAmt' },
   // ],
 });
 
@@ -193,12 +179,13 @@ const excelDownload = () => {
     header: headerGroup.header,
     headProps: headerGroup.headProps,
   };
-  excelExport(props.messages.rowData, options);
+  excelExport(props.messages.rowData.rows, props.messages.rowData.rowsSum, options);
 };
 
 const visibleHeadProps = ref([]);
 const instance = ref(undefined);
-const excelExport = (data, options) => {
+
+const excelExport = (data, dataSum, options) => {
   let headProps = [];
   if (Array.isArray(options.headProps)) {
     headProps = options.headProps;
@@ -209,95 +196,82 @@ const excelExport = (data, options) => {
   } else {
     headProps = Object.keys(data[0]);
   }
-  visibleHeadProps.value = headerGroup.headProps;
 
+  visibleHeadProps.value = headerGroup.headProps;
   instance.value = document.createElement('table');
 
   // Header 세팅
-  let headerRows = [];
-  if (!Array.isArray(headerGroup.header[0])) {
-    headerRows.push(headerGroup.header);
-  } else {
-    headerRows = headerGroup.header;
-  }
+  let headerRows = Array.isArray(headerGroup.header[0]) ? headerGroup.header : [headerGroup.header];
   let thead = document.createElement('thead');
-  for (let row of headerRows) {
+  headerRows.forEach(row => {
     let tr = document.createElement('tr');
-    for (let h of row) {
-      let rowspan = h.rowspan || '1';
-      let colspan = h.colspan || '1';
+    row.forEach(h => {
       let th = document.createElement('th');
-      th.setAttribute('rowspan', rowspan);
-      th.setAttribute('colspan', colspan);
+      th.setAttribute('rowspan', h.rowspan || '1');
+      th.setAttribute('colspan', h.colspan || '1');
       th.innerText = h.name;
       tr.appendChild(th);
-    }
+    });
     thead.appendChild(tr);
-  }
+  });
   instance.value.appendChild(thead);
 
-  // Body 세팅
+  // Body 세팅 (rowData 처리)
   let tbody = document.createElement('tbody');
-  for (let row of data) {
-    let tr = document.createElement('tr');
-    let isExcelWrite = true;
-    for (let cellkey of visibleHeadProps.value) {
-      // 조건에 맞는 자료는 제외하는 부분
-      if (cellkey === 'cnt' && row[cellkey] === undefined) {
-        isExcelWrite = false;
-        break; // CNT가 undefined인 경우 해당 row를 건너뜀
-      }
-      // 조건에 맞는 자료는 제외하는 부분 끝
+  processDataRows(data, tbody);
 
-      let td = document.createElement('td');
-      td.innerText = row[cellkey];
-      tr.appendChild(td);
-    }
-    if (isExcelWrite) {
-      tbody.appendChild(tr);
-    }
-  }
+  // 합계 데이터 처리 (dataSum)
+  processDataRows(dataSum, tbody);
+
   instance.value.appendChild(tbody);
 
-  // instance에 만들어진 table을 엑셀파일로 저장
+  // 테이블을 엑셀로 변환 및 저장
+  saveAsExcel(instance.value, props.messages.titleNm);
+};
+
+const processDataRows = (rows, tbody) => {
+  rows.forEach(row => {
+    let tr = document.createElement('tr');
+    visibleHeadProps.value.forEach(key => {
+      let td = document.createElement('td');
+      td.innerText = row[key] || '';
+      tr.appendChild(td);
+    });
+    tbody.appendChild(tr);
+  });
+};
+
+const saveAsExcel = (tableElement, title) => {
   const config = { raw: true, type: 'string' };
-  const ws = XLSX.utils.table_to_sheet(instance.value, config);
+  const ws = XLSX.utils.table_to_sheet(tableElement, config);
 
-  // Set red color to A1 cell
-  ws['A1'].s = {
-    font: {
-      color: { rgb: 'FF0000' }, // Red color
-      bold: true,
-    },
-  };
+  // 스타일 및 테두리 추가
+  applyExcelStyles(ws);
 
-  // Add borders to all cells
-  const range = XLSX.utils.decode_range(ws['!ref']);
+  let wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, title);
+  XLSX.writeFile(wb, `${title}.xlsx`);
+};
+
+const applyExcelStyles = worksheet => {
+  const range = XLSX.utils.decode_range(worksheet['!ref']);
   for (let R = range.s.r; R <= range.e.r; ++R) {
     for (let C = range.s.c; C <= range.e.c; ++C) {
       const cellAddress = XLSX.utils.encode_cell({ r: R, c: C });
-      if (!ws[cellAddress]) continue;
-      ws[cellAddress].s = {
+      if (!worksheet[cellAddress]) continue;
+      worksheet[cellAddress].s = {
         border: {
-          // top: { style: 'thin', color: { auto: 1 } },
-          // bottom: { style: 'thin', color: { auto: 1 } },
-          // left: { style: 'thin', color: { auto: 1 } },
-          // right: { style: 'thin', color: { auto: 1 } },
-          top: { style: 'thin', color: { rgb: '0000FF' } }, // Blue color
-          bottom: { style: 'thin', color: { rgb: '0000FF' } }, // Blue color
-          left: { style: 'thin', color: { rgb: '0000FF' } }, // Blue color
-          right: { style: 'thin', color: { rgb: '0000FF' } }, // Blue color
+          top: { style: 'thin', color: { rgb: '0000FF' } },
+          bottom: { style: 'thin', color: { rgb: '0000FF' } },
+          left: { style: 'thin', color: { rgb: '0000FF' } },
+          right: { style: 'thin', color: { rgb: '0000FF' } },
         },
       };
     }
   }
-
-  let wb = XLSX.utils.book_new();
-  XLSX.utils.book_append_sheet(wb, ws, props.messages.titleNm);
-  XLSX.writeFile(wb, props.messages.titleNm + '.xlsx');
 };
 </script>
 
 <style scoped>
-@import 'src/css/print/sal2130.css';
+@import 'src/css/print/sal3210.css';
 </style>
