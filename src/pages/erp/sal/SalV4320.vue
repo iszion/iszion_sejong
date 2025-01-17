@@ -40,32 +40,6 @@
           <q-input
             stack-label
             class=""
-            v-model="searchValue.custNm"
-            label="거래처명"
-            label-color="orange"
-            @keyup.enter.prevent="openHelpCustDialog(searchValue.custNm)"
-          >
-            <template v-slot:prepend>
-              <q-btn dense flat class="q-mt-md text-bold" icon="search" size="md" :label="searchValue.custCd" @click="openHelpCustDialog('')" />
-            </template>
-            <template v-slot:append>
-              <q-icon
-                size="0.8em"
-                v-if="searchValue.custNm !== ''"
-                name="close"
-                @click="
-                  searchValue.custNm = '';
-                  searchValue.custCd = '';
-                  handelGetData();
-                "
-                class="cursor-pointer q-pt-md"
-              />
-            </template>
-          </q-input>
-
-          <q-input
-            stack-label
-            class=""
             v-model="searchValue.prodNm"
             label="도서명"
             label-color="orange"
@@ -118,7 +92,10 @@
     <q-dialog persistent full-height full-width v-model="isDialogVisible">
       <q-card class="q-pa-none q-ma-none">
         <q-card-section class="q-pa-none q-ma-none">
-          <sal-v2120p :messages="{ rowData: rowData, titleNm: menuLabel, searchValue: searchValue }" @close="handleClose" />
+          <sal-v4320p
+            :messages="{ rowData: rowData.rows, titleNm: menuLabel, dealDayFrom: searchValue.period.from, dealDayTo: searchValue.period.to }"
+            @close="handleClose"
+          />
         </q-card-section>
       </q-card>
     </q-dialog>
@@ -134,10 +111,9 @@ import { AgGridVue } from 'ag-grid-vue3';
 import { computed, onBeforeMount, onBeforeUnmount, onMounted, reactive, ref, watch } from 'vue';
 import { api } from 'boot/axios';
 import { date, QBtn, QIcon, QToggle, SessionStorage, useQuasar } from 'quasar';
-import SalV2120p from 'pages/erp/sal/SalV2120p.vue';
+import SalV4320p from 'pages/erp/sal/SalV4320p.vue';
 import commUtil from 'src/js_comm/comm-util';
 import HelpProd from 'components/subvue/HelpProd.vue';
-import HelpCust from 'components/subvue/HelpCust.vue';
 
 const rowData = reactive({ rows: [], rowsSum: [] });
 const isDialogVisible = ref(false);
@@ -160,11 +136,9 @@ const contentZoneStyle = computed(() => ({
 
 const searchPeriod = ref({ from: commUtil.getToday(), to: commUtil.getToday() });
 const searchValue = reactive({
-  // period: { from: commUtil.getToday(), to: commUtil.getToday() },
-  period: { from: '2024-10-01', to: '2024-11-30' },
+  period: { from: commUtil.getToday(), to: commUtil.getToday() },
   textValue: '',
-  custNm: '',
-  custCd: '',
+  dealFgOptions: [],
   prodNm: '',
   prodCd: '',
 });
@@ -182,50 +156,46 @@ watch(searchPeriod, newVal => {
 });
 
 const columnDefs = ref([
-  {
-    headerName: '#',
-    field: 'rowNum',
-    minWidth: 70,
-    maxWidth: 80,
-    pinned: !$q.screen.xs && !$q.screen.sm ? 'left' : null,
-    sortable: true,
-    filter: false,
-    // valueGetter: function (params) {
-    // return params.node.rowIndex + 1;
-    // if (params.data.cnt === undefined) {
-    //   return '';
-    // } else {
-    // return params.data.rowNum;
-    // }
-    // },
-    cellStyle: params => {
-      return { textAlign: 'center' };
-    },
-  },
+  // {
+  //   headerName: '#',
+  //   field: 'rowNum',
+  //   minWidth: 70,
+  //   maxWidth: 80,
+  //   pinned: !$q.screen.xs && !$q.screen.sm ? 'left' : null,
+  //   sortable: true,
+  //   filter: false,
+  //   // valueGetter: function (params) {
+  //   // return params.node.rowIndex + 1;
+  //   // if (params.data.cnt === undefined) {
+  //   //   return '';
+  //   // } else {
+  //   // return params.data.rowNum;
+  //   // }
+  //   // },
+  //   cellStyle: params => {
+  //     return { textAlign: 'center' };
+  //   },
+  // },
   {
     headerName: '거래일자',
-    field: 'dealDay',
+    field: 'saleDay',
     pinned: !$q.screen.xs && !$q.screen.sm ? 'left' : null,
     minWidth: 130,
     maxWidth: 130,
     valueGetter: params => {
-      if (params.data.dealDay && params.data.dealDay.length === 8) {
-        return `${params.data.dealDay.slice(0, 4)}-${params.data.dealDay.slice(4, 6)}-${params.data.dealDay.slice(6)}`;
+      if (params.data.saleDay === '00000000') {
+        return '이월재고'; // dealDay가 undefined일 경우 '합계'로 설정
+      } else if (params.data.saleYm === '총계') {
+        return '총계'; // dealDay가 undefined일 경우 '합계'로 설정
+      } else if (params.data.saleDay === '월계') {
+        return '월계'; // dealDay가 undefined일 경우 '합계'로 설정
+      } else if (params.data.custNm === '일계') {
+        return '일계'; // dealDay가 undefined일 경우 '합계'로 설정
       }
-      return params.data.dealDay;
-    },
-    cellStyle: params => {
-      return { textAlign: 'center' };
-    },
-  },
-  {
-    headerName: '전표번호',
-    field: 'seq',
-    pinned: !$q.screen.xs && !$q.screen.sm ? 'left' : null,
-    minWidth: 100,
-    maxWidth: 100,
-    valueGetter: params => {
-      return params.data.seq;
+      if (params.data.saleDay && params.data.saleDay.length === 8) {
+        return `${params.data.saleDay.slice(0, 4)}-${params.data.saleDay.slice(4, 6)}-${params.data.saleDay.slice(6)}`;
+      }
+      return params.data.saleDay;
     },
     cellStyle: params => {
       return { textAlign: 'center' };
@@ -238,6 +208,15 @@ const columnDefs = ref([
     resizable: true,
     pinned: !$q.screen.xs && !$q.screen.sm ? 'left' : null,
     valueGetter: function (params) {
+      if (params.data.saleDay === '00000000') {
+        return ''; // dealDay가 undefined일 경우 '합계'로 설정
+      } else if (params.data.saleYm === '총계') {
+        return ''; // dealDay가 undefined일 경우 '합계'로 설정
+      } else if (params.data.saleDay === '월계') {
+        return ''; // dealDay가 undefined일 경우 '합계'로 설정
+      } else if (params.data.custNm === '일계') {
+        return ''; // dealDay가 undefined일 경우 '합계'로 설정
+      }
       return params.data.custNm;
     },
   },
@@ -248,35 +227,192 @@ const columnDefs = ref([
     maxWidth: 85,
     resizable: true,
     valueGetter: function (params) {
+      if (params.data.saleDay === '00000000') {
+        return ''; // dealDay가 undefined일 경우 '합계'로 설정
+      } else if (params.data.saleYm === '총계') {
+        return ''; // dealDay가 undefined일 경우 '합계'로 설정
+      } else if (params.data.saleDay === '월계') {
+        return ''; // dealDay가 undefined일 경우 '합계'로 설정
+      } else if (params.data.custNm === '일계') {
+        return ''; // dealDay가 undefined일 경우 '합계'로 설정
+      }
       return params.data.custCd;
     },
   },
   {
-    headerName: 'ITEM',
-    field: 'cnt',
-    minWidth: 90,
-    maxWidth: 90,
-    valueFormatter: params => {
-      if (params.value != null) {
-        return new Intl.NumberFormat('ko-KR', {
-          // style: 'currency',
-          // currency: 'KRW',
-          minimumFractionDigits: 0,
-          maximumFractionDigits: 0,
-        }).format(params.value);
+    headerName: '구분',
+    field: 'fgNm',
+    minWidth: 80,
+    maxWidth: 80,
+    valueGetter: function (params) {
+      if (params.data.saleDay === '00000000') {
+        return ''; // dealDay가 undefined일 경우 '합계'로 설정
+      } else if (params.data.saleYm === '총계') {
+        return ''; // dealDay가 undefined일 경우 '합계'로 설정
+      } else if (params.data.saleDay === '월계') {
+        return ''; // dealDay가 undefined일 경우 '합계'로 설정
+      } else if (params.data.custNm === '일계') {
+        return ''; // dealDay가 undefined일 경우 '합계'로 설정
       }
-      return '';
+      return params.data.fgNm;
     },
-    cellClass: 'ag-right-aligned-cell',
-    // cellStyle: () => {
-    //   return {
-    //     color: $q.dark.isActive ? 'orange' : 'teal',
-    //   };
-    // },
+    cellStyle: params => {
+      return { textAlign: 'center' };
+    },
+  },
+
+  {
+    headerName: '입고',
+    children: [
+      {
+        headerName: '입고',
+        field: 'iQty',
+        minWidth: 110,
+        maxWidth: 110,
+        valueFormatter: params => {
+          if (params.value != null) {
+            return new Intl.NumberFormat('ko-KR', {
+              // style: 'currency',
+              // currency: 'KRW',
+              minimumFractionDigits: 0,
+              maximumFractionDigits: 0,
+            }).format(params.value);
+          }
+          return '';
+        },
+        cellClass: 'ag-right-aligned-cell',
+        // cellStyle: () => {
+        //   return {
+        //     color: $q.dark.isActive ? 'orange' : 'teal',
+        //   };
+        // },
+      },
+      {
+        headerName: '재생',
+        field: 'ibQty',
+        minWidth: 110,
+        maxWidth: 110,
+        valueFormatter: params => {
+          if (params.value != null) {
+            return new Intl.NumberFormat('ko-KR', {
+              // style: 'currency',
+              // currency: 'KRW',
+              minimumFractionDigits: 0,
+              maximumFractionDigits: 0,
+            }).format(params.value);
+          }
+          return '';
+        },
+        cellClass: 'ag-right-aligned-cell',
+        // cellStyle: () => {
+        //   return {
+        //     color: $q.dark.isActive ? 'orange' : 'teal',
+        //   };
+        // },
+      },
+    ],
   },
   {
-    headerName: '총수량',
-    field: 'sumQty',
+    headerName: '출고',
+    children: [
+      {
+        headerName: '출고',
+        field: 'oQty',
+        minWidth: 110,
+        maxWidth: 110,
+        valueFormatter: params => {
+          if (params.value != null) {
+            return new Intl.NumberFormat('ko-KR', {
+              // style: 'currency',
+              // currency: 'KRW',
+              minimumFractionDigits: 0,
+              maximumFractionDigits: 0,
+            }).format(params.value);
+          }
+          return '';
+        },
+        cellClass: 'ag-right-aligned-cell',
+        // cellStyle: () => {
+        //   return {
+        //     color: $q.dark.isActive ? 'orange' : 'teal',
+        //   };
+        // },
+      },
+      {
+        headerName: '증정',
+        field: 'ojQty',
+        minWidth: 110,
+        maxWidth: 110,
+        valueFormatter: params => {
+          if (params.value != null) {
+            return new Intl.NumberFormat('ko-KR', {
+              // style: 'currency',
+              // currency: 'KRW',
+              minimumFractionDigits: 0,
+              maximumFractionDigits: 0,
+            }).format(params.value);
+          }
+          return '';
+        },
+        cellClass: 'ag-right-aligned-cell',
+        // cellStyle: () => {
+        //   return {
+        //     color: $q.dark.isActive ? 'orange' : 'teal',
+        //   };
+        // },
+      },
+
+      {
+        headerName: '반품',
+        field: 'obQty',
+        minWidth: 110,
+        maxWidth: 110,
+        valueFormatter: params => {
+          if (params.value != null) {
+            return new Intl.NumberFormat('ko-KR', {
+              // style: 'currency',
+              // currency: 'KRW',
+              minimumFractionDigits: 0,
+              maximumFractionDigits: 0,
+            }).format(params.value);
+          }
+          return '';
+        },
+        cellClass: 'ag-right-aligned-cell',
+        // cellStyle: () => {
+        //   return {
+        //     color: $q.dark.isActive ? 'orange' : 'teal',
+        //   };
+        // },
+      },
+      {
+        headerName: '폐기',
+        field: 'oxQty',
+        minWidth: 110,
+        maxWidth: 110,
+        valueFormatter: params => {
+          if (params.value != null) {
+            return new Intl.NumberFormat('ko-KR', {
+              // style: 'currency',
+              // currency: 'KRW',
+              minimumFractionDigits: 0,
+              maximumFractionDigits: 0,
+            }).format(params.value);
+          }
+          return '';
+        },
+        cellClass: 'ag-right-aligned-cell',
+        // cellStyle: () => {
+        //   return {
+        //     color: $q.dark.isActive ? 'orange' : 'teal',
+        //   };
+        // },
+      },
+    ],
+  },
+  {
+    headerName: '재고조정',
+    field: 'ozQty',
     minWidth: 110,
     maxWidth: 110,
     valueFormatter: params => {
@@ -298,10 +434,10 @@ const columnDefs = ref([
     // },
   },
   {
-    headerName: '합계금액',
-    field: 'sumAmt',
-    minWidth: 150,
-    maxWidth: 150,
+    headerName: '재고',
+    field: 'jQty',
+    minWidth: 110,
+    maxWidth: 110,
     valueFormatter: params => {
       if (params.value != null) {
         return new Intl.NumberFormat('ko-KR', {
@@ -320,13 +456,21 @@ const columnDefs = ref([
     //   };
     // },
   },
-
   {
     headerName: '비고',
     field: 'remarks',
     minWidth: 150,
     resizable: true,
     valueGetter: function (params) {
+      if (params.data.saleDay === '00000000') {
+        return ''; // dealDay가 undefined일 경우 '합계'로 설정
+      } else if (params.data.saleYm === '총계') {
+        return ''; // dealDay가 undefined일 경우 '합계'로 설정
+      } else if (params.data.saleDay === '월계') {
+        return ''; // dealDay가 undefined일 경우 '합계'로 설정
+      } else if (params.data.custNm === '일계') {
+        return ''; // dealDay가 undefined일 경우 '합계'로 설정
+      }
       return params.data.remarks;
     },
   },
@@ -377,10 +521,9 @@ const handleResize = () => {
 
 const getData = async () => {
   try {
-    const response = await api.post('/api/sal/sal2120_list', {
+    const response = await api.post('/api/sal/sal4320_list', {
       paramPeriodFrom: commUtil.unFormatDate(searchValue.period.from),
       paramPeriodTo: commUtil.unFormatDate(searchValue.period.to),
-      paramCustCd: searchValue.custCd,
       paramProdCd: searchValue.prodCd,
       // paramPeriodFrom: '20241101',
       // paramPeriodTo: '20241231',
@@ -388,7 +531,7 @@ const getData = async () => {
     });
     rowData.rows = response.data.data;
     myGrid.value.api.setGridOption('rowData', rowData.rows);
-    myGrid.value.api.setGridOption('pinnedBottomRowData', [calculateTotal()]);
+    // myGrid.value.api.setGridOption('pinnedBottomRowData', [calculateTotal()]);
     // console.log('data : ', JSON.stringify(rowData.rows));
   } catch (error) {
     console.error('Error fetching users:', error);
@@ -419,31 +562,6 @@ const getDataCommOption = async resCommCd1 => {
 // ***** DataBase 연결부분 끝  *************************************//
 // **************************************************************//
 // *********************************
-// rows 전체 합 구하는 부분
-const calculateTotal = () => {
-  let totalRow = {
-    custNm: '합계',
-    cnt: 0,
-    sumQty: 0,
-    sumAmt: 0,
-  };
-
-  rowData.rows.forEach(row => {
-    totalRow.cnt += row.cnt || 0;
-    totalRow.sumQty += row.sumQty || 0;
-    totalRow.sumAmt += row.sumAmt || 0;
-  });
-
-  const hasMeaningfulData = totalRow.cnt !== 0 || totalRow.sumQty !== 0 || totalRow.sumAmt !== 0;
-
-  if (hasMeaningfulData) {
-    rowData.rowsSum.push(totalRow);
-  }
-
-  return totalRow;
-};
-// rows 전체 합 구하는 부분 끝
-// *********************************
 const myGrid = ref(null);
 const myGridOptions = {
   columnDefs: columnDefs.value,
@@ -465,10 +583,20 @@ const myGridOptions = {
   suppressHorizontalScroll: true,
   localeText: { noRowsToShow: '조회 결과가 없습니다.' },
   getRowStyle: function (event) {
-    if (event.node.rowPinned) {
-      return { 'font-weight': 'bold', background: '#dddddd' };
+    // if (param.node.rowPinned) {
+    //   return { 'font-weight': 'bold', background: '#dddddd' };
+    // }
+    // return { 'text-align': 'left' };
+    // seq가 undefined이면 행 배경색 변경 및 "소계" 삽입
+    if (event.data.saleDay === '00000000') {
+      return { backgroundColor: 'rgba(0,181,117,0.24)', fontWeight: 'bold' }; // 예: 연한 주황색
     }
-
+    if (event.data.custNm === '일계') {
+      return { backgroundColor: 'rgba(1,127,194,0.17)' }; // 예: 연한 파란색
+    }
+    if (event.data.custNm === '총계') {
+      return { backgroundColor: 'rgba(3,147,5,0.22)' }; // 예: 연한 파란색
+    }
     // dealDay가 undefined이면 행 배경색 변경 및 "합계" 삽입
     return null; // 기본 스타일
   },
@@ -522,7 +650,7 @@ const myGridOptions = {
   onSortChanged: function (event) {
     // console.log('onSortChanged');
   },
-  pinnedBottomRowData: [calculateTotal()],
+  // pinnedBottomRowData: [calculateTotal()],
   onCellValueChanged: function (event) {
     // console.log('onCellValueChanged');
   },
@@ -546,27 +674,11 @@ const myGridOptions = {
 };
 
 /* *** 코드헬프부분 ** */
-const openHelpCustDialog = resNm => {
-  $q.dialog({
-    component: HelpCust,
-    componentProps: {
-      paramValueNm: resNm,
-      paramUseYn: 'N',
-      paramCloseDay: '99991231',
-    },
-  })
-    .onOk(res => {
-      searchValue.custCd = res.custCd;
-      searchValue.custNm = res.custNm;
-    })
-    .onCancel(() => {})
-    .onDismiss(() => {});
-};
 const openHelpProdDialog = resNm => {
   $q.dialog({
     component: HelpProd,
     componentProps: {
-      paramValueNm: resNm,
+      paramValueNm: searchValue.prodNm,
       paramUseYn: 'N',
       paramCloseDay: '99991231',
     },

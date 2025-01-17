@@ -19,53 +19,41 @@
     <q-card class="q-pa-sm">
       <q-toolbar class="q-px-sm q-pt-none">
         <div class="row q-col-gutter-x-md">
-          <q-field label="출고기간" stack-label label-color="orange">
-            <template v-slot:control>
-              <div class="self-end full-width no-outline text-bold" tabindex="0">{{ searchValue.period.from }} ~ {{ searchValue.period.to }}</div>
-            </template>
-
-            <template v-slot:append>
-              <q-icon name="event" class="cursor-pointer self-end">
-                <q-popup-proxy cover transition-show="scale" transition-hide="scale" anchor="bottom left" self="top left" fit>
-                  <q-date minimal range v-model="searchPeriod" mask="YYYY-MM-DD">
-                    <div class="row items-center justify-end">
-                      <q-btn :disable="searchValue.period.from === null" v-close-popup label="선택하기" color="primary" flat />
-                    </div>
-                  </q-date>
-                </q-popup-proxy>
-              </q-icon>
-            </template>
-          </q-field>
-
           <q-input
             stack-label
-            class=""
-            v-model="searchValue.custNm"
-            label="거래처명"
             label-color="orange"
-            @keyup.enter.prevent="openHelpCustDialog(searchValue.custNm)"
+            label="기준년"
+            class="text-subtitle1"
+            v-model="searchValue.year"
+            type="number"
+            style="width: 100px"
+            @update:model-value="getData"
           >
-            <template v-slot:prepend>
-              <q-btn dense flat class="q-mt-md text-bold" icon="search" size="md" :label="searchValue.custCd" @click="openHelpCustDialog('')" />
-            </template>
             <template v-slot:append>
-              <q-icon
-                size="0.8em"
-                v-if="searchValue.custNm !== ''"
-                name="close"
-                @click="
-                  searchValue.custNm = '';
-                  searchValue.custCd = '';
-                  handelGetData();
-                "
-                class="cursor-pointer q-pt-md"
-              />
+              <span class="text-subtitle1 q-pt-md">년</span>
             </template>
           </q-input>
 
+          <q-select
+            stack-label
+            options-dense
+            label-color="orange"
+            v-model="searchValue.month"
+            :options="searchValue.monthOptions"
+            option-value="valueCd"
+            option-label="valueNm"
+            option-disable="inactive"
+            emit-value
+            map-options
+            style="min-width: 90px"
+            label="기준월"
+            @update:model-value="getData"
+          />
+
           <q-input
             stack-label
             class=""
+            style="width: 300px"
             v-model="searchValue.prodNm"
             label="도서명"
             label-color="orange"
@@ -82,6 +70,7 @@
                 @click="
                   searchValue.prodNm = '';
                   searchValue.prodCd = '';
+                  searchValue.sPrice = '';
                   handelGetData();
                 "
                 class="cursor-pointer q-pt-md"
@@ -90,13 +79,13 @@
           </q-input>
         </div>
         <q-space />
-        <div class="row q-gutter-x-xs q-gutter-y-md">
+        <div class="row q-gutter-x-xs q-gutter-y-md self-end">
           <q-btn outline color="grey" @click="handelGetData" class="q-px-sm">
             <q-icon name="search" size="xs" class="q-mr-xs" />
             조회
           </q-btn>
 
-          <q-btn v-if="!$q.screen.xs" :disable="rowData.rows.length === 0" outline color="teal" @click="isDialogVisible = true" class="q-px-sm">
+          <q-btn v-if="!$q.screen.xs" :disable="rowData.rows.length === 0" outline color="teal" @click="handlePrint" class="q-px-sm">
             <q-icon name="download" size="xs" class="q-mr-xs" />
             엑셀/출력
           </q-btn>
@@ -118,7 +107,14 @@
     <q-dialog persistent full-height full-width v-model="isDialogVisible">
       <q-card class="q-pa-none q-ma-none">
         <q-card-section class="q-pa-none q-ma-none">
-          <sal-v2120p :messages="{ rowData: rowData, titleNm: menuLabel, searchValue: searchValue }" @close="handleClose" />
+          <sal-v4210p
+            :messages="{
+              rowData: rowData,
+              titleNm: menuLabel,
+              searchValue: searchValue,
+            }"
+            @close="handleClose"
+          />
         </q-card-section>
       </q-card>
     </q-dialog>
@@ -131,17 +127,20 @@ import 'ag-grid-community/styles/ag-theme-quartz.css';
 import 'ag-grid-community/styles/ag-theme-alpine.css';
 import 'ag-grid-community/styles/ag-theme-balham.css';
 import { AgGridVue } from 'ag-grid-vue3';
-import { computed, onBeforeMount, onBeforeUnmount, onMounted, reactive, ref, watch } from 'vue';
+import { computed, onBeforeMount, onBeforeUnmount, onMounted, reactive, ref } from 'vue';
 import { api } from 'boot/axios';
-import { date, QBtn, QIcon, QToggle, SessionStorage, useQuasar } from 'quasar';
-import SalV2120p from 'pages/erp/sal/SalV2120p.vue';
+import { QBtn, QIcon, useQuasar } from 'quasar';
+import SalV4210p from 'pages/erp/sal/SalV4210p.vue';
 import commUtil from 'src/js_comm/comm-util';
-import HelpProd from 'components/subvue/HelpProd.vue';
 import HelpCust from 'components/subvue/HelpCust.vue';
+import HelpProd from 'components/subvue/HelpProd.vue';
 
 const rowData = reactive({ rows: [], rowsSum: [] });
 const isDialogVisible = ref(false);
 
+const handlePrint = () => {
+  isDialogVisible.value = true;
+};
 // grid Height 자동처리부분1
 const gridHeight = ref(145); // 초기 높이
 const rowHeight = 45; // 행당 높이 (예: 25px)
@@ -158,125 +157,44 @@ const contentZoneStyle = computed(() => ({
   height: `${contentZoneHeight.value - 160}px`,
 }));
 
-const searchPeriod = ref({ from: commUtil.getToday(), to: commUtil.getToday() });
 const searchValue = reactive({
-  // period: { from: commUtil.getToday(), to: commUtil.getToday() },
-  period: { from: '2024-10-01', to: '2024-11-30' },
+  year: commUtil.getTodayYear(),
+  month: commUtil.getTodayMonth(),
   textValue: '',
-  custNm: '',
-  custCd: '',
+  monthOptions: [
+    { valueNm: '01월', valueCd: '01' },
+    { valueNm: '02월', valueCd: '02' },
+    { valueNm: '03월', valueCd: '03' },
+    { valueNm: '04월', valueCd: '04' },
+    { valueNm: '05월', valueCd: '05' },
+    { valueNm: '06월', valueCd: '06' },
+    { valueNm: '07월', valueCd: '07' },
+    { valueNm: '08월', valueCd: '08' },
+    { valueNm: '09월', valueCd: '09' },
+    { valueNm: '10월', valueCd: '10' },
+    { valueNm: '11월', valueCd: '11' },
+    { valueNm: '12월', valueCd: '12' },
+  ],
   prodNm: '',
   prodCd: '',
-});
-// 모델 값 감시
-watch(searchPeriod, newVal => {
-  if (typeof newVal === 'object' && newVal !== null && !Array.isArray(newVal)) {
-    // console.log('기간 선택됨:', newVal.from, '부터', newVal.to, '까지');
-    searchValue.period.from = newVal.from;
-    searchValue.period.to = newVal.to;
-  } else {
-    // console.log('하루만 선택됨:', newVal);
-    searchValue.period.from = newVal;
-    searchValue.period.to = newVal;
-  }
+  sPrice: '',
 });
 
 const columnDefs = ref([
   {
-    headerName: '#',
-    field: 'rowNum',
-    minWidth: 70,
-    maxWidth: 80,
+    headerName: '기준일자',
+    field: 'stockDay',
     pinned: !$q.screen.xs && !$q.screen.sm ? 'left' : null,
-    sortable: true,
-    filter: false,
-    // valueGetter: function (params) {
-    // return params.node.rowIndex + 1;
-    // if (params.data.cnt === undefined) {
-    //   return '';
-    // } else {
-    // return params.data.rowNum;
-    // }
-    // },
-    cellStyle: params => {
-      return { textAlign: 'center' };
-    },
-  },
-  {
-    headerName: '거래일자',
-    field: 'dealDay',
-    pinned: !$q.screen.xs && !$q.screen.sm ? 'left' : null,
-    minWidth: 130,
-    maxWidth: 130,
-    valueGetter: params => {
-      if (params.data.dealDay && params.data.dealDay.length === 8) {
-        return `${params.data.dealDay.slice(0, 4)}-${params.data.dealDay.slice(4, 6)}-${params.data.dealDay.slice(6)}`;
-      }
-      return params.data.dealDay;
-    },
-    cellStyle: params => {
-      return { textAlign: 'center' };
-    },
-  },
-  {
-    headerName: '전표번호',
-    field: 'seq',
-    pinned: !$q.screen.xs && !$q.screen.sm ? 'left' : null,
-    minWidth: 100,
-    maxWidth: 100,
-    valueGetter: params => {
-      return params.data.seq;
-    },
-    cellStyle: params => {
-      return { textAlign: 'center' };
-    },
-  },
-  {
-    headerName: '업체명',
-    field: 'custNm',
     minWidth: 150,
-    resizable: true,
-    pinned: !$q.screen.xs && !$q.screen.sm ? 'left' : null,
-    valueGetter: function (params) {
-      return params.data.custNm;
+    maxWidth: 150,
+
+    cellStyle: params => {
+      return { textAlign: 'center' };
     },
   },
   {
-    headerName: '코드',
-    field: 'custCd',
-    minWidth: 85,
-    maxWidth: 85,
-    resizable: true,
-    valueGetter: function (params) {
-      return params.data.custCd;
-    },
-  },
-  {
-    headerName: 'ITEM',
-    field: 'cnt',
-    minWidth: 90,
-    maxWidth: 90,
-    valueFormatter: params => {
-      if (params.value != null) {
-        return new Intl.NumberFormat('ko-KR', {
-          // style: 'currency',
-          // currency: 'KRW',
-          minimumFractionDigits: 0,
-          maximumFractionDigits: 0,
-        }).format(params.value);
-      }
-      return '';
-    },
-    cellClass: 'ag-right-aligned-cell',
-    // cellStyle: () => {
-    //   return {
-    //     color: $q.dark.isActive ? 'orange' : 'teal',
-    //   };
-    // },
-  },
-  {
-    headerName: '총수량',
-    field: 'sumQty',
+    headerName: '입고수량',
+    field: 'iQty',
     minWidth: 110,
     maxWidth: 110,
     valueFormatter: params => {
@@ -298,10 +216,84 @@ const columnDefs = ref([
     // },
   },
   {
-    headerName: '합계금액',
-    field: 'sumAmt',
-    minWidth: 150,
-    maxWidth: 150,
+    headerName: '출고',
+    children: [
+      {
+        headerName: '출고수량',
+        field: 'oQty',
+        minWidth: 110,
+        maxWidth: 110,
+        valueFormatter: params => {
+          if (params.value != null) {
+            return new Intl.NumberFormat('ko-KR', {
+              // style: 'currency',
+              // currency: 'KRW',
+              minimumFractionDigits: 0,
+              maximumFractionDigits: 0,
+            }).format(params.value);
+          }
+          return '';
+        },
+        cellClass: 'ag-right-aligned-cell',
+        // cellStyle: () => {
+        //   return {
+        //     color: $q.dark.isActive ? 'orange' : 'teal',
+        //   };
+        // },
+      },
+      {
+        headerName: '증정수량',
+        field: 'ojQty',
+        minWidth: 110,
+        maxWidth: 110,
+        valueFormatter: params => {
+          if (params.value != null) {
+            return new Intl.NumberFormat('ko-KR', {
+              // style: 'currency',
+              // currency: 'KRW',
+              minimumFractionDigits: 0,
+              maximumFractionDigits: 0,
+            }).format(params.value);
+          }
+          return '';
+        },
+        cellClass: 'ag-right-aligned-cell',
+        // cellStyle: () => {
+        //   return {
+        //     color: $q.dark.isActive ? 'orange' : 'teal',
+        //   };
+        // },
+      },
+      {
+        headerName: '폐기수량',
+        field: 'oxQty',
+        minWidth: 110,
+        maxWidth: 110,
+        valueFormatter: params => {
+          if (params.value != null) {
+            return new Intl.NumberFormat('ko-KR', {
+              // style: 'currency',
+              // currency: 'KRW',
+              minimumFractionDigits: 0,
+              maximumFractionDigits: 0,
+            }).format(params.value);
+          }
+          return '';
+        },
+        cellClass: 'ag-right-aligned-cell',
+        // cellStyle: () => {
+        //   return {
+        //     color: $q.dark.isActive ? 'orange' : 'teal',
+        //   };
+        // },
+      },
+    ],
+  },
+  {
+    headerName: '출고계',
+    field: 'otQty',
+    minWidth: 110,
+    maxWidth: 110,
     valueFormatter: params => {
       if (params.value != null) {
         return new Intl.NumberFormat('ko-KR', {
@@ -320,15 +312,80 @@ const columnDefs = ref([
     //   };
     // },
   },
-
+  {
+    headerName: '재고조정',
+    field: 'ozQty',
+    minWidth: 110,
+    maxWidth: 110,
+    valueFormatter: params => {
+      if (params.value != null) {
+        return new Intl.NumberFormat('ko-KR', {
+          // style: 'currency',
+          // currency: 'KRW',
+          minimumFractionDigits: 0,
+          maximumFractionDigits: 0,
+        }).format(params.value);
+      }
+      return '';
+    },
+    cellClass: 'ag-right-aligned-cell',
+    // cellStyle: () => {
+    //   return {
+    //     color: $q.dark.isActive ? 'orange' : 'teal',
+    //   };
+    // },
+  },
+  {
+    headerName: '반품',
+    field: 'obQty',
+    minWidth: 110,
+    maxWidth: 110,
+    valueFormatter: params => {
+      if (params.value != null) {
+        return new Intl.NumberFormat('ko-KR', {
+          // style: 'currency',
+          // currency: 'KRW',
+          minimumFractionDigits: 0,
+          maximumFractionDigits: 0,
+        }).format(params.value);
+      }
+      return '';
+    },
+    cellClass: 'ag-right-aligned-cell',
+    // cellStyle: () => {
+    //   return {
+    //     color: $q.dark.isActive ? 'orange' : 'teal',
+    //   };
+    // },
+  },
+  {
+    headerName: '총재고',
+    field: 'jQty',
+    minWidth: 110,
+    maxWidth: 110,
+    valueFormatter: params => {
+      if (params.value != null) {
+        return new Intl.NumberFormat('ko-KR', {
+          // style: 'currency',
+          // currency: 'KRW',
+          minimumFractionDigits: 0,
+          maximumFractionDigits: 0,
+        }).format(params.value);
+      }
+      return '';
+    },
+    cellClass: 'ag-right-aligned-cell',
+    // cellStyle: () => {
+    //   return {
+    //     color: $q.dark.isActive ? 'orange' : 'teal',
+    //   };
+    // },
+  },
   {
     headerName: '비고',
-    field: 'remarks',
+    field: '',
     minWidth: 150,
     resizable: true,
-    valueGetter: function (params) {
-      return params.data.remarks;
-    },
   },
 ]);
 
@@ -337,16 +394,24 @@ onBeforeUnmount(() => {
   // Remove the resize event listener when the component is destroyed
   window.removeEventListener('resize', handleResize);
 });
-onBeforeMount(() => {
-  getDataCommOption('402').then(() => {
-    handelGetData();
-  });
-});
+onBeforeMount(() => {});
 
 const handelGetData = () => {
-  // getDataMaxPages().then(() => {
-  getData();
-  // });
+  if (searchValue.prodCd === '' || searchValue.prodCd === null) {
+    $q.dialog({
+      dark: true,
+      title: '안내',
+      message: '도서명을 선택하세요',
+      // persistent: true,
+    })
+      .onOk(() => {})
+      .onCancel(() => {})
+      .onDismiss(() => {
+        // 확인/취소 모두 실행되었을때
+      });
+  } else {
+    getData();
+  }
 };
 
 const menuLabel = ref('');
@@ -377,64 +442,108 @@ const handleResize = () => {
 
 const getData = async () => {
   try {
-    const response = await api.post('/api/sal/sal2120_list', {
-      paramPeriodFrom: commUtil.unFormatDate(searchValue.period.from),
-      paramPeriodTo: commUtil.unFormatDate(searchValue.period.to),
-      paramCustCd: searchValue.custCd,
+    const response = await api.post('/api/sal/sal4210_list', {
+      paramYear: searchValue.year,
+      paramMonth: searchValue.month,
       paramProdCd: searchValue.prodCd,
-      // paramPeriodFrom: '20241101',
-      // paramPeriodTo: '20241231',
-      // paramProdCd: '4457',
     });
-    rowData.rows = response.data.data;
+    // rowData.rows = response.data.data;
+    rowData.rows = fillMissingDates(response.data.data, searchValue.year + '' + searchValue.month);
+
     myGrid.value.api.setGridOption('rowData', rowData.rows);
     myGrid.value.api.setGridOption('pinnedBottomRowData', [calculateTotal()]);
-    // console.log('data : ', JSON.stringify(rowData.rows));
+    // console.log('rowData : ', JSON.stringify(rowData.rows));
   } catch (error) {
     console.error('Error fetching users:', error);
   }
 };
 
-// ***** 공통코드정보 가져오기 부분  *****************************//
-const getDataCommOption = async resCommCd1 => {
-  try {
-    const response = await api.post('/api/mst/comm_option_list', { paramCommCd1: resCommCd1 });
+// 해당 월의 모든 날짜와 요일 생성
+const generateMonthDates = yearMonth => {
+  const year = parseInt(yearMonth.slice(0, 4), 10);
+  const month = parseInt(yearMonth.slice(4, 6), 10) - 1; // 월은 0부터 시작
+  const dates = [];
+  const date = new Date(year, month, 1);
 
-    switch (resCommCd1) {
-      case '402':
-        searchValue.dealFgOptions = JSON.parse(JSON.stringify(response.data.data));
-        searchValue.dealFgOptions.unshift({ commCd: '', commNm: '전체' });
-        break;
-      default:
-        searchValue.dealFgOptions = [];
-    }
-
-    // console.log('getData1: ', JSON.stringify(response.data.data));
-  } catch (error) {
-    console.error('Error fetching users:', error);
+  while (date.getMonth() === month) {
+    const day = date.getDate();
+    const weekday = ['일', '월', '화', '수', '목', '금', '토'][date.getDay()];
+    const fullDate = `${yearMonth}${day.toString().padStart(2, '0')}`;
+    dates.push({ stockDay: fullDate, weekday });
+    date.setDate(day + 1);
   }
+
+  return dates;
+};
+const fillMissingDates = (data, yearMonth) => {
+  // console.log('data : ', JSON.stringify(data));
+  const allDates = generateMonthDates(yearMonth);
+  // console.log('allDates : ', JSON.stringify(allDates));
+  allDates.unshift({ stockDay: yearMonth + '' + '00', weekday: '' });
+
+  // 데이터 맵핑
+  const dataMap = new Map(data.map(d => [d.stockDay, d]));
+  // 누락된 일자 채우기
+  return allDates.map(({ stockDay, weekday }) => {
+    // console.log(stockDay);
+    return {
+      stockDay: stockDay.endsWith('00') ? '전월이월' : stockDay,
+      weekday: stockDay.endsWith('00') ? '' : weekday,
+      ...dataMap.get(stockDay), // 기존 데이터 사용
+      iQty: dataMap.get(stockDay)?.iQty || 0,
+      oQty: dataMap.get(stockDay)?.oQty || 0,
+      ojQty: dataMap.get(stockDay)?.ojQty || 0,
+      oxQty: dataMap.get(stockDay)?.oxQty || 0,
+      otQty: dataMap.get(stockDay)?.otQty || 0,
+      ozQty: dataMap.get(stockDay)?.ozQty || 0,
+      obQty: dataMap.get(stockDay)?.obQty || 0,
+      jQty: dataMap.get(stockDay)?.jQty || 0,
+    };
+  });
 };
 
 // **************************************************************//
 // ***** DataBase 연결부분 끝  *************************************//
 // **************************************************************//
+
 // *********************************
 // rows 전체 합 구하는 부분
 const calculateTotal = () => {
   let totalRow = {
-    custNm: '합계',
-    cnt: 0,
-    sumQty: 0,
-    sumAmt: 0,
+    stockDay: '합계',
+    iQty: 0,
+    oQty: 0,
+    ojQty: 0,
+    oxQty: 0,
+    otQty: 0,
+    ozQty: 0,
+    obQty: 0,
+    jQty: 0,
   };
 
   rowData.rows.forEach(row => {
-    totalRow.cnt += row.cnt || 0;
-    totalRow.sumQty += row.sumQty || 0;
-    totalRow.sumAmt += row.sumAmt || 0;
+    totalRow.iQty += row.iQty || 0;
+    totalRow.oQty += row.oQty || 0;
+    totalRow.ojQty += row.ojQty || 0;
+    totalRow.oxQty += row.oxQty || 0;
+    totalRow.otQty += row.otQty || 0;
+    totalRow.ozQty += row.ozQty || 0;
+    totalRow.obQty += row.obQty || 0;
+
+    if (row.jQty !== 0) {
+      totalRow.jQty = row.jQty;
+    }
   });
 
-  const hasMeaningfulData = totalRow.cnt !== 0 || totalRow.sumQty !== 0 || totalRow.sumAmt !== 0;
+  const hasMeaningfulData =
+    totalRow.iQty > 0 ||
+    totalRow.oQty > 0 ||
+    totalRow.ojQty > 0 ||
+    totalRow.oxQty > 0 ||
+    totalRow.otQty > 0 ||
+    totalRow.ozQty > 0 ||
+    totalRow.obQty > 0 ||
+    totalRow.jQty > 0;
 
   if (hasMeaningfulData) {
     rowData.rowsSum.push(totalRow);
@@ -442,7 +551,6 @@ const calculateTotal = () => {
 
   return totalRow;
 };
-// rows 전체 합 구하는 부분 끝
 // *********************************
 const myGrid = ref(null);
 const myGridOptions = {
@@ -456,10 +564,10 @@ const myGridOptions = {
     editable: false,
   },
   rowSelection: 'single' /* 'single' or 'multiple',*/,
-  enableColResize: true,
-  enableSorting: true,
-  enableFilter: true,
-  enableRangeSelection: true,
+  // enableColResize: true,
+  // enableSorting: true,
+  // enableFilter: true,
+  // enableRangeSelection: true,
   suppressRowClickSelection: false,
   animateRows: true,
   suppressHorizontalScroll: true,
@@ -468,9 +576,23 @@ const myGridOptions = {
     if (event.node.rowPinned) {
       return { 'font-weight': 'bold', background: '#dddddd' };
     }
-
-    // dealDay가 undefined이면 행 배경색 변경 및 "합계" 삽입
-    return null; // 기본 스타일
+    // return { 'text-align': 'left' };
+    // seq가 undefined이면 행 배경색 변경 및 "소계" 삽입
+    if (event.data.weekday === '') {
+      event.data.stockDay = '전월이월';
+      return { backgroundColor: 'rgba(0,181,117,0.24)', fontWeight: 'bold' }; // 예: 연한 주황색
+    } else {
+      const _day = `${event.data.stockDay.slice(0, 4)}-${event.data.stockDay.slice(4, 6)}-${event.data.stockDay.slice(6)}`;
+      if (event.data.weekday === '토') {
+        event.data.stockDay = _day + ' (' + event.data.weekday + ')';
+        return { backgroundColor: 'rgba(1,127,194,0.17)', color: 'blue' }; // 예: 연한 주황색
+      }
+      if (event.data.weekday === '일') {
+        event.data.stockDay = _day + ' (' + event.data.weekday + ')';
+        return { backgroundColor: 'rgba(147,3,3,0.11)', color: 'red' }; // 예: 연한 파란색
+      }
+      return (event.data.stockDay = _day + ' (' + event.data.weekday + ')'); // 기본 스타일
+    }
   },
   getRowHeight: function (event) {
     // 고정된 행의 높이
@@ -479,7 +601,7 @@ const myGridOptions = {
     }
     return 30;
   },
-  headerHeight: 40, // 헤더 행 높이를 50px로 설정
+  headerHeight: 30, // 헤더 행 높이를 50px로 설정
   // 또는 동적으로 헤더 높이를 계산
   // getHeaderHeight: function () {
   //   return 60; // 동적으로 60px 설정
@@ -526,18 +648,18 @@ const myGridOptions = {
   onCellValueChanged: function (event) {
     // console.log('onCellValueChanged');
   },
-  getRowNodeId: function (event) {
-    // console.log('getRowNodeId');
-    return null;
-  },
+  // getRowNodeId: function (event) {
+  // console.log('getRowNodeId');
+  // return null;
+  // },
   // 리드 상단 고정
-  setPinnedTopRowData: function (data) {
-    return null;
-  },
+  // setPinnedTopRowData: function (data) {
+  //   return null;
+  // },
   // 그리드 하단 고정
-  setPinnedBottomRowData: function (data) {
-    return null;
-  },
+  // setPinnedBottomRowData: function (data) {
+  //   return null;
+  // },
   // components: {
   //   numericCellEditor: NumericCellEditor,
   //   moodEditor: MoodEditor,
@@ -546,34 +668,22 @@ const myGridOptions = {
 };
 
 /* *** 코드헬프부분 ** */
-const openHelpCustDialog = resNm => {
-  $q.dialog({
-    component: HelpCust,
-    componentProps: {
-      paramValueNm: resNm,
-      paramUseYn: 'N',
-      paramCloseDay: '99991231',
-    },
-  })
-    .onOk(res => {
-      searchValue.custCd = res.custCd;
-      searchValue.custNm = res.custNm;
-    })
-    .onCancel(() => {})
-    .onDismiss(() => {});
-};
+
 const openHelpProdDialog = resNm => {
   $q.dialog({
     component: HelpProd,
     componentProps: {
       paramValueNm: resNm,
       paramUseYn: 'N',
-      paramCloseDay: '99991231',
+      paramCloseDay: '00000000',
     },
   })
     .onOk(res => {
+      // console.log('help : ', JSON.stringify(res));
       searchValue.prodNm = res.prodNm;
       searchValue.prodCd = res.prodCd;
+      searchValue.sPrice = res.sPrice;
+      getData();
     })
     .onCancel(() => {})
     .onDismiss(() => {});

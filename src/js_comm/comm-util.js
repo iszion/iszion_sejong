@@ -151,4 +151,35 @@ export default {
     if (size < 1073741824) return `${(size / 1048576).toFixed(2)} MB`;
     return `${(size / 1073741824).toFixed(2)} GB`;
   },
+
+  getPreviousMonthDate(dateString, mm) {
+    // 입력된 문자열을 연도, 월, 일로 분리
+    const year = parseInt(dateString.slice(0, 4), 10);
+    const month = parseInt(dateString.slice(4, 6), 10) - 1; // 월은 0부터 시작
+    const day = parseInt(dateString.slice(6, 8), 10);
+
+    // Date 객체 생성
+    const date = new Date(year, month, day);
+
+    // 1개월 전으로 설정
+    date.setMonth(date.getMonth() - mm);
+
+    // 한 달 전의 말일 계산
+    const lastDayOfPreviousMonth = new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
+
+    // 입력된 일자가 말일일 경우, 1일 추가 조정
+    if (day > lastDayOfPreviousMonth) {
+      date.setDate(lastDayOfPreviousMonth);
+    } else {
+      date.setDate(day + 1); // 기본적으로 하루를 추가
+    }
+
+    // 연도, 월, 일을 0을 포함한 2자리 문자열로 변환
+    const newYear = date.getFullYear();
+    const newMonth = String(date.getMonth() + 1).padStart(2, '0'); // 월은 0부터 시작하므로 +1
+    const newDay = String(date.getDate()).padStart(2, '0');
+
+    // 최종 결과 반환
+    return `${newYear}${newMonth}${newDay}`;
+  },
 };

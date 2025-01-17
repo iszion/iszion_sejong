@@ -15,7 +15,6 @@ th {
   background-color: #333333; /* 다크 모드 배경색 */
 }
 
-
 .bg-grey1 {
   background-color: #f1f1f1; /* 다크 모드 배경색 */
 }
@@ -36,16 +35,16 @@ td:nth-child(1) {
     text-align: center;
 } /* 사번 */
 td:nth-child(2) {
-    text-align: center;
+    text-align: right;
 } /* 성명 */
 td:nth-child(3) {
-    text-align: center;
+    text-align: right;
 } /* 소속 */
 td:nth-child(4) {
-    text-align: left;
+    text-align: right;
 } /* 직급 */
 td:nth-child(5) {
-    text-align: center;
+    text-align: right;
 } /* 구분 */
 td:nth-child(6) {
     text-align: right;
@@ -54,5 +53,11 @@ td:nth-child(7) {
   text-align: right;
 }
 td:nth-child(8) {
+    text-align: right;
+} /* 항목 */
+td:nth-child(9) {
+  text-align: right;
+}
+td:nth-child(10) {
   text-align: left;
 }

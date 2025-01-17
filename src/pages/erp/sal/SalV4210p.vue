@@ -32,42 +32,53 @@
                 <span class="text-h5">{{ props.messages.titleNm }}</span>
                 <q-space />
                 <span class="text-subtitle1 text-bold self-end"
-                  >출고기간 : {{ props.messages.searchValue.period.from }} ~ {{ props.messages.searchValue.period.to }}</span
+                  >출고기간 : {{ props.messages.searchValue.stdYear }}년 {{ props.messages.searchValue.stdMonth }}월</span
                 >
               </div>
 
               <table>
                 <tr>
-                  <th rowspan="1" colspan="1">No</th>
-                  <th rowspan="1" colspan="1">거래일자</th>
-                  <th rowspan="1" colspan="1">전표번호</th>
-                  <th rowspan="1" colspan="1">업체명</th>
-                  <th rowspan="1" colspan="1">자료수</th>
-                  <th rowspan="1" colspan="1">총수량</th>
-                  <th rowspan="1" colspan="1">합계금액</th>
-                  <th rowspan="1" colspan="1">비고</th>
+                  <th rowspan="2" colspan="1">기일자</th>
+                  <th rowspan="2" colspan="1">입고수량</th>
+                  <th rowspan="1" colspan="3">출고</th>
+                  <th rowspan="2" colspan="1">출고계</th>
+                  <th rowspan="2" colspan="1">재고조정</th>
+                  <th rowspan="2" colspan="1">반품</th>
+                  <th rowspan="2" colspan="1">총재고</th>
+                  <th rowspan="2" colspan="1">비고</th>
                 </tr>
+                <tr>
+                  <th rowspan="1" colspan="1">출고수량</th>
+                  <th rowspan="1" colspan="1">증정수량</th>
+                  <th rowspan="1" colspan="1">폐기수량</th>
+                </tr>
+                <tr
+                  v-for="(data, index) in props.messages.rowData.rows || []"
+                  :key="index"
+                  :class="data.weekday === '' ? 'bg-grey3' : data.weekday === '토' ? 'bg-grey1' : data.weekday === '일' ? 'bg-grey2' : ''"
+                >
+                  <td>{{ data.stockDay }}</td>
 
-                <tr v-for="(data, index) in props.messages.rowData.rows || []" :key="index">
-                  <td>{{ data.rowNum }}</td>
-                  <td>{{ commUtil.formatDate(data.dealDay) }}</td>
-                  <td>{{ data.seq }}</td>
-                  <td>{{ data.custNm }}</td>
-                  <td>{{ commUtil.formatComma(data.cnt) }}</td>
-                  <td>{{ commUtil.formatComma(data.sumQty) }}</td>
-                  <td>{{ commUtil.formatComma(data.sumAmt) }}</td>
-                  <td>{{ data.remarks }}</td>
+                  <td>{{ commUtil.formatComma(data.iQty) }}</td>
+                  <td>{{ commUtil.formatComma(data.oQty) }}</td>
+                  <td>{{ commUtil.formatComma(data.ojQty) }}</td>
+                  <td>{{ commUtil.formatComma(data.oxQty) }}</td>
+                  <td>{{ commUtil.formatComma(data.otQty) }}</td>
+                  <td>{{ commUtil.formatComma(data.ozQty) }}</td>
+                  <td>{{ commUtil.formatComma(data.obQty) }}</td>
+                  <td>{{ commUtil.formatComma(data.jQty) }}</td>
+                  <td></td>
                 </tr>
                 <tr class="bg-grey3">
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td style="text-align: center">
-                    {{ props.messages.rowData.rowsSum[0].custNm }}
-                  </td>
-                  <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].cnt) }}</td>
-                  <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].sumQty) }}</td>
-                  <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].sumAmt) }}</td>
+                  <td>{{ props.messages.rowData.rowsSum[0].stockDay }}</td>
+                  <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].iQty) }}</td>
+                  <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].oQty) }}</td>
+                  <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].ojQty) }}</td>
+                  <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].oxQty) }}</td>
+                  <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].otQty) }}</td>
+                  <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].ozQty) }}</td>
+                  <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].obQty) }}</td>
+                  <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].jQty) }}</td>
                   <td></td>
                 </tr>
               </table>
@@ -85,7 +96,7 @@
 </template>
 
 <script setup>
-import { defineProps, defineEmits, reactive, ref } from 'vue';
+import { defineProps, defineEmits, reactive, ref, onBeforeMount } from 'vue';
 import printJS from 'print-js';
 import * as XLSX from 'xlsx';
 import { QBtn, QIcon, useQuasar } from 'quasar';
@@ -97,12 +108,11 @@ const props = defineProps({
   messages: {
     rowData: Object,
     titleNm: String,
-    buysearchValue: Object,
+    searchValud: Object,
   },
 });
 
 function closeDialog() {
-  console.log('closeDialog called');
   emit('close');
 }
 
@@ -110,11 +120,11 @@ const isPrintReport = () => {
   printJS({
     printable: 'printZone',
     type: 'html',
-    css: ['/css/print/sal2120.css', '/css/quasar.css'],
+    css: ['/css/print/sal4210.css', '/css/quasar.css'],
     scanStyles: false,
   });
 };
-
+onBeforeMount(() => {});
 /* ************************************************************************* *
  ** Excel저장  처리부분
  ** ************************************************************************* */
@@ -142,30 +152,28 @@ const isExcelDownload = () => {
 };
 const headerGroup = reactive({
   header: [],
-  headProps: ['dealDay', 'seq', 'custNm', 'cnt', 'sumQty', 'sumAmt', 'remarks'],
+  headProps: ['stockDay', 'iQty', 'oQty', 'ojQty', 'oxQty', 'otQty', 'ozQty', 'obQty', 'jQty', 'remarks'],
   headRow1: [
-    { name: '거래일자', rowspan: 1, colspan: 1, key: 'dealDay' },
-    { name: '전표번호', rowspan: 1, colspan: 1, key: 'seq' },
-    { name: '거래처명', rowspan: 1, colspan: 1, key: 'custNm' },
-    { name: '자료수', rowspan: 1, colspan: 1, key: 'cnt' },
-    { name: '총수량', rowspan: 1, colspan: 1, key: 'sumQty' },
-    { name: '합계금액', rowspan: 1, colspan: 1, key: 'sumAmt' },
-    { name: '비고', rowspan: 1, colspan: 1, key: 'remarks' },
+    { name: '기준일자', rowspan: 2, colspan: 1, key: 'stockDay' },
+    { name: '입고수량', rowspan: 2, colspan: 1, key: 'iQty' },
+    { name: '출고', rowspan: 1, colspan: 3 },
+    { name: '출고계', rowspan: 2, colspan: 1, key: 'otQty' },
+    { name: '재고조정', rowspan: 2, colspan: 1, key: 'ozQty' },
+    { name: '반품', rowspan: 2, colspan: 1, key: 'obQty' },
+    { name: '총재고', rowspan: 2, colspan: 1, key: 'jQty' },
+    { name: '비고', rowspan: 2, colspan: 1, key: 'remarks' },
   ],
-  // headRow2: [
-  //   { name: '입고', rowspan: 1, colspan: 1, key: 'iQty' },
-  //   { name: '재생', rowspan: 1, colspan: 1, key: 'ibQty' },
-  //   { name: '출고', rowspan: 1, colspan: 1, key: 'oQty' },
-  //   { name: '증정', rowspan: 1, colspan: 1, key: 'ojQty' },
-  //   { name: '반품', rowspan: 1, colspan: 1, key: 'obQty' },
-  //   { name: '폐기', rowspan: 1, colspan: 1, key: 'oxQty' },
-  // ],
+  headRow2: [
+    { name: '출고수량', rowspan: 1, colspan: 1, key: 'oQty' },
+    { name: '증정수량', rowspan: 1, colspan: 1, key: 'ojQty' },
+    { name: '폐기수량', rowspan: 1, colspan: 1, key: 'oxQty' },
+  ],
 });
 
 const excelDownload = () => {
   headerGroup.header = [];
   headerGroup.header.push(headerGroup.headRow1);
-  // headerGroup.header.push(headerGroup.headRow2);
+  headerGroup.header.push(headerGroup.headRow2);
 
   let options = {
     header: headerGroup.header,
@@ -265,5 +273,5 @@ const applyExcelStyles = worksheet => {
 </script>
 
 <style scoped>
-@import 'src/css/print/sal2120.css';
+@import 'src/css/print/sal4210.css';
 </style>

@@ -37,55 +37,34 @@
             </template>
           </q-field>
 
-          <q-input
+          <q-select
             stack-label
-            class=""
-            v-model="searchValue.custNm"
-            label="거래처명"
+            options-dense
             label-color="orange"
-            @keyup.enter.prevent="openHelpCustDialog(searchValue.custNm)"
-          >
-            <template v-slot:prepend>
-              <q-btn dense flat class="q-mt-md text-bold" icon="search" size="md" :label="searchValue.custCd" @click="openHelpCustDialog('')" />
-            </template>
-            <template v-slot:append>
-              <q-icon
-                size="0.8em"
-                v-if="searchValue.custNm !== ''"
-                name="close"
-                @click="
-                  searchValue.custNm = '';
-                  searchValue.custCd = '';
-                  handelGetData();
-                "
-                class="cursor-pointer q-pt-md"
-              />
-            </template>
-          </q-input>
+            v-model="searchValue.prodDiv"
+            :options="searchValue.prodDivOptions"
+            option-value="commCd"
+            option-label="commNm"
+            option-disable="inactive"
+            emit-value
+            map-options
+            style="min-width: 150px"
+            label="구분"
+          />
 
           <q-input
+            v-if="!$q.screen.xs"
             stack-label
-            class=""
-            v-model="searchValue.prodNm"
-            label="도서명"
             label-color="orange"
-            @keyup.enter.prevent="openHelpProdDialog(searchValue.prodNm)"
+            bottom-slots
+            v-model="searchValue.textValue"
+            label="검색어"
+            class="q-pb-none"
+            style="width: 120px"
+            @update:model-value="handelGetData"
           >
-            <template v-slot:prepend>
-              <q-btn dense flat class="q-mt-md text-bold" icon="search" size="md" :label="searchValue.prodCd" @click="openHelpProdDialog('')" />
-            </template>
             <template v-slot:append>
-              <q-icon
-                size="0.8em"
-                v-if="searchValue.prodNm !== ''"
-                name="close"
-                @click="
-                  searchValue.prodNm = '';
-                  searchValue.prodCd = '';
-                  handelGetData();
-                "
-                class="cursor-pointer q-pt-md"
-              />
+              <q-icon v-if="searchValue.textValue !== ''" name="close" @click="searchValue.textValue = ''" size="xs" class="cursor-pointer q-pt-md" />
             </template>
           </q-input>
         </div>
@@ -118,7 +97,10 @@
     <q-dialog persistent full-height full-width v-model="isDialogVisible">
       <q-card class="q-pa-none q-ma-none">
         <q-card-section class="q-pa-none q-ma-none">
-          <sal-v2120p :messages="{ rowData: rowData, titleNm: menuLabel, searchValue: searchValue }" @close="handleClose" />
+          <sal-v4110p
+            :messages="{ rowData: rowData, titleNm: menuLabel, dealDayFrom: searchValue.period.from, dealDayTo: searchValue.period.to }"
+            @close="handleClose"
+          />
         </q-card-section>
       </q-card>
     </q-dialog>
@@ -133,11 +115,9 @@ import 'ag-grid-community/styles/ag-theme-balham.css';
 import { AgGridVue } from 'ag-grid-vue3';
 import { computed, onBeforeMount, onBeforeUnmount, onMounted, reactive, ref, watch } from 'vue';
 import { api } from 'boot/axios';
-import { date, QBtn, QIcon, QToggle, SessionStorage, useQuasar } from 'quasar';
-import SalV2120p from 'pages/erp/sal/SalV2120p.vue';
+import { QBtn, QIcon, useQuasar } from 'quasar';
+import SalV4110p from 'pages/erp/sal/SalV4110p.vue';
 import commUtil from 'src/js_comm/comm-util';
-import HelpProd from 'components/subvue/HelpProd.vue';
-import HelpCust from 'components/subvue/HelpCust.vue';
 
 const rowData = reactive({ rows: [], rowsSum: [] });
 const isDialogVisible = ref(false);
@@ -160,13 +140,11 @@ const contentZoneStyle = computed(() => ({
 
 const searchPeriod = ref({ from: commUtil.getToday(), to: commUtil.getToday() });
 const searchValue = reactive({
-  // period: { from: commUtil.getToday(), to: commUtil.getToday() },
-  period: { from: '2024-10-01', to: '2024-11-30' },
+  // period: { from: '20241101', to: '20241130' },
+  period: { from: commUtil.getToday(), to: commUtil.getToday() },
   textValue: '',
-  custNm: '',
-  custCd: '',
-  prodNm: '',
-  prodCd: '',
+  prodDivOptions: [],
+  prodDiv: '1011101',
 });
 // 모델 값 감시
 watch(searchPeriod, newVal => {
@@ -185,98 +163,45 @@ const columnDefs = ref([
   {
     headerName: '#',
     field: 'rowNum',
-    minWidth: 70,
+    minWidth: 80,
     maxWidth: 80,
     pinned: !$q.screen.xs && !$q.screen.sm ? 'left' : null,
     sortable: true,
     filter: false,
-    // valueGetter: function (params) {
-    // return params.node.rowIndex + 1;
-    // if (params.data.cnt === undefined) {
-    //   return '';
-    // } else {
-    // return params.data.rowNum;
-    // }
-    // },
-    cellStyle: params => {
-      return { textAlign: 'center' };
-    },
-  },
-  {
-    headerName: '거래일자',
-    field: 'dealDay',
-    pinned: !$q.screen.xs && !$q.screen.sm ? 'left' : null,
-    minWidth: 130,
-    maxWidth: 130,
-    valueGetter: params => {
-      if (params.data.dealDay && params.data.dealDay.length === 8) {
-        return `${params.data.dealDay.slice(0, 4)}-${params.data.dealDay.slice(4, 6)}-${params.data.dealDay.slice(6)}`;
-      }
-      return params.data.dealDay;
-    },
-    cellStyle: params => {
-      return { textAlign: 'center' };
-    },
-  },
-  {
-    headerName: '전표번호',
-    field: 'seq',
-    pinned: !$q.screen.xs && !$q.screen.sm ? 'left' : null,
-    minWidth: 100,
-    maxWidth: 100,
-    valueGetter: params => {
-      return params.data.seq;
-    },
-    cellStyle: params => {
-      return { textAlign: 'center' };
-    },
-  },
-  {
-    headerName: '업체명',
-    field: 'custNm',
-    minWidth: 150,
-    resizable: true,
-    pinned: !$q.screen.xs && !$q.screen.sm ? 'left' : null,
     valueGetter: function (params) {
-      return params.data.custNm;
+      if (params.node.rowPinned) {
+        return null; // Do not display a number for pinned rows
+      }
+      return params.node.rowIndex + 1;
+    },
+    cellStyle: params => {
+      return { textAlign: 'center' };
+    },
+  },
+  {
+    headerName: '도서명',
+    field: 'prodNm',
+    pinned: !$q.screen.xs && !$q.screen.sm ? 'left' : null,
+    minWidth: 200,
+    valueGetter: params => {
+      return params.data.prodNm;
+    },
+    cellStyle: params => {
+      return { textAlign: 'left' };
     },
   },
   {
     headerName: '코드',
-    field: 'custCd',
-    minWidth: 85,
-    maxWidth: 85,
+    field: 'prodCd',
+    minWidth: 100,
     resizable: true,
     valueGetter: function (params) {
-      return params.data.custCd;
+      return params.data.prodCd;
     },
   },
   {
-    headerName: 'ITEM',
-    field: 'cnt',
-    minWidth: 90,
-    maxWidth: 90,
-    valueFormatter: params => {
-      if (params.value != null) {
-        return new Intl.NumberFormat('ko-KR', {
-          // style: 'currency',
-          // currency: 'KRW',
-          minimumFractionDigits: 0,
-          maximumFractionDigits: 0,
-        }).format(params.value);
-      }
-      return '';
-    },
-    cellClass: 'ag-right-aligned-cell',
-    // cellStyle: () => {
-    //   return {
-    //     color: $q.dark.isActive ? 'orange' : 'teal',
-    //   };
-    // },
-  },
-  {
-    headerName: '총수량',
-    field: 'sumQty',
+    headerName: '이월',
+    field: 'wjQty',
     minWidth: 110,
     maxWidth: 110,
     valueFormatter: params => {
@@ -298,10 +223,181 @@ const columnDefs = ref([
     // },
   },
   {
-    headerName: '합계금액',
-    field: 'sumAmt',
-    minWidth: 150,
-    maxWidth: 150,
+    headerName: '기간내 출고정보',
+    children: [
+      {
+        headerName: '입고',
+        field: 'iQty',
+        minWidth: 110,
+        maxWidth: 110,
+        valueFormatter: params => {
+          if (params.value != null) {
+            return new Intl.NumberFormat('ko-KR', {
+              // style: 'currency',
+              // currency: 'KRW',
+              minimumFractionDigits: 0,
+              maximumFractionDigits: 0,
+            }).format(params.value);
+          }
+          return '';
+        },
+        cellClass: 'ag-right-aligned-cell',
+        // cellStyle: () => {
+        //   return {
+        //     color: $q.dark.isActive ? 'orange' : 'teal',
+        //   };
+        // },
+      },
+      {
+        headerName: '출고정보',
+        children: [
+          {
+            headerName: '출고',
+            field: 'oQty',
+            minWidth: 110,
+            maxWidth: 110,
+            valueFormatter: params => {
+              if (params.value != null) {
+                return new Intl.NumberFormat('ko-KR', {
+                  // style: 'currency',
+                  // currency: 'KRW',
+                  minimumFractionDigits: 0,
+                  maximumFractionDigits: 0,
+                }).format(params.value);
+              }
+              return '';
+            },
+            cellClass: 'ag-right-aligned-cell',
+            // cellStyle: () => {
+            //   return {
+            //     color: $q.dark.isActive ? 'orange' : 'teal',
+            //   };
+            // },
+          },
+          {
+            headerName: '증정',
+            field: 'ojQty',
+            minWidth: 90,
+            maxWidth: 90,
+            valueFormatter: params => {
+              if (params.value != null) {
+                return new Intl.NumberFormat('ko-KR', {
+                  // style: 'currency',
+                  // currency: 'KRW',
+                  minimumFractionDigits: 0,
+                  maximumFractionDigits: 0,
+                }).format(params.value);
+              }
+              return '';
+            },
+            cellClass: 'ag-right-aligned-cell',
+            // cellStyle: () => {
+            //   return {
+            //     color: $q.dark.isActive ? 'orange' : 'teal',
+            //   };
+            // },
+          },
+          {
+            headerName: '폐기',
+            field: 'oxQty',
+            minWidth: 90,
+            maxWidth: 90,
+            valueFormatter: params => {
+              if (params.value != null) {
+                return new Intl.NumberFormat('ko-KR', {
+                  // style: 'currency',
+                  // currency: 'KRW',
+                  minimumFractionDigits: 0,
+                  maximumFractionDigits: 0,
+                }).format(params.value);
+              }
+              return '';
+            },
+            cellClass: 'ag-right-aligned-cell',
+            // cellStyle: () => {
+            //   return {
+            //     color: $q.dark.isActive ? 'orange' : 'teal',
+            //   };
+            // },
+          },
+        ],
+      },
+      {
+        headerName: '출고합계',
+        field: 'otQty',
+        minWidth: 110,
+        maxWidth: 110,
+        valueFormatter: params => {
+          if (params.value != null) {
+            return new Intl.NumberFormat('ko-KR', {
+              // style: 'currency',
+              // currency: 'KRW',
+              minimumFractionDigits: 0,
+              maximumFractionDigits: 0,
+            }).format(params.value);
+          }
+          return '';
+        },
+        cellClass: 'ag-right-aligned-cell',
+        // cellStyle: () => {
+        //   return {
+        //     color: $q.dark.isActive ? 'orange' : 'teal',
+        //   };
+        // },
+      },
+      {
+        headerName: '재고조정',
+        field: 'ozQty',
+        minWidth: 110,
+        maxWidth: 110,
+        valueFormatter: params => {
+          if (params.value != null) {
+            return new Intl.NumberFormat('ko-KR', {
+              // style: 'currency',
+              // currency: 'KRW',
+              minimumFractionDigits: 0,
+              maximumFractionDigits: 0,
+            }).format(params.value);
+          }
+          return '';
+        },
+        cellClass: 'ag-right-aligned-cell',
+        // cellStyle: () => {
+        //   return {
+        //     color: $q.dark.isActive ? 'orange' : 'teal',
+        //   };
+        // },
+      },
+      {
+        headerName: '반품',
+        field: 'obQty',
+        minWidth: 100,
+        maxWidth: 100,
+        valueFormatter: params => {
+          if (params.value != null) {
+            return new Intl.NumberFormat('ko-KR', {
+              // style: 'currency',
+              // currency: 'KRW',
+              minimumFractionDigits: 0,
+              maximumFractionDigits: 0,
+            }).format(params.value);
+          }
+          return '';
+        },
+        cellClass: 'ag-right-aligned-cell',
+        // cellStyle: () => {
+        //   return {
+        //     color: $q.dark.isActive ? 'orange' : 'teal',
+        //   };
+        // },
+      },
+    ],
+  },
+  {
+    headerName: '총재고',
+    field: 'jQty',
+    minWidth: 110,
+    maxWidth: 110,
     valueFormatter: params => {
       if (params.value != null) {
         return new Intl.NumberFormat('ko-KR', {
@@ -320,7 +416,6 @@ const columnDefs = ref([
     //   };
     // },
   },
-
   {
     headerName: '비고',
     field: 'remarks',
@@ -338,7 +433,7 @@ onBeforeUnmount(() => {
   window.removeEventListener('resize', handleResize);
 });
 onBeforeMount(() => {
-  getDataCommOption('402').then(() => {
+  getDataCommOption('101').then(() => {
     handelGetData();
   });
 });
@@ -377,14 +472,11 @@ const handleResize = () => {
 
 const getData = async () => {
   try {
-    const response = await api.post('/api/sal/sal2120_list', {
+    const response = await api.post('/api/sal/sal4110_list', {
       paramPeriodFrom: commUtil.unFormatDate(searchValue.period.from),
       paramPeriodTo: commUtil.unFormatDate(searchValue.period.to),
-      paramCustCd: searchValue.custCd,
-      paramProdCd: searchValue.prodCd,
-      // paramPeriodFrom: '20241101',
-      // paramPeriodTo: '20241231',
-      // paramProdCd: '4457',
+      paramProdDiv: searchValue.prodDiv,
+      paramValue: searchValue.textValue,
     });
     rowData.rows = response.data.data;
     myGrid.value.api.setGridOption('rowData', rowData.rows);
@@ -401,12 +493,12 @@ const getDataCommOption = async resCommCd1 => {
     const response = await api.post('/api/mst/comm_option_list', { paramCommCd1: resCommCd1 });
 
     switch (resCommCd1) {
-      case '402':
-        searchValue.dealFgOptions = JSON.parse(JSON.stringify(response.data.data));
-        searchValue.dealFgOptions.unshift({ commCd: '', commNm: '전체' });
+      case '101':
+        searchValue.prodDivOptions = JSON.parse(JSON.stringify(response.data.data));
+        searchValue.prodDivOptions.push({ commCd: '', commNm: '전체' });
         break;
       default:
-        searchValue.dealFgOptions = [];
+        searchValue.prodDivOptions = [];
     }
 
     // console.log('getData1: ', JSON.stringify(response.data.data));
@@ -422,19 +514,38 @@ const getDataCommOption = async resCommCd1 => {
 // rows 전체 합 구하는 부분
 const calculateTotal = () => {
   let totalRow = {
-    custNm: '합계',
-    cnt: 0,
-    sumQty: 0,
-    sumAmt: 0,
+    prodNm: '합계',
+    wjQty: 0,
+    iQty: 0,
+    oQty: 0,
+    ojQty: 0,
+    oxQty: 0,
+    otQty: 0,
+    ozQty: 0,
+    obQty: 0,
+    jQty: 0,
   };
 
   rowData.rows.forEach(row => {
-    totalRow.cnt += row.cnt || 0;
-    totalRow.sumQty += row.sumQty || 0;
-    totalRow.sumAmt += row.sumAmt || 0;
+    totalRow.wjQty += row.wjQty || 0;
+    totalRow.iQty += row.iQty || 0;
+    totalRow.oQty += row.oQty || 0;
+    totalRow.ojQty += row.ojQty || 0;
+    totalRow.oxQty += row.oxQty || 0;
+    totalRow.otQty += row.otQty || 0;
+    totalRow.ozQty += row.ozQty || 0;
+    totalRow.obQty += row.obQty || 0;
   });
 
-  const hasMeaningfulData = totalRow.cnt !== 0 || totalRow.sumQty !== 0 || totalRow.sumAmt !== 0;
+  const hasMeaningfulData =
+    totalRow.wjQty !== 0 ||
+    totalRow.iQty !== 0 ||
+    totalRow.oQty !== 0 ||
+    totalRow.ojQty !== 0 ||
+    totalRow.oxQty !== 0 ||
+    totalRow.otQty !== 0 ||
+    totalRow.ozQty !== 0 ||
+    totalRow.obQty !== 0;
 
   if (hasMeaningfulData) {
     rowData.rowsSum.push(totalRow);
@@ -443,6 +554,7 @@ const calculateTotal = () => {
   return totalRow;
 };
 // rows 전체 합 구하는 부분 끝
+
 // *********************************
 const myGrid = ref(null);
 const myGridOptions = {
@@ -456,10 +568,10 @@ const myGridOptions = {
     editable: false,
   },
   rowSelection: 'single' /* 'single' or 'multiple',*/,
-  enableColResize: true,
-  enableSorting: true,
-  enableFilter: true,
-  enableRangeSelection: true,
+  // enableColResize: true,
+  // enableSorting: true,
+  // enableFilter: true,
+  // enableRangeSelection: true,
   suppressRowClickSelection: false,
   animateRows: true,
   suppressHorizontalScroll: true,
@@ -468,7 +580,17 @@ const myGridOptions = {
     if (event.node.rowPinned) {
       return { 'font-weight': 'bold', background: '#dddddd' };
     }
-
+    // return { 'text-align': 'left' };
+    // seq가 undefined이면 행 배경색 변경 및 "소계" 삽입
+    // if (event.data.saleDay === '00000000') {
+    //   return { backgroundColor: 'rgba(0,181,117,0.24)', fontWeight: 'bold' }; // 예: 연한 주황색
+    // }
+    // if (event.data.custNm === '일계') {
+    //   return { backgroundColor: 'rgba(1,127,194,0.17)' }; // 예: 연한 파란색
+    // }
+    // if (event.data.custNm === '총계') {
+    //   return { backgroundColor: 'rgba(3,147,5,0.22)' }; // 예: 연한 파란색
+    // }
     // dealDay가 undefined이면 행 배경색 변경 및 "합계" 삽입
     return null; // 기본 스타일
   },
@@ -479,7 +601,7 @@ const myGridOptions = {
     }
     return 30;
   },
-  headerHeight: 40, // 헤더 행 높이를 50px로 설정
+  headerHeight: 25, // 헤더 행 높이를 50px로 설정
   // 또는 동적으로 헤더 높이를 계산
   // getHeaderHeight: function () {
   //   return 60; // 동적으로 60px 설정
@@ -526,18 +648,18 @@ const myGridOptions = {
   onCellValueChanged: function (event) {
     // console.log('onCellValueChanged');
   },
-  getRowNodeId: function (event) {
-    // console.log('getRowNodeId');
-    return null;
-  },
+  // getRowNodeId: function (event) {
+  //   console.log('getRowNodeId');
+  // return null;
+  // },
   // 리드 상단 고정
-  setPinnedTopRowData: function (data) {
-    return null;
-  },
+  // setPinnedTopRowData: function (data) {
+  //   return null;
+  // },
   // 그리드 하단 고정
-  setPinnedBottomRowData: function (data) {
-    return null;
-  },
+  // setPinnedBottomRowData: function (data) {
+  //   return null;
+  // },
   // components: {
   //   numericCellEditor: NumericCellEditor,
   //   moodEditor: MoodEditor,
@@ -546,37 +668,5 @@ const myGridOptions = {
 };
 
 /* *** 코드헬프부분 ** */
-const openHelpCustDialog = resNm => {
-  $q.dialog({
-    component: HelpCust,
-    componentProps: {
-      paramValueNm: resNm,
-      paramUseYn: 'N',
-      paramCloseDay: '99991231',
-    },
-  })
-    .onOk(res => {
-      searchValue.custCd = res.custCd;
-      searchValue.custNm = res.custNm;
-    })
-    .onCancel(() => {})
-    .onDismiss(() => {});
-};
-const openHelpProdDialog = resNm => {
-  $q.dialog({
-    component: HelpProd,
-    componentProps: {
-      paramValueNm: resNm,
-      paramUseYn: 'N',
-      paramCloseDay: '99991231',
-    },
-  })
-    .onOk(res => {
-      searchValue.prodNm = res.prodNm;
-      searchValue.prodCd = res.prodCd;
-    })
-    .onCancel(() => {})
-    .onDismiss(() => {});
-};
 </script>
 <style></style>

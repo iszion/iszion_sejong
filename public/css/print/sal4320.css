@@ -15,17 +15,6 @@ th {
   background-color: #333333; /* 다크 모드 배경색 */
 }
 
-
-.bg-grey1 {
-  background-color: #f1f1f1; /* 다크 모드 배경색 */
-}
-.bg-grey2 {
-  background-color: #eaeaea; /* 다크 모드 배경색 */
-}
-.bg-grey3 {
-  background-color: #e8e8e8; /* 다크 모드 배경색 */
-}
-
 td {
     border: 1px solid grey; /* 셀 테두리 설정 (원하는 경우) */
     padding: 3px; /* 셀 안 패딩 */
@@ -42,10 +31,10 @@ td:nth-child(3) {
     text-align: center;
 } /* 소속 */
 td:nth-child(4) {
-    text-align: left;
+    text-align: center;
 } /* 직급 */
 td:nth-child(5) {
-    text-align: center;
+    text-align: right;
 } /* 구분 */
 td:nth-child(6) {
     text-align: right;
@@ -54,5 +43,20 @@ td:nth-child(7) {
   text-align: right;
 }
 td:nth-child(8) {
+    text-align: right;
+} /* 항목 */
+td:nth-child(9) {
+  text-align: right;
+}
+td:nth-child(10) {
+  text-align: right;
+}
+td:nth-child(11) {
+  text-align: right;
+}
+td:nth-child(12) {
+  text-align: right;
+}
+td:nth-child(13) {
   text-align: left;
 }

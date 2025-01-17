@@ -42,10 +42,10 @@ td:nth-child(3) {
     text-align: center;
 } /* 소속 */
 td:nth-child(4) {
-    text-align: left;
+    text-align: center;
 } /* 직급 */
 td:nth-child(5) {
-    text-align: center;
+    text-align: right;
 } /* 구분 */
 td:nth-child(6) {
     text-align: right;
@@ -54,5 +54,20 @@ td:nth-child(7) {
   text-align: right;
 }
 td:nth-child(8) {
+    text-align: right;
+} /* 항목 */
+td:nth-child(9) {
+  text-align: right;
+}
+td:nth-child(10) {
+  text-align: right;
+}
+td:nth-child(11) {
+  text-align: right;
+}
+td:nth-child(12) {
+  text-align: right;
+}
+td:nth-child(13) {
   text-align: left;
 }

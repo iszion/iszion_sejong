@@ -504,13 +504,13 @@ const calculateTotal = () => {
   rowData.rows.forEach(row => {
     totalRow.oQty += row.oQty || 0;
     totalRow.oJQty += row.ojQty || 0;
-    totalRow.oBQty += row.obQty || 0;
+    totalRow.obQty += row.obQty || 0;
     totalRow.oAmt += row.oAmt || 0;
     totalRow.ojAmt += row.ojAmt || 0;
     totalRow.obAmt += row.obAmt || 0;
     totalRow.inAmt += row.inAmt || 0;
 
-    if (row.jAmt > 0) {
+    if (row.jAmt !== 0) {
       totalRow.jAmt = row.jAmt;
     }
   });
@@ -544,10 +544,10 @@ const myGridOptions = {
     editable: false,
   },
   rowSelection: 'single' /* 'single' or 'multiple',*/,
-  enableColResize: true,
-  enableSorting: true,
-  enableFilter: true,
-  enableRangeSelection: true,
+  // enableColResize: true,
+  // enableSorting: true,
+  // enableFilter: true,
+  // enableRangeSelection: true,
   suppressRowClickSelection: false,
   animateRows: true,
   suppressHorizontalScroll: true,
@@ -628,18 +628,18 @@ const myGridOptions = {
   onCellValueChanged: function (event) {
     // console.log('onCellValueChanged');
   },
-  getRowNodeId: function (event) {
-    // console.log('getRowNodeId');
-    return null;
-  },
+  // getRowNodeId: function (event) {
+  // console.log('getRowNodeId');
+  // return null;
+  // },
   // 리드 상단 고정
-  setPinnedTopRowData: function (data) {
-    return null;
-  },
+  // setPinnedTopRowData: function (data) {
+  //   return null;
+  // },
   // 그리드 하단 고정
-  setPinnedBottomRowData: function (data) {
-    return null;
-  },
+  // setPinnedBottomRowData: function (data) {
+  //   return null;
+  // },
   // components: {
   //   numericCellEditor: NumericCellEditor,
   //   moodEditor: MoodEditor,
