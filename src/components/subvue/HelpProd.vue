@@ -137,7 +137,7 @@ const columnDefs = ref([
   },
   {
     headerName: '발행일',
-    field: 'pubDate',
+    field: 'pubDay',
     valueFormatter: dateFormatter,
     minWidth: 120,
     maxWidth: 120,

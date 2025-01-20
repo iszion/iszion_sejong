@@ -206,7 +206,7 @@
                     stack-label
                     :dense="dense"
                     class="col-xs-12 col-sm-4"
-                    v-model="formData.makeDate"
+                    v-model="formData.makeDay"
                     type="date"
                     label="등록일"
                     :label-color="$q.dark.isActive ? 'green' : 'blue'"
@@ -927,7 +927,7 @@ const columnDefs = reactive({
     },
     {
       headerName: '등록일',
-      field: 'makeDate',
+      field: 'makeDay',
       valueFormatter: dateFormatter,
       minWidth: 120,
       maxWidth: 120,
@@ -1074,7 +1074,7 @@ const formDataInitialize = () => {
     yulSg: '0',
     yulGt: '0',
     limitAmt: '0',
-    makeDate: '',
+    makeDay: '',
     billYn: '',
     billEmail: '',
     useYn: 'N',
@@ -1105,7 +1105,7 @@ const addDataSection = () => {
   formData.value.itemCl = '1';
   formData.value.ebookYn = 'N';
   formData.value.useYn = 'N';
-  formData.value.makeDate = commUtil.getToday();
+  formData.value.makeDay = commUtil.getToday();
 
   setTimeout(() => {
     startFocus.value.focus();
@@ -1143,7 +1143,7 @@ const deleteDataSection = () => {
     });
 };
 const saveDataSection = () => {
-  formData.value.makeDate = commUtil.unFormatDate(formData.value.makeDate);
+  formData.value.makeDay = commUtil.unFormatDate(formData.value.makeDay);
   formData.value.custBusinNo = formData.value.custBusinNo.replace(/-/g, '');
   // console.log('formData : ', JSON.stringify(formData.value));
   // console.log('oldFormData : ', JSON.stringify(oldFormData.value));
@@ -1266,7 +1266,7 @@ const getDataSelect = async resCustCd => {
     formData.value = response.data.data[0];
     // console.log('select data ::: ', JSON.stringify(formData.value));
     oldFormData.value = JSON.parse(JSON.stringify(formData.value)); // 초기자료 저장
-    formData.value.makeDate = commUtil.formatDate(response.data.data[0].makeDate);
+    formData.value.makeDay = commUtil.formatDate(response.data.data[0].makeDay);
   } catch (error) {
     console.error('Error fetching users:', error);
   }

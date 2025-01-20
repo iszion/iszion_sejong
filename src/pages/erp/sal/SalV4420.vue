@@ -21,20 +21,34 @@
         <div class="row q-col-gutter-x-md">
           <q-input
             stack-label
-            readonly
-            v-model="searchValue.stdDay"
-            label="발행일자"
             label-color="orange"
-            style="width: 140px"
+            label="기준년"
             class="text-subtitle1"
+            v-model="searchValue.year"
+            type="number"
+            style="width: 100px"
+            @update:model-value="getData"
           >
             <template v-slot:append>
-              <q-icon name="event" class="cursor-pointer q-pt-md" />
+              <span class="text-subtitle1 q-pt-md">년</span>
             </template>
-            <q-popup-proxy v-model="showDatePopupDay" transition-show="scale" transition-hide="scale">
-              <q-date minimal v-model="searchValue.stdDay" mask="YYYY-MM-DD" color="orange" @update:model-value="onDateSelectDay" />
-            </q-popup-proxy>
           </q-input>
+
+          <q-select
+            stack-label
+            options-dense
+            label-color="orange"
+            v-model="searchValue.month"
+            :options="searchValue.monthOptions"
+            option-value="valueCd"
+            option-label="valueNm"
+            option-disable="inactive"
+            emit-value
+            map-options
+            style="min-width: 90px"
+            label="기준월"
+            @update:model-value="getData"
+          />
 
           <q-select
             stack-label
@@ -96,7 +110,7 @@
     <q-dialog persistent full-height full-width v-model="isDialogVisible">
       <q-card class="q-pa-none q-ma-none">
         <q-card-section class="q-pa-none q-ma-none">
-          <sal-v4120p :messages="{ rowData: rowData, titleNm: menuLabel, searchValue: searchValue }" @close="handleClose" />
+          <sal-v4420p :messages="{ rowData: rowData, titleNm: menuLabel, searchValue: searchValue }" @close="handleClose" />
         </q-card-section>
       </q-card>
     </q-dialog>
@@ -112,7 +126,7 @@ import { AgGridVue } from 'ag-grid-vue3';
 import { computed, onBeforeMount, onBeforeUnmount, onMounted, reactive, ref, watch } from 'vue';
 import { api } from 'boot/axios';
 import { QBtn, QIcon, useQuasar } from 'quasar';
-import SalV4120p from 'pages/erp/sal/SalV4120p.vue';
+import SalV4420p from 'pages/erp/sal/SalV4420p.vue';
 import commUtil from 'src/js_comm/comm-util';
 
 const rowData = reactive({ rows: [], rowsSum: [] });
@@ -125,16 +139,6 @@ const minHeight = ref(90); // 최소 높이 (예: 300px) rowHeight의 3배
 
 const $q = useQuasar();
 
-const showDatePopupDay = ref(false);
-const onDateSelectDay = () => {
-  showDatePopupDay.value = false;
-  searchValue.stdDayM1 = commUtil.getPreviousMonthDate(commUtil.unFormatDate(searchValue.stdDay), 1);
-  searchValue.stdDayM3 = commUtil.getPreviousMonthDate(commUtil.unFormatDate(searchValue.stdDay), 3);
-  searchValue.titleM1 = searchValue.stdDayM1.toString().substring(2) + '~' + commUtil.unFormatDate(searchValue.stdDay).substring(2);
-  searchValue.titleM3 = searchValue.stdDayM3.toString().substring(2) + '~' + commUtil.unFormatDate(searchValue.stdDay).substring(2);
-  console.log('m1 : ', searchValue.titleM1, searchValue.titleM3);
-};
-
 function handleClose() {
   console.log('handleClose called');
   isDialogVisible.value = false;
@@ -145,14 +149,25 @@ const contentZoneStyle = computed(() => ({
 }));
 
 const searchValue = reactive({
-  stdDay: commUtil.getToday(),
-  stdDayM1: '',
-  stdDayM3: '',
+  year: commUtil.getTodayYear(),
+  month: commUtil.getTodayMonth(),
+  monthOptions: [
+    { valueNm: '01월', valueCd: '01' },
+    { valueNm: '02월', valueCd: '02' },
+    { valueNm: '03월', valueCd: '03' },
+    { valueNm: '04월', valueCd: '04' },
+    { valueNm: '05월', valueCd: '05' },
+    { valueNm: '06월', valueCd: '06' },
+    { valueNm: '07월', valueCd: '07' },
+    { valueNm: '08월', valueCd: '08' },
+    { valueNm: '09월', valueCd: '09' },
+    { valueNm: '10월', valueCd: '10' },
+    { valueNm: '11월', valueCd: '11' },
+    { valueNm: '12월', valueCd: '12' },
+  ],
   textValue: '',
   prodDivOptions: [],
   prodDiv: '1011101',
-  titleM1: '',
-  titleM3: '',
 });
 
 const columnDefs = ref([
@@ -219,10 +234,309 @@ const columnDefs = ref([
     // },
   },
   {
-    headerName: '총재고수량',
+    headerName: '전월재고량',
+    field: 'wjQty',
+    minWidth: 120,
+    maxWidth: 120,
+    valueFormatter: params => {
+      if (params.value != null) {
+        return new Intl.NumberFormat('ko-KR', {
+          // style: 'currency',
+          // currency: 'KRW',
+          minimumFractionDigits: 0,
+          maximumFractionDigits: 0,
+        }).format(params.value);
+      }
+      return '';
+    },
+    cellClass: 'ag-right-aligned-cell',
+    // cellStyle: () => {
+    //   return {
+    //     color: $q.dark.isActive ? 'orange' : 'teal',
+    //   };
+    // },
+  },
+  {
+    headerName: '당월입고량',
+    field: 'iQty',
+    minWidth: 120,
+    maxWidth: 120,
+    valueFormatter: params => {
+      if (params.value != null) {
+        return new Intl.NumberFormat('ko-KR', {
+          // style: 'currency',
+          // currency: 'KRW',
+          minimumFractionDigits: 0,
+          maximumFractionDigits: 0,
+        }).format(params.value);
+      }
+      return '';
+    },
+    cellClass: 'ag-right-aligned-cell',
+    // cellStyle: () => {
+    //   return {
+    //     color: $q.dark.isActive ? 'orange' : 'teal',
+    //   };
+    // },
+  },
+  {
+    headerName: '총재고',
+    field: 'tjQty',
+    minWidth: 120,
+    maxWidth: 120,
+    valueFormatter: params => {
+      if (params.value != null) {
+        return new Intl.NumberFormat('ko-KR', {
+          // style: 'currency',
+          // currency: 'KRW',
+          minimumFractionDigits: 0,
+          maximumFractionDigits: 0,
+        }).format(params.value);
+      }
+      return '';
+    },
+    cellClass: 'ag-right-aligned-cell',
+    // cellStyle: () => {
+    //   return {
+    //     color: $q.dark.isActive ? 'orange' : 'teal',
+    //   };
+    // },
+  },
+  {
+    headerName: '총출고수량',
+    field: 'qtQty',
+    minWidth: 120,
+    maxWidth: 120,
+    valueFormatter: params => {
+      if (params.value != null) {
+        return new Intl.NumberFormat('ko-KR', {
+          // style: 'currency',
+          // currency: 'KRW',
+          minimumFractionDigits: 0,
+          maximumFractionDigits: 0,
+        }).format(params.value);
+      }
+      return '';
+    },
+    cellClass: 'ag-right-aligned-cell',
+    // cellStyle: () => {
+    //   return {
+    //     color: $q.dark.isActive ? 'orange' : 'teal',
+    //   };
+    // },
+  },
+  {
+    headerName: '당월출고액(입고액)',
+    children: [
+      {
+        headerName: '출고수량',
+        field: 'oQty',
+        minWidth: 160,
+        valueFormatter: params => {
+          if (params.value != null) {
+            return new Intl.NumberFormat('ko-KR', {
+              // style: 'currency',
+              // currency: 'KRW',
+              minimumFractionDigits: 0,
+              maximumFractionDigits: 0,
+            }).format(params.value);
+          }
+          return '';
+        },
+        cellClass: 'ag-right-aligned-cell',
+        // cellStyle: () => {
+        //   return {
+        //     color: $q.dark.isActive ? 'orange' : 'teal',
+        //   };
+        // },
+      },
+      {
+        headerName: '출고금액',
+        field: 'oAmt',
+        minWidth: 160,
+        valueFormatter: params => {
+          if (params.value != null) {
+            return new Intl.NumberFormat('ko-KR', {
+              // style: 'currency',
+              // currency: 'KRW',
+              minimumFractionDigits: 0,
+              maximumFractionDigits: 0,
+            }).format(params.value);
+          }
+          return '';
+        },
+        cellClass: 'ag-right-aligned-cell',
+        // cellStyle: () => {
+        //   return {
+        //     color: $q.dark.isActive ? 'orange' : 'teal',
+        //   };
+        // },
+      },
+      {
+        headerName: '반품금액',
+        field: 'obAmt',
+        minWidth: 160,
+        valueFormatter: params => {
+          if (params.value != null) {
+            return new Intl.NumberFormat('ko-KR', {
+              // style: 'currency',
+              // currency: 'KRW',
+              minimumFractionDigits: 0,
+              maximumFractionDigits: 0,
+            }).format(params.value);
+          }
+          return '';
+        },
+        cellClass: 'ag-right-aligned-cell',
+        // cellStyle: () => {
+        //   return {
+        //     color: $q.dark.isActive ? 'orange' : 'teal',
+        //   };
+        // },
+      },
+    ],
+  },
+  {
+    headerName: '실매출액(SB개산서발행)',
+    field: 'odAmt',
+    minWidth: 160,
+    valueFormatter: params => {
+      if (params.value != null) {
+        return new Intl.NumberFormat('ko-KR', {
+          // style: 'currency',
+          // currency: 'KRW',
+          minimumFractionDigits: 0,
+          maximumFractionDigits: 0,
+        }).format(params.value);
+      }
+      return '';
+    },
+    cellClass: 'ag-right-aligned-cell',
+    // cellStyle: () => {
+    //   return {
+    //     color: $q.dark.isActive ? 'orange' : 'teal',
+    //   };
+    // },
+  },
+  {
+    headerName: '당월반품액',
+    children: [
+      {
+        headerName: '반품수량',
+        field: 'obQty',
+        minWidth: 160,
+        valueFormatter: params => {
+          if (params.value != null) {
+            return new Intl.NumberFormat('ko-KR', {
+              // style: 'currency',
+              // currency: 'KRW',
+              minimumFractionDigits: 0,
+              maximumFractionDigits: 0,
+            }).format(params.value);
+          }
+          return '';
+        },
+        cellClass: 'ag-right-aligned-cell',
+        // cellStyle: () => {
+        //   return {
+        //     color: $q.dark.isActive ? 'orange' : 'teal',
+        //   };
+        // },
+      },
+      {
+        headerName: '증정수량',
+        field: 'ojQty',
+        minWidth: 160,
+        valueFormatter: params => {
+          if (params.value != null) {
+            return new Intl.NumberFormat('ko-KR', {
+              // style: 'currency',
+              // currency: 'KRW',
+              minimumFractionDigits: 0,
+              maximumFractionDigits: 0,
+            }).format(params.value);
+          }
+          return '';
+        },
+        cellClass: 'ag-right-aligned-cell',
+        // cellStyle: () => {
+        //   return {
+        //     color: $q.dark.isActive ? 'orange' : 'teal',
+        //   };
+        // },
+      },
+      {
+        headerName: '순출고수량',
+        field: 'odQty',
+        minWidth: 160,
+        valueFormatter: params => {
+          if (params.value != null) {
+            return new Intl.NumberFormat('ko-KR', {
+              // style: 'currency',
+              // currency: 'KRW',
+              minimumFractionDigits: 0,
+              maximumFractionDigits: 0,
+            }).format(params.value);
+          }
+          return '';
+        },
+        cellClass: 'ag-right-aligned-cell',
+        // cellStyle: () => {
+        //   return {
+        //     color: $q.dark.isActive ? 'orange' : 'teal',
+        //   };
+        // },
+      },
+    ],
+  },
+  {
+    headerName: '당월폐기',
+    field: 'oxQty',
+    minWidth: 160,
+    valueFormatter: params => {
+      if (params.value != null) {
+        return new Intl.NumberFormat('ko-KR', {
+          // style: 'currency',
+          // currency: 'KRW',
+          minimumFractionDigits: 0,
+          maximumFractionDigits: 0,
+        }).format(params.value);
+      }
+      return '';
+    },
+    cellClass: 'ag-right-aligned-cell',
+    // cellStyle: () => {
+    //   return {
+    //     color: $q.dark.isActive ? 'orange' : 'teal',
+    //   };
+    // },
+  },
+  {
+    headerName: '재고조정',
+    field: 'ozQty',
+    minWidth: 160,
+    valueFormatter: params => {
+      if (params.value != null) {
+        return new Intl.NumberFormat('ko-KR', {
+          // style: 'currency',
+          // currency: 'KRW',
+          minimumFractionDigits: 0,
+          maximumFractionDigits: 0,
+        }).format(params.value);
+      }
+      return '';
+    },
+    cellClass: 'ag-right-aligned-cell',
+    // cellStyle: () => {
+    //   return {
+    //     color: $q.dark.isActive ? 'orange' : 'teal',
+    //   };
+    // },
+  },
+  {
+    headerName: '당월재고',
     field: 'jQty',
-    minWidth: 110,
-    maxWidth: 110,
+    minWidth: 160,
     valueFormatter: params => {
       if (params.value != null) {
         return new Intl.NumberFormat('ko-KR', {
@@ -242,10 +556,9 @@ const columnDefs = ref([
     // },
   },
   {
-    headerName: '총반품수량',
-    field: 'bQty',
-    minWidth: 110,
-    maxWidth: 110,
+    headerName: '실매입금액(DB계산서수취)',
+    field: 'idAmt',
+    minWidth: 160,
     valueFormatter: params => {
       if (params.value != null) {
         return new Intl.NumberFormat('ko-KR', {
@@ -265,113 +578,26 @@ const columnDefs = ref([
     // },
   },
   {
-    headerName: '출고수량',
-    children: [
-      {
-        headerName: searchValue.stdDayM1 + '~' + searchValue.stdDay,
-        field: 'm1Qty',
-        minWidth: 160,
-        valueFormatter: params => {
-          if (params.value != null) {
-            return new Intl.NumberFormat('ko-KR', {
-              // style: 'currency',
-              // currency: 'KRW',
-              minimumFractionDigits: 0,
-              maximumFractionDigits: 0,
-            }).format(params.value);
-          }
-          return '';
-        },
-        cellClass: 'ag-right-aligned-cell',
-        // cellStyle: () => {
-        //   return {
-        //     color: $q.dark.isActive ? 'orange' : 'teal',
-        //   };
-        // },
-      },
-      {
-        headerName: searchValue.stdDayM3 + '~' + searchValue.stdDay,
-        field: 'm3Qty',
-        minWidth: 160,
-        valueFormatter: params => {
-          if (params.value != null) {
-            return new Intl.NumberFormat('ko-KR', {
-              // style: 'currency',
-              // currency: 'KRW',
-              minimumFractionDigits: 0,
-              maximumFractionDigits: 0,
-            }).format(params.value);
-          }
-          return '';
-        },
-        cellClass: 'ag-right-aligned-cell',
-        // cellStyle: () => {
-        //   return {
-        //     color: $q.dark.isActive ? 'orange' : 'teal',
-        //   };
-        // },
-      },
-    ],
-  },
-  {
-    headerName: '적정량',
-    children: [
-      {
-        headerName: '1개월',
-        field: 'ov1Qty',
-        minWidth: 110,
-        valueFormatter: params => {
-          if (params.value != null) {
-            return new Intl.NumberFormat('ko-KR', {
-              // style: 'currency',
-              // currency: 'KRW',
-              minimumFractionDigits: 0,
-              maximumFractionDigits: 0,
-            }).format(params.value);
-          }
-          return '';
-        },
-        cellClass: 'ag-right-aligned-cell',
-        // cellStyle: () => {
-        //   return {
-        //     color: $q.dark.isActive ? 'orange' : 'teal',
-        //   };
-        // },
-      },
-      {
-        headerName: '3개월',
-        field: 'ov3Qty',
-        minWidth: 110,
-        maxWidth: 110,
-        valueFormatter: params => {
-          if (params.value != null) {
-            return new Intl.NumberFormat('ko-KR', {
-              // style: 'currency',
-              // currency: 'KRW',
-              minimumFractionDigits: 0,
-              maximumFractionDigits: 0,
-            }).format(params.value);
-          }
-          return '';
-        },
-        cellClass: 'ag-right-aligned-cell',
-        // cellStyle: () => {
-        //   return {
-        //     color: $q.dark.isActive ? 'orange' : 'teal',
-        //   };
-        // },
-      },
-    ],
-  },
-
-  {
-    headerName: '비고',
-    field: 'remarks',
-    minWidth: 150,
-    resizable: true,
-    valueGetter: function (params) {
-      return params.data.remarks;
+    headerName: '당월미수금(미지급금)',
+    field: 'jdAmt',
+    minWidth: 160,
+    valueFormatter: params => {
+      if (params.value != null) {
+        return new Intl.NumberFormat('ko-KR', {
+          // style: 'currency',
+          // currency: 'KRW',
+          minimumFractionDigits: 0,
+          maximumFractionDigits: 0,
+        }).format(params.value);
+      }
+      return '';
     },
+    cellClass: 'ag-right-aligned-cell',
+    // cellStyle: () => {
+    //   return {
+    //     color: $q.dark.isActive ? 'orange' : 'teal',
+    //   };
+    // },
   },
 ]);
 
@@ -381,7 +607,6 @@ onBeforeUnmount(() => {
   window.removeEventListener('resize', handleResize);
 });
 onBeforeMount(() => {
-  onDateSelectDay();
   getDataCommOption('101').then(() => {
     handelGetData();
   });
@@ -413,40 +638,15 @@ const handleResize = () => {
 };
 // ======================================================
 
-const changeHeaderName = () => {
-  const updateHeaderName = columns => {
-    return columns.map(colDef => {
-      if (colDef.field === 'm1Qty') {
-        return { ...colDef, headerName: searchValue.titleM1 };
-      }
-      if (colDef.field === 'm3Qty') {
-        return { ...colDef, headerName: searchValue.titleM3 };
-      }
-      if (colDef.children) {
-        // children 속성을 재귀적으로 업데이트
-        return { ...colDef, children: updateHeaderName(colDef.children) };
-      }
-      return colDef;
-    });
-  };
-
-  columnDefs.value = updateHeaderName(columnDefs.value);
-
-  if (myGrid.value) {
-    myGrid.value.api.setColumnDefs(columnDefs.value);
-  }
-};
 // **************************************************************//
 // ***** DataBase 연결부분    *************************************//
 // **************************************************************//
 
 const getData = async () => {
-  changeHeaderName();
   try {
-    const response = await api.post('/api/sal/sal4120_list', {
-      paramStdDay: commUtil.unFormatDate(searchValue.stdDay),
-      paramStdDayM1: searchValue.stdDayM1,
-      paramStdDayM3: searchValue.stdDayM3,
+    const response = await api.post('/api/sal/sal4420_list', {
+      paramYear: searchValue.year,
+      paramMonth: searchValue.month,
       paramProdDiv: searchValue.prodDiv,
       paramValue: searchValue.textValue,
     });
@@ -454,7 +654,7 @@ const getData = async () => {
     myGrid.value.api.setColumnDefs(columnDefs.value);
     myGrid.value.api.setGridOption('rowData', rowData.rows);
     myGrid.value.api.setGridOption('pinnedBottomRowData', [calculateTotal()]);
-    // console.log('data : ', JSON.stringify(rowData.rows));
+    // console.log('data : ', JSON.stringify(rowData.rowsSum));
   } catch (error) {
     console.error('Error fetching users:', error);
   }
@@ -486,27 +686,64 @@ const getDataCommOption = async resCommCd1 => {
 // *********************************
 // rows 전체 합 구하는 부분
 const calculateTotal = () => {
+  rowData.rowsSum = [];
+
   let totalRow = {
     prodNm: '합계',
+    wjQty: 0,
+    iQty: 0,
+    tjQty: 0,
+    otQty: 0,
+    oQty: 0,
+    oAmt: 0,
+    obAmt: 0,
+    odAmt: 0,
+    obQty: 0,
+    ojQty: 0,
+    odQty: 0,
+    oxQty: 0,
+    ozQty: 0,
     jQty: 0,
-    bQty: 0,
-    m1Qty: 0,
-    m3Qty: 0,
-    ov1Qty: 0,
-    ov3Qty: 0,
+    idAmt: 0,
+    jdAmt: 0,
   };
 
   rowData.rows.forEach(row => {
+    totalRow.wjQty += row.wjQty || 0;
+    totalRow.iQty += row.iQty || 0;
+    totalRow.tjQty += row.tjQty || 0;
+    totalRow.otQty += row.otQty || 0;
+    totalRow.oQty += row.oQty || 0;
+    totalRow.oAmt += row.oAmt || 0;
+    totalRow.obAmt += row.obAmt || 0;
+    totalRow.odAmt += row.odAmt || 0;
+    totalRow.obQty += row.obQty || 0;
+    totalRow.ojQty += row.ojQty || 0;
+    totalRow.odQty += row.odQty || 0;
+    totalRow.oxQty += row.oxQty || 0;
+    totalRow.ozQty += row.ozQty || 0;
     totalRow.jQty += row.jQty || 0;
-    totalRow.bQty += row.bQty || 0;
-    totalRow.m1Qty += row.m1Qty || 0;
-    totalRow.m3Qty += row.m3Qty || 0;
-    totalRow.ov1Qty += row.ov1Qty || 0;
-    totalRow.ov3Qty += row.ov3Qty || 0;
+    totalRow.idAmt += row.idAmt || 0;
+    totalRow.jdAmt += row.jdAmt || 0;
   });
 
   const hasMeaningfulData =
-    totalRow.jQty !== 0 || totalRow.bQty !== 0 || totalRow.m1Qty !== 0 || totalRow.m3Qty !== 0 || totalRow.ov1Qty !== 0 || totalRow.ov3Qty !== 0;
+    totalRow.wjQty !== 0 ||
+    totalRow.iQty !== 0 ||
+    totalRow.tjQty !== 0 ||
+    totalRow.otQty !== 0 ||
+    totalRow.oQty !== 0 ||
+    totalRow.oAmt !== 0 ||
+    totalRow.obAmt !== 0 ||
+    totalRow.odAmt !== 0 ||
+    totalRow.obQty !== 0 ||
+    totalRow.ojQty !== 0 ||
+    totalRow.odQty !== 0 ||
+    totalRow.oxQty !== 0 ||
+    totalRow.ozQty !== 0 ||
+    totalRow.jQty !== 0 ||
+    totalRow.idAmt !== 0 ||
+    totalRow.jdAmt !== 0;
 
   if (hasMeaningfulData) {
     rowData.rowsSum.push(totalRow);

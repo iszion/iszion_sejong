@@ -412,7 +412,7 @@
                     stack-label
                     :dense="dense"
                     class="col-auto"
-                    v-model="formData.pubDate"
+                    v-model="formData.pubDay"
                     type="date"
                     label="발행일"
                     :label-color="$q.dark.isActive ? 'green' : 'blue'"
@@ -422,7 +422,7 @@
                     stack-label
                     :dense="dense"
                     class="col-auto"
-                    v-model="formData.makeDate"
+                    v-model="formData.makeDay"
                     type="date"
                     label="등록일"
                     :label-color="$q.dark.isActive ? 'green' : 'blue'"
@@ -662,14 +662,14 @@ const columnDefs = reactive({
     },
     {
       headerName: '등록일',
-      field: 'makeDate',
+      field: 'makeDay',
       valueFormatter: dateFormatter,
       minWidth: 120,
       maxWidth: 120,
     },
     {
       headerName: '발행일',
-      field: 'pubDate',
+      field: 'pubDay',
       valueFormatter: dateFormatter,
       minWidth: 120,
       maxWidth: 120,
@@ -838,8 +838,8 @@ const formDataInitialize = () => {
     bundleProdCd: '',
     namagerNm: '',
     remarks: '',
-    makeDate: '',
-    pubDate: '',
+    makeDay: '',
+    pubDay: '',
   };
 };
 
@@ -864,7 +864,7 @@ const addDataSection = () => {
   formData.value.prodCl = '1';
   formData.value.ebookYn = 'N';
   formData.value.useYn = 'N';
-  formData.value.makeDate = commUtil.getToday();
+  formData.value.makeDay = commUtil.getToday();
 
   setTimeout(() => {
     startFocus.value.focus();
@@ -902,8 +902,8 @@ const deleteDataSection = () => {
     });
 };
 const saveDataSection = () => {
-  formData.value.makeDate = commUtil.unFormatDate(formData.value.makeDate);
-  formData.value.pubDate = commUtil.unFormatDate(formData.value.pubDate);
+  formData.value.makeDay = commUtil.unFormatDate(formData.value.makeDay);
+  formData.value.pubDay = commUtil.unFormatDate(formData.value.pubDay);
   formData.value.copyrightSday = commUtil.unFormatDate(formData.value.copyrightSday);
   formData.value.copyrightEday = commUtil.unFormatDate(formData.value.copyrightEday);
   formData.value.isbn = formData.value.isbn.replace(/-/g, '');
@@ -1030,8 +1030,8 @@ const getDataSelect = async resProdCd => {
     formData.value = response.data.data[0];
     // console.log('select data ::: ', JSON.stringify(formData.value));
     oldFormData.value = JSON.parse(JSON.stringify(formData.value)); // 초기자료 저장
-    formData.value.pubDate = commUtil.formatDate(response.data.data[0].pubDate);
-    formData.value.makeDate = commUtil.formatDate(response.data.data[0].makeDate);
+    formData.value.pubDay = commUtil.formatDate(response.data.data[0].pubDay);
+    formData.value.makeDay = commUtil.formatDate(response.data.data[0].makeDay);
     formData.value.copyrightSday = commUtil.formatDate(response.data.data[0].copyrightSday);
     formData.value.copyrightEday = commUtil.formatDate(response.data.data[0].copyrightEday);
   } catch (error) {
@@ -1261,7 +1261,7 @@ const openHelpAgentDialog = () => {
     component: HelpAgent,
     componentProps: {
       paramValueNm: formData.value.agentNm,
-      paramCloseDay: commUtil.unFormatDate(formData.value.makeDate),
+      paramCloseDay: commUtil.unFormatDate(formData.value.makeDay),
     },
   })
     .onOk(res => {
