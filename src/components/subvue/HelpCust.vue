@@ -151,46 +151,6 @@ onBeforeMount(() => {
 });
 
 const selectedRows = ref(null);
-// const onSelectionChanged = event => {
-//   selectedRows.value = event.api.getSelectedRows();
-// };
-// const gridApi = ref(null);
-// const gridColumnApi = ref(null);
-// const onGridReady = params => {
-//   gridApi.value = params.api;
-//   gridColumnApi.value = params.columnApi;
-//   gridApi.value.setGridOption('headerHeight', 30);
-//   gridApi.value.setGridOption('rowHeight', 30);
-// };
-
-// const onCellKeyDown = params => {
-//   const key = params.event.key;
-//   if (key === 'Enter') {
-//     handleSelectedClick();
-//   } else {
-//     if (key === 'ArrowUp' || key === 'ArrowDown') {
-//       // 상하 키를 누를 때 행 이동 로직 추가
-//       const currentRowIndex = params.rowIndex;
-//       let nextRowIndex = currentRowIndex;
-//       // console.log('index : ', nextRowIndex);
-//       if (key === 'ArrowUp') {
-//         nextRowIndex = currentRowIndex - 1;
-//       } else if (key === 'ArrowDown') {
-//         nextRowIndex = currentRowIndex + 1;
-//       }
-//       if (nextRowIndex >= 0 && nextRowIndex < gridApi.value.getDisplayedRowCount()) {
-//         gridApi.value.forEachNode(node => {
-//           if (node.rowIndex === nextRowIndex) {
-//             node.setSelected(true);
-//           } else {
-//             node.setSelected(false);
-//           }
-//         });
-//         gridApi.value.ensureIndexVisible(nextRowIndex);
-//       }
-//     }
-//   }
-// };
 
 const handleSelectedClick = () => {
   // console.log('sel :: ', JSON.stringify(selectedRows.value));
@@ -244,8 +204,8 @@ const gridOptions = {
   // enableSorting: true,
   // enableFilter: false,
   // enableRangeSelection: true,
-  suppressRowClickSelection: true,
-  suppressCellSelection: true,
+  suppressRowClickSelection: false,
+  // suppressCellSelection: true,
   animateRows: true,
   suppressHorizontalScroll: true,
   localeText: { noRowsToShow: '조회 결과가 없습니다.' },
@@ -334,10 +294,6 @@ const gridOptions = {
   },
   onCellClicked: function (event) {
     // console.log('onCellClicked');
-    // event.api.startEditingCell({
-    //   rowIndex: event.rowIndex,
-    //   colKey: event.column.getId(),
-    // });
   },
   // isRowSelectable: node => !node.footer,
   isRowSelectable: function (event) {
@@ -354,21 +310,7 @@ const gridOptions = {
   onCellValueChanged: function (event) {
     // console.log('onCellValueChanged');
   },
-  // getRowNodeId: function (data) {
-  //   return null;
-  // },
-  // 리드 상단 고정
-  // setPinnedTopRowData: function (data) {
-  //   return null;
-  // },
-  // 그리드 하단 고정
-  // setPinnedBottomRowData: function (data) {
-  //   return null;
-  // },
-  // components: {
-  //   numericCellEditor: NumericCellEditor,
-  //   moodEditor: MoodEditor,
-  // },
+
   debug: false,
 };
 </script>

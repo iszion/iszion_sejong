@@ -28,7 +28,7 @@ export default {
   main_menu_mkt: '영업관리',
   main_menu_mst: '기준정보',
   main_menu_sys: '시스템',
-  main_menu_pay: '인세관리',
+  main_menu_fee: '인세관리',
   main_menu_sal: '판매관리',
   main_menu_cos: '손익원가',
 

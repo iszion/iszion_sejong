@@ -31,7 +31,7 @@ export default {
   main_menu_hpe: 'performance evaluation',
   main_menu_mst: 'Master',
   main_menu_sys: 'System',
-  main_menu_pay: 'Royalty',
+  main_menu_fee: 'Royalty',
   main_menu_sal: 'Sale',
   main_menu_cos: 'Profit & Loss',
 

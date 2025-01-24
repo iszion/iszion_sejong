@@ -49,10 +49,14 @@ const routes = [
       { path: 'sal4480', component: () => import('pages/erp/sal/SalV4480.vue') },
       { path: 'sal4490', component: () => import('pages/erp/sal/SalV4490.vue') },
 
+      { path: 'fee1010', component: () => import('pages/erp/fee/FeeV1010.vue') },
+      { path: 'fee1020', component: () => import('pages/erp/fee/FeeV1020.vue') },
+
       { path: 'mst1010', component: () => import('pages/erp/mst/MstV1010.vue') },
       { path: 'mst2010', component: () => import('pages/erp/mst/MstV2010.vue') },
       { path: 'mst2020', component: () => import('pages/erp/mst/MstV2020.vue') },
       { path: 'mst2030', component: () => import('pages/erp/mst/MstV2030.vue') },
+      { path: 'mst2040', component: () => import('pages/erp/mst/MstV2040.vue') },
       { path: 'mst5090', component: () => import('pages/erp/mst/MstV5090.vue') },
       { path: 'mstgrid', component: () => import('pages/erp/mst/MstVgrid.vue') },
       { path: 'mstgridfocus', component: () => import('pages/erp/mst/MstVgridFocus.vue') },

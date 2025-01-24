@@ -1,6 +1,6 @@
 <template>
   <div>
-    <q-toggle size="sm" color="blue-14" true-value="Y" false-value="N" v-model="value.gnPay" @update:model-value="handleUpdate"> </q-toggle>
+    <q-toggle size="sm" color="blue-14" true-value="Y" false-value="N" v-model="value.gnFee" @update:model-value="handleUpdate"> </q-toggle>
   </div>
 </template>
 

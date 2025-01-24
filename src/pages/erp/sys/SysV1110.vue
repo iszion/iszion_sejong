@@ -165,7 +165,7 @@ import { useYearInfoStore } from 'src/store/setYearInfo';
 import CompSelectLevel from 'components/CompSelectLevel.vue';
 import CompToggleSal from 'components/CompToggleSal.vue';
 import CompToggleCos from 'components/CompToggleCos.vue';
-import CompTogglePay from 'components/CompTogglePay.vue';
+import CompToggleFee from 'components/CompToggleFee.vue';
 const storeYear = useYearInfoStore();
 
 const $q = useQuasar();
@@ -299,14 +299,14 @@ const columnDefsSet = () => {
       headerComponentParams: {
         headerCheckYn: false,
         updateSelectedValue: row => {
-          checkAll('gnPay', row.value ? 'Y' : 'N');
+          checkAll('gnFee', row.value ? 'Y' : 'N');
         },
       },
-      field: 'gnPay',
+      field: 'gnFee',
       maxWidth: 110,
       minWidth: 110,
       cellStyle: { textAlign: 'center' },
-      cellRenderer: CompTogglePay,
+      cellRenderer: CompToggleFee,
       cellRendererParams: {
         updateSelectedValue: row => {
           handleCellValueChanged();

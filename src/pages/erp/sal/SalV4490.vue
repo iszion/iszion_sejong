@@ -37,22 +37,22 @@
           <q-input
             stack-label
             class=""
-            v-model="searchValue.custNm"
-            label="거래처명"
+            v-model="searchValue.prodNm"
+            label="도서명"
             label-color="orange"
-            @keyup.enter.prevent="openHelpCustDialog(searchValue.custNm)"
+            @keyup.enter.prevent="openHelpProdDialog(searchValue.prodNm)"
           >
             <template v-slot:prepend>
-              <q-btn dense flat class="q-mt-md text-bold" icon="search" size="md" :label="searchValue.custCd" @click="openHelpCustDialog('')" />
+              <q-btn dense flat class="q-mt-md text-bold" icon="search" size="md" :label="searchValue.prodCd" @click="openHelpProdDialog('')" />
             </template>
             <template v-slot:append>
               <q-icon
                 size="0.8em"
-                v-if="searchValue.custNm !== ''"
+                v-if="searchValue.prodNm !== ''"
                 name="close"
                 @click="
-                  searchValue.custNm = '';
-                  searchValue.custCd = '';
+                  searchValue.prodNm = '';
+                  searchValue.prodCd = '';
                   handelGetData();
                 "
                 class="cursor-pointer q-pt-md"
@@ -105,7 +105,7 @@
     <q-dialog persistent full-height full-width v-model="isDialogVisible">
       <q-card class="q-pa-none q-ma-none">
         <q-card-section class="q-pa-none q-ma-none">
-          <sal-v4480p :messages="{ rowData: rowData, titleNm: menuLabel, searchValue: searchValue }" @close="handleClose" />
+          <sal-v4490p :messages="{ rowData: rowData, titleNm: menuLabel, searchValue: searchValue }" @close="handleClose" />
         </q-card-section>
       </q-card>
     </q-dialog>
@@ -121,9 +121,10 @@ import { AgGridVue } from 'ag-grid-vue3';
 import { computed, onBeforeMount, onBeforeUnmount, onMounted, reactive, ref, watch } from 'vue';
 import { api } from 'boot/axios';
 import { QBtn, QIcon, useQuasar } from 'quasar';
-import SalV4480p from 'pages/erp/sal/SalV4480p.vue';
+import SalV4490p from 'pages/erp/sal/SalV4490p.vue';
 import commUtil from 'src/js_comm/comm-util';
 import HelpCust from 'components/subvue/HelpCust.vue';
+import HelpProd from 'components/subvue/HelpProd.vue';
 
 const rowData = reactive({ rows: [], rowsSum: [] });
 const isDialogVisible = ref(false);
@@ -147,8 +148,8 @@ const contentZoneStyle = computed(() => ({
 const searchValue = reactive({
   year: commUtil.getTodayYear(),
   textValue: '',
-  custCd: '',
-  custNm: '',
+  prodCd: '',
+  prodNm: '',
 });
 
 const columnDefs = ref([
@@ -171,12 +172,12 @@ const columnDefs = ref([
     },
   },
   {
-    headerName: '도서명',
-    field: 'prodNm',
+    headerName: '거래처명',
+    field: 'custNm',
     pinned: !$q.screen.xs && !$q.screen.sm ? 'left' : null,
     minWidth: 200,
     valueGetter: params => {
-      return params.data.prodNm;
+      return params.data.custNm;
     },
     cellStyle: params => {
       return { textAlign: 'left' };
@@ -184,12 +185,12 @@ const columnDefs = ref([
   },
   {
     headerName: '코드',
-    field: 'prodCd',
+    field: 'custCd',
     minWidth: 90,
     maxWidth: 90,
     resizable: true,
     valueGetter: function (params) {
-      return params.data.prodCd;
+      return params.data.custCd;
     },
   },
   {
@@ -2236,9 +2237,9 @@ const handleResize = () => {
 
 const getData = async () => {
   try {
-    const response = await api.post('/api/sal/sal4480_list', {
+    const response = await api.post('/api/sal/sal4490_list', {
       paramYear: searchValue.year,
-      paramCustCd: searchValue.custCd,
+      paramProdCd: searchValue.prodCd,
       paramValue: searchValue.textValue,
     });
     rowData.rows = response.data.data;
@@ -2260,7 +2261,7 @@ const calculateTotal = () => {
   rowData.rowsSum = [];
 
   let totalRow = {
-    prodNm: '합계',
+    custNm: '합계',
     tOQty: 0,
     tOAmt: 0,
     tObQty: 0,
@@ -2647,18 +2648,18 @@ const myGridOptions = {
 };
 
 /* *** 코드헬프부분 ** */
-const openHelpCustDialog = resNm => {
+const openHelpProdDialog = resNm => {
   $q.dialog({
-    component: HelpCust,
+    component: HelpProd,
     componentProps: {
-      paramValueNm: resNm,
+      paramValueNm: searchValue.prodNm,
       paramUseYn: 'N',
       paramCloseDay: '99991231',
     },
   })
     .onOk(res => {
-      searchValue.custCd = res.custCd;
-      searchValue.custNm = res.custNm;
+      searchValue.prodNm = res.prodNm;
+      searchValue.prodCd = res.prodCd;
     })
     .onCancel(() => {})
     .onDismiss(() => {});
