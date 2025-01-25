@@ -35,6 +35,7 @@ const routes = [
       { path: 'sal3220', component: () => import('pages/erp/sal/SalV3220.vue') },
       { path: 'sal4110', component: () => import('pages/erp/sal/SalV4110.vue') },
       { path: 'sal4120', component: () => import('pages/erp/sal/SalV4120.vue') },
+      { path: 'sal4130', component: () => import('pages/erp/sal/SalV4130.vue') },
       { path: 'sal4210', component: () => import('pages/erp/sal/SalV4210.vue') },
       { path: 'sal4220', component: () => import('pages/erp/sal/SalV4220.vue') },
       { path: 'sal4310', component: () => import('pages/erp/sal/SalV4310.vue') },
@@ -51,6 +52,10 @@ const routes = [
 
       { path: 'fee1010', component: () => import('pages/erp/fee/FeeV1010.vue') },
       { path: 'fee1020', component: () => import('pages/erp/fee/FeeV1020.vue') },
+      { path: 'fee1030', component: () => import('pages/erp/fee/FeeV1030.vue') },
+      { path: 'fee2010', component: () => import('pages/erp/fee/FeeV2010.vue') },
+      { path: 'fee3010', component: () => import('pages/erp/fee/FeeV3010.vue') },
+      { path: 'fee3020', component: () => import('pages/erp/fee/FeeV3020.vue') },
 
       { path: 'mst1010', component: () => import('pages/erp/mst/MstV1010.vue') },
       { path: 'mst2010', component: () => import('pages/erp/mst/MstV2010.vue') },
