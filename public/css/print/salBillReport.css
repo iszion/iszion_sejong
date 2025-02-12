@@ -1,0 +1,327 @@
+
+/* 헤더부분 */
+.dt1 {
+  height: 40px;
+  text-align: center;
+  font-size: 0.9em;
+  font-weight: normal;
+  background-color: #f0f0f0;
+}
+.dv1 {
+  height: 40px;
+  font-size: 1.0em;
+  font-weight: normal;
+}
+
+.tit {
+  text-align: center;
+  font-size: 1.2em;
+  font-weight: bold;
+  background-color: #f0f0f0;
+  border-top: 2px solid grey; /* 셀 테두리 설정 (원하는 경우) */
+  border-left: 2px solid grey; /* 셀 테두리 설정 (원하는 경우) */
+  border-right: 2px solid grey; /* 셀 테두리 설정 (원하는 경우) */
+  border-bottom: 2px solid grey; /* 셀 테두리 설정 (원하는 경우) */
+  padding: 10px; /* 셀 안 패딩 */
+}
+
+/* 사업자등록번호 제목 */
+.bd2 {
+  width: 20%;
+  border-left: 2px solid grey;
+  border-bottom: 1px solid grey;
+}
+/* 사업자등록번호 값 */
+.bd3 {
+  width: 80%;
+  font-size: 1.2em;
+  font-weight: bold;
+  border-left: 1px solid grey;
+  border-right: 2px solid grey;
+  border-bottom: 1px solid grey;
+  padding: 7px 20px; /* 셀 안 패딩 */
+}
+
+/* 상호 제목 */
+.bd4 {
+  width: 20%;
+  border-left: 2px solid grey;
+  border-bottom: 1px solid grey;
+}
+/* 상호 값 */
+.bd5 {
+  width: 40%;
+  border-left: 1px solid grey;
+  border-bottom: 1px solid grey;
+  padding: 8px 20px; /* 셀 안 패딩 */
+}
+
+/* 대표자 제목 */
+.bd6 {
+  width: 15%;
+  border-left: 1px solid grey;
+  border-bottom: 1px solid grey;
+  padding: 10px; /* 셀 안 패딩 */
+}
+/* 대표자 값 */
+.bd7 {
+  width: 25%;
+  border-left: 1px solid grey;
+  border-right: 2px solid grey;
+  border-bottom: 1px solid grey;
+  padding: 9px 20px; /* 셀 안 패딩 */
+}
+
+/* 소재지 제목 */
+.bd8 {
+  width: 20%;
+  border-left: 2px solid grey;
+  border-bottom: 1px solid grey;
+  padding:10px; /* 셀 안 패딩 */
+}
+/* 소재지 값 */
+.bd9 {
+  width: 80%;
+  border-left: 1px solid grey;
+  border-right: 2px solid grey;
+  border-bottom: 1px solid grey;
+  padding: 8px 20px; /* 셀 안 패딩 */
+}
+
+/* 업태 제목 */
+.bd10 {
+  width: 20%;
+  border-left: 2px solid grey;
+  border-bottom: 2px solid grey;
+  padding: 10px; /* 셀 안 패딩 */
+}
+/* 업태 값 */
+.bd11 {
+  width: 35%;
+  border-left: 1px solid grey;
+  border-bottom: 2px solid grey;
+  padding: 8px 20px; /* 셀 안 패딩 */
+}
+
+/* 종목 제목 */
+.bd12 {
+  width: 15%;
+  border-left: 1px solid grey;
+  border-bottom: 2px solid grey;
+  padding: 10px; /* 셀 안 패딩 */
+}
+/* 종목 값 */
+.bd13 {
+  width: 30%;
+  border-left: 1px solid grey;
+  border-right: 2px solid grey;
+  border-bottom: 2px solid grey;
+  padding: 8px 20px; /* 셀 안 패딩 */
+}
+
+/* 디테일 타이틀 부분 */
+.bdt1 {
+  width: 5%;
+  border-top: 2px solid grey;
+  border-left: 2px solid grey;
+  border-right: 1px solid grey;
+  border-bottom: 2px solid grey;
+  padding: 8px; /* 셀 안 패딩 */
+}
+.bdt2 {
+  width: 7%;
+  border-top: 2px solid grey;
+  border-right: 1px solid grey;
+  border-bottom: 2px solid grey;
+  padding: 8px; /* 셀 안 패딩 */
+}
+.bdt3 {
+  width: 7%;
+  border-top: 2px solid grey;
+  border-right: 1px solid grey;
+  border-bottom: 2px solid grey;
+  padding: 8px; /* 셀 안 패딩 */
+}
+.bdt4 {
+  width: 40%;
+  border-top: 2px solid grey;
+  border-right: 1px solid grey;
+  border-bottom: 2px solid grey;
+  padding: 8px; /* 셀 안 패딩 */
+}
+.bdt5 {
+  width: 5%;
+  border-top: 2px solid grey;
+  border-right: 1px solid grey;
+  border-bottom: 2px solid grey;
+  padding: 8px; /* 셀 안 패딩 */
+}
+.bdt6 {
+  width: 9%;
+  border-top: 2px solid grey;
+  border-right: 1px solid grey;
+  border-bottom: 2px solid grey;
+  padding: 8px; /* 셀 안 패딩 */
+}
+.bdt7 {
+  width: 5%;
+  border-top: 2px solid grey;
+  border-right: 1px solid grey;
+  border-bottom: 2px solid grey;
+  padding: 8px; /* 셀 안 패딩 */
+}
+.bdt8 {
+  width: 12%;
+  border-top: 2px solid grey;
+  border-right: 1px solid grey;
+  border-bottom: 2px solid grey;
+  padding: 8px; /* 셀 안 패딩 */
+}
+.bdt9 {
+  width: 10%;
+  border-top: 2px solid grey;
+  border-right: 2px solid grey;
+  border-bottom: 2px solid grey;
+  padding: 8px; /* 셀 안 패딩 */
+}
+
+
+/* 디테일 item 부분 */
+.bdv1 {
+  width: 5%;
+  text-align: center;
+  border-left: 2px solid grey;
+  border-right: 1px solid grey;
+  border-bottom: 1px dotted grey;
+  padding: 5px; /* 셀 안 패딩 */
+}
+.bdv2 {
+  width: 7%;
+  text-align: center;
+  border-right: 1px solid grey;
+  border-bottom: 1px dotted grey;
+  padding: 5px; /* 셀 안 패딩 */
+}
+.bdv3 {
+  width: 7%;
+  text-align: center;
+  border-right: 1px solid grey;
+  border-bottom: 1px dotted grey;
+  padding: 5px; /* 셀 안 패딩 */
+}
+.bdv4 {
+  width: 40%;
+  text-align: left;
+  border-right: 1px solid grey;
+  border-bottom: 1px dotted grey;
+  padding: 5px; /* 셀 안 패딩 */
+}
+.bdv5 {
+  width: 5%;
+  text-align: center;
+  border-right: 1px solid grey;
+  border-bottom: 1px dotted grey;
+  padding: 5px; /* 셀 안 패딩 */
+}
+.bdv6 {
+  width: 9%;
+  text-align: right;
+  border-right: 1px solid grey;
+  border-bottom: 1px dotted grey;
+  padding: 5px; /* 셀 안 패딩 */
+}
+.bdv7 {
+  width: 5%;
+  text-align: center;
+  border-right: 1px solid grey;
+  border-bottom: 1px dotted grey;
+  padding: 5px; /* 셀 안 패딩 */
+}
+.bdv8 {
+  width: 12%;
+  text-align: right;
+  border-right: 1px solid grey;
+  border-bottom: 1px dotted grey;
+  padding: 5px; /* 셀 안 패딩 */
+}
+.bdv9 {
+  width: 10%;
+  border-right: 2px solid grey;
+  border-bottom: 1px dotted grey;
+  padding: 5px; /* 셀 안 패딩 */
+}
+
+.bdvt1 {
+  font-size: 1.0em;
+  font-weight: bold;
+  background-color: #f0f0f0;
+  border-top: 1px solid grey; /* 셀 테두리 설정 (원하는 경우) */
+  border-left: 2px solid grey; /* 셀 테두리 설정 (원하는 경우) */
+  border-right: 1px solid grey; /* 셀 테두리 설정 (원하는 경우) */
+  border-bottom: 2px solid grey; /* 셀 테두리 설정 (원하는 경우) */
+  padding: 8px; /* 셀 안 패딩 */
+}
+.bdvt5 {
+  width: 5%;
+  text-align: center;
+  font-size: 1.0em;
+  font-weight: bold;
+  background-color: #f0f0f0;
+  border-top: 1px solid grey; /* 셀 테두리 설정 (원하는 경우) */
+  border-right: 1px solid grey; /* 셀 테두리 설정 (원하는 경우) */
+  border-bottom: 2px solid grey; /* 셀 테두리 설정 (원하는 경우) */
+  padding: 8px; /* 셀 안 패딩 */
+}
+.bdvt6 {
+  width: 9%;
+  text-align: right;
+  font-size: 1.0em;
+  font-weight: bold;
+  background-color: #f0f0f0;
+  border-top: 1px solid grey; /* 셀 테두리 설정 (원하는 경우) */
+  border-right: 1px solid grey; /* 셀 테두리 설정 (원하는 경우) */
+  border-bottom: 2px solid grey; /* 셀 테두리 설정 (원하는 경우) */
+  padding: 8px; /* 셀 안 패딩 */
+}
+.bdvt7 {
+  width: 5%;
+  text-align: center;
+  font-size: 1.0em;
+  font-weight: bold;
+  background-color: #f0f0f0;
+  border-top: 1px solid grey; /* 셀 테두리 설정 (원하는 경우) */
+  border-right: 1px solid grey; /* 셀 테두리 설정 (원하는 경우) */
+  border-bottom: 2px solid grey; /* 셀 테두리 설정 (원하는 경우) */
+  padding: 8px; /* 셀 안 패딩 */
+}
+.bdvt8 {
+  width: 12%;
+  text-align: right;
+  font-size: 1.0em;
+  font-weight: bold;
+  background-color: #f0f0f0;
+  border-top: 1px solid grey; /* 셀 테두리 설정 (원하는 경우) */
+  border-right: 1px solid grey; /* 셀 테두리 설정 (원하는 경우) */
+  border-bottom: 2px solid grey; /* 셀 테두리 설정 (원하는 경우) */
+  padding: 8px; /* 셀 안 패딩 */
+}
+.bdvt9 {
+  width: 10%;
+  text-align: center;
+  font-size: 1.0em;
+  font-weight: bold;
+  background-color: #f0f0f0;
+  border-top: 1px solid grey; /* 셀 테두리 설정 (원하는 경우) */
+  border-right: 2px solid grey; /* 셀 테두리 설정 (원하는 경우) */
+  border-bottom: 2px solid grey; /* 셀 테두리 설정 (원하는 경우) */
+  padding: 8px; /* 셀 안 패딩 */
+}
+.bdvm {
+  width: 10%;
+  font-size: 1.2em;
+  font-weight: normal;
+  border-left: 2px solid grey; /* 셀 테두리 설정 (원하는 경우) */
+  border-right: 2px solid grey; /* 셀 테두리 설정 (원하는 경우) */
+  border-bottom: 2px solid grey; /* 셀 테두리 설정 (원하는 경우) */
+  padding: 10px; /* 셀 안 패딩 */
+}

@@ -7,7 +7,7 @@ export default {
   login_company_name: '(주)이즈지온',
   login_com: '코드',
   login_com_hint: '회사코드를 입력하세요',
-  login_id: '아이디(사번)',
+  login_id: '아이디',
   login_id_hint: '아이디(사번)를 입력해 주세요',
   login_password: '패스워드',
   login_password_hint: '패스워드를 입력해주세요',
@@ -31,6 +31,7 @@ export default {
   main_menu_fee: '인세관리',
   main_menu_sal: '판매관리',
   main_menu_cos: '손익원가',
+  main_menu_com: '관리자',
 
   /* *****  Sub Menu MST 부분  *****  */
   sub_menu_mst1010: '인사정보관리',

@@ -61,7 +61,6 @@
       </q-card-actions>
     </q-card>
   </q-dialog>
-  <q-btn @click="dataTest">Button</q-btn>
   <!--  게시글 조회부분 끝-->
 </template>
 
@@ -98,7 +97,7 @@ const formatRegDay = resDay => {
   return day + ' (' + week + ')';
 };
 const isEventInsert = tabName => {
-  formData.value.userId = storeUser.setEmpCd;
+  formData.value.userId = storeUser.userId;
   formData.value.regDay = date.value;
   formData.value.oldRegDay = date.value;
   formData.value.contents = '';
@@ -187,7 +186,7 @@ const eventData = ref(null);
 const getEventData = async () => {
   const today_month = commUtil.getTodayMonth();
   try {
-    const response = await api.post('/api/sys/event_list', { paramUserId: storeUser.setEmpCd, paramMonth: today_month });
+    const response = await api.post('/api/sys/event_list', { paramUserId: storeUser.userId, paramMonth: today_month });
     eventData.value = response.data.data;
     eventDays.value = [];
     for (let i = 0; i < eventData.value.length; i++) {
@@ -218,10 +217,6 @@ const saveEventDataAndHandleResult = resFormData => {
 // **************************************************************//
 // ***** DataBase 연결부분 끝  *************************************//
 // **************************************************************//
-const dataTest = async () => {
-  console.log('###dataTest###');
-  const response = await api.post('/api/coup/dataTest');
-};
 </script>
 
 <style scoped lang="sass"></style>

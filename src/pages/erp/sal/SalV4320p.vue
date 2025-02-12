@@ -35,60 +35,65 @@
               </div>
 
               <table>
-                <tr>
-                  <th rowspan="2" colspan="1">거래일자</th>
-                  <th rowspan="2" colspan="1">업체명</th>
-                  <th rowspan="2" colspan="1">코드</th>
-                  <th rowspan="2" colspan="1">구분</th>
-                  <th rowspan="1" colspan="2">입고</th>
-                  <th rowspan="1" colspan="4">출고</th>
-                  <th rowspan="2" colspan="1">재고조정</th>
-                  <th rowspan="2" colspan="1">재고</th>
-                  <th rowspan="2" colspan="1">비고</th>
-                </tr>
-                <tr>
-                  <th rowspan="1" colspan="1">입고</th>
-                  <th rowspan="1" colspan="1">재생</th>
-                  <th rowspan="1" colspan="1">출고</th>
-                  <th rowspan="1" colspan="1">증정</th>
-                  <th rowspan="1" colspan="1">반품</th>
-                  <th rowspan="1" colspan="1">폐기</th>
-                </tr>
-                <tr v-for="(data, index) in props.messages.rowData || []" :key="index">
-                  <td v-if="data.saleYm === '총계'">총계</td>
-                  <td v-else-if="data.saleDay === '월계'">월계</td>
-                  <td v-else-if="data.custNm === '일계'">일계</td>
-                  <td v-else>{{ commUtil.formatDate(data.saleDay) }}</td>
+                <thead>
+                  <tr>
+                    <th rowspan="2" colspan="1">거래일자</th>
+                    <th rowspan="2" colspan="1">업체명</th>
+                    <th rowspan="2" colspan="1">코드</th>
+                    <th rowspan="2" colspan="1">구분</th>
+                    <th rowspan="1" colspan="2">입고</th>
+                    <th rowspan="1" colspan="4">출고</th>
+                    <th rowspan="2" colspan="1">재고조정</th>
+                    <th rowspan="2" colspan="1">재고</th>
+                    <th rowspan="2" colspan="1">비고</th>
+                  </tr>
+                  <tr>
+                    <th rowspan="1" colspan="1">입고</th>
+                    <th rowspan="1" colspan="1">재생</th>
+                    <th rowspan="1" colspan="1">출고</th>
+                    <th rowspan="1" colspan="1">증정</th>
+                    <th rowspan="1" colspan="1">반품</th>
+                    <th rowspan="1" colspan="1">폐기</th>
+                  </tr>
+                </thead>
 
-                  <td v-if="data.saleYm === '총계'"></td>
-                  <td v-else-if="data.saleDay === '월계'"></td>
-                  <td v-else-if="data.custNm === '일계'"></td>
-                  <td v-else>{{ data.custNm }}</td>
+                <tbody>
+                  <tr v-for="(data, index) in props.messages.rowData || []" :key="index">
+                    <td v-if="data.saleYm === '총계'">총계</td>
+                    <td v-else-if="data.saleDay === '월계'">월계</td>
+                    <td v-else-if="data.custNm === '일계'">일계</td>
+                    <td v-else>{{ commUtil.formatDate(data.saleDay) }}</td>
 
-                  <td v-if="data.saleYm === '총계'"></td>
-                  <td v-else-if="data.saleDay === '월계'"></td>
-                  <td v-else-if="data.custNm === '일계'"></td>
-                  <td v-else>{{ data.custCd }}</td>
+                    <td v-if="data.saleYm === '총계'"></td>
+                    <td v-else-if="data.saleDay === '월계'"></td>
+                    <td v-else-if="data.custNm === '일계'"></td>
+                    <td v-else>{{ data.custNm }}</td>
 
-                  <td v-if="data.saleYm === '총계'"></td>
-                  <td v-else-if="data.saleDay === '월계'"></td>
-                  <td v-else-if="data.custNm === '일계'"></td>
-                  <td v-else>{{ data.fgNm }}</td>
+                    <td v-if="data.saleYm === '총계'"></td>
+                    <td v-else-if="data.saleDay === '월계'"></td>
+                    <td v-else-if="data.custNm === '일계'"></td>
+                    <td v-else>{{ data.custCd }}</td>
 
-                  <td>{{ commUtil.formatComma(data.iQty) }}</td>
-                  <td>{{ commUtil.formatComma(data.ibQty) }}</td>
-                  <td>{{ commUtil.formatComma(data.oQty) }}</td>
-                  <td>{{ commUtil.formatComma(data.ojQty) }}</td>
-                  <td>{{ commUtil.formatComma(data.obQty) }}</td>
-                  <td>{{ commUtil.formatComma(data.oxQty) }}</td>
-                  <td>{{ commUtil.formatComma(data.ozQty) }}</td>
-                  <td>{{ commUtil.formatComma(data.jQty) }}</td>
+                    <td v-if="data.saleYm === '총계'"></td>
+                    <td v-else-if="data.saleDay === '월계'"></td>
+                    <td v-else-if="data.custNm === '일계'"></td>
+                    <td v-else>{{ data.fgNm }}</td>
 
-                  <td v-if="data.saleYm === '총계'"></td>
-                  <td v-else-if="data.saleDay === '월계'"></td>
-                  <td v-else-if="data.custNm === '일계'"></td>
-                  <td v-else>{{ data.remarks }}</td>
-                </tr>
+                    <td>{{ commUtil.formatComma(data.iQty) }}</td>
+                    <td>{{ commUtil.formatComma(data.ibQty) }}</td>
+                    <td>{{ commUtil.formatComma(data.oQty) }}</td>
+                    <td>{{ commUtil.formatComma(data.ojQty) }}</td>
+                    <td>{{ commUtil.formatComma(data.obQty) }}</td>
+                    <td>{{ commUtil.formatComma(data.oxQty) }}</td>
+                    <td>{{ commUtil.formatComma(data.ozQty) }}</td>
+                    <td>{{ commUtil.formatComma(data.jQty) }}</td>
+
+                    <td v-if="data.saleYm === '총계'"></td>
+                    <td v-else-if="data.saleDay === '월계'"></td>
+                    <td v-else-if="data.custNm === '일계'"></td>
+                    <td v-else>{{ data.remarks }}</td>
+                  </tr>
+                </tbody>
               </table>
               <div class="row">
                 <span class="text-subtitle2">주식회사 세종서적</span>
@@ -104,7 +109,7 @@
 </template>
 
 <script setup>
-import { defineProps, defineEmits, reactive, ref } from 'vue';
+import { reactive, ref } from 'vue';
 import printJS from 'print-js';
 import * as XLSX from 'xlsx';
 import { QBtn, QIcon, useQuasar } from 'quasar';

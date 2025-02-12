@@ -35,66 +35,70 @@
               </div>
 
               <table>
-                <tr>
-                  <th rowspan="2" colspan="1">No</th>
-                  <th rowspan="2" colspan="1">거래처명</th>
-                  <th rowspan="2" colspan="1">코드</th>
-                  <th rowspan="2" colspan="1">합계</th>
-                  <th rowspan="1" colspan="12">매출액</th>
-                </tr>
-                <tr>
-                  <th rowspan="1" colspan="1">1월</th>
-                  <th rowspan="1" colspan="1">2월</th>
-                  <th rowspan="1" colspan="1">3월</th>
-                  <th rowspan="1" colspan="1">4월</th>
-                  <th rowspan="1" colspan="1">5월</th>
-                  <th rowspan="1" colspan="1">6월</th>
-                  <th rowspan="1" colspan="1">7월</th>
-                  <th rowspan="1" colspan="1">8월</th>
-                  <th rowspan="1" colspan="1">9월</th>
-                  <th rowspan="1" colspan="1">10월</th>
-                  <th rowspan="1" colspan="1">11월</th>
-                  <th rowspan="1" colspan="1">12월</th>
-                </tr>
+                <thead>
+                  <tr>
+                    <th rowspan="2" colspan="1">No</th>
+                    <th rowspan="2" colspan="1">거래처명</th>
+                    <th rowspan="2" colspan="1">코드</th>
+                    <th rowspan="2" colspan="1">합계</th>
+                    <th rowspan="1" colspan="12">매출액</th>
+                  </tr>
+                  <tr>
+                    <th rowspan="1" colspan="1">1월</th>
+                    <th rowspan="1" colspan="1">2월</th>
+                    <th rowspan="1" colspan="1">3월</th>
+                    <th rowspan="1" colspan="1">4월</th>
+                    <th rowspan="1" colspan="1">5월</th>
+                    <th rowspan="1" colspan="1">6월</th>
+                    <th rowspan="1" colspan="1">7월</th>
+                    <th rowspan="1" colspan="1">8월</th>
+                    <th rowspan="1" colspan="1">9월</th>
+                    <th rowspan="1" colspan="1">10월</th>
+                    <th rowspan="1" colspan="1">11월</th>
+                    <th rowspan="1" colspan="1">12월</th>
+                  </tr>
+                </thead>
 
-                <tr v-for="(data, index) in props.messages.rowData.rows || []" :key="index">
-                  <td>{{ index + 1 }}</td>
-                  <td>{{ data.custNm }}</td>
-                  <td>{{ data.custCd }}</td>
-                  <td>{{ commUtil.formatComma(data.totAmt) }}</td>
+                <tbody>
+                  <tr v-for="(data, index) in props.messages.rowData.rows || []" :key="index">
+                    <td>{{ index + 1 }}</td>
+                    <td>{{ data.custNm }}</td>
+                    <td>{{ data.custCd }}</td>
+                    <td>{{ commUtil.formatComma(data.totAmt) }}</td>
 
-                  <td>{{ commUtil.formatComma(data.m01Amt) }}</td>
-                  <td>{{ commUtil.formatComma(data.m02Amt) }}</td>
-                  <td>{{ commUtil.formatComma(data.m03Amt) }}</td>
-                  <td>{{ commUtil.formatComma(data.m04Amt) }}</td>
-                  <td>{{ commUtil.formatComma(data.m05Amt) }}</td>
-                  <td>{{ commUtil.formatComma(data.m06Amt) }}</td>
-                  <td>{{ commUtil.formatComma(data.m07Amt) }}</td>
-                  <td>{{ commUtil.formatComma(data.m08Amt) }}</td>
-                  <td>{{ commUtil.formatComma(data.m09Amt) }}</td>
-                  <td>{{ commUtil.formatComma(data.m10Amt) }}</td>
-                  <td>{{ commUtil.formatComma(data.m11Amt) }}</td>
-                  <td>{{ commUtil.formatComma(data.m12Amt) }}</td>
-                </tr>
-                <tr class="bg-grey3">
-                  <td></td>
-                  <td style="text-align: center">{{ props.messages.rowData.rowsSum[0].custNm }}</td>
-                  <td></td>
-                  <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].totAmt) }}</td>
+                    <td>{{ commUtil.formatComma(data.m01Amt) }}</td>
+                    <td>{{ commUtil.formatComma(data.m02Amt) }}</td>
+                    <td>{{ commUtil.formatComma(data.m03Amt) }}</td>
+                    <td>{{ commUtil.formatComma(data.m04Amt) }}</td>
+                    <td>{{ commUtil.formatComma(data.m05Amt) }}</td>
+                    <td>{{ commUtil.formatComma(data.m06Amt) }}</td>
+                    <td>{{ commUtil.formatComma(data.m07Amt) }}</td>
+                    <td>{{ commUtil.formatComma(data.m08Amt) }}</td>
+                    <td>{{ commUtil.formatComma(data.m09Amt) }}</td>
+                    <td>{{ commUtil.formatComma(data.m10Amt) }}</td>
+                    <td>{{ commUtil.formatComma(data.m11Amt) }}</td>
+                    <td>{{ commUtil.formatComma(data.m12Amt) }}</td>
+                  </tr>
+                  <tr class="bg-grey3">
+                    <td></td>
+                    <td style="text-align: center">{{ props.messages.rowData.rowsSum[0].custNm }}</td>
+                    <td></td>
+                    <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].totAmt) }}</td>
 
-                  <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].m01Amt) }}</td>
-                  <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].m02Amt) }}</td>
-                  <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].m03Amt) }}</td>
-                  <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].m04Amt) }}</td>
-                  <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].m05Amt) }}</td>
-                  <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].m06Amt) }}</td>
-                  <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].m07Amt) }}</td>
-                  <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].m08Amt) }}</td>
-                  <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].m09Amt) }}</td>
-                  <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].m10Amt) }}</td>
-                  <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].m11Amt) }}</td>
-                  <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].m12Amt) }}</td>
-                </tr>
+                    <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].m01Amt) }}</td>
+                    <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].m02Amt) }}</td>
+                    <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].m03Amt) }}</td>
+                    <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].m04Amt) }}</td>
+                    <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].m05Amt) }}</td>
+                    <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].m06Amt) }}</td>
+                    <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].m07Amt) }}</td>
+                    <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].m08Amt) }}</td>
+                    <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].m09Amt) }}</td>
+                    <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].m10Amt) }}</td>
+                    <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].m11Amt) }}</td>
+                    <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].m12Amt) }}</td>
+                  </tr>
+                </tbody>
               </table>
               <div class="row">
                 <span class="text-subtitle2">주식회사 세종서적</span>
@@ -110,7 +114,7 @@
 </template>
 
 <script setup>
-import { defineProps, defineEmits, reactive, ref } from 'vue';
+import { reactive, ref } from 'vue';
 import printJS from 'print-js';
 import * as XLSX from 'xlsx';
 import { QBtn, QIcon, useQuasar } from 'quasar';

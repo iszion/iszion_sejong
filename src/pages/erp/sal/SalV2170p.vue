@@ -35,30 +35,34 @@
               </div>
 
               <table>
-                <tr>
-                  <th rowspan="1" colspan="1">지점명</th>
-                  <th rowspan="1" colspan="1">도서명</th>
-                  <th rowspan="1" colspan="1">출고수량</th>
-                  <th rowspan="1" colspan="1">증정수량</th>
-                  <th rowspan="1" colspan="1">반품수량</th>
-                  <th rowspan="1" colspan="1">폐기수량</th>
-                  <th rowspan="1" colspan="1">조정수량</th>
-                  <th rowspan="1" colspan="1">출고금액</th>
-                  <th rowspan="1" colspan="1">반품금액</th>
-                </tr>
+                <thead>
+                  <tr>
+                    <th rowspan="1" colspan="1">지점명</th>
+                    <th rowspan="1" colspan="1">도서명</th>
+                    <th rowspan="1" colspan="1">출고수량</th>
+                    <th rowspan="1" colspan="1">증정수량</th>
+                    <th rowspan="1" colspan="1">반품수량</th>
+                    <th rowspan="1" colspan="1">폐기수량</th>
+                    <th rowspan="1" colspan="1">조정수량</th>
+                    <th rowspan="1" colspan="1">출고금액</th>
+                    <th rowspan="1" colspan="1">반품금액</th>
+                  </tr>
+                </thead>
 
-                <tr v-for="(data, index) in props.messages.rowData || []" :key="index">
-                  <td>{{ data.prodCd === '지점계' ? '' : data.custsCd }}</td>
+                <tbody>
+                  <tr v-for="(data, index) in props.messages.rowData || []" :key="index">
+                    <td>{{ data.prodCd === '지점계' ? '' : data.custsCd }}</td>
 
-                  <td>{{ data.prodCd === '지점계' ? (data.custsCd === '총계' ? '총계' : '지점계') : data.prodNm }}</td>
-                  <td>{{ commUtil.formatComma(data.oQty) }}</td>
-                  <td>{{ commUtil.formatComma(data.ojQty) }}</td>
-                  <td>{{ commUtil.formatComma(data.obQty) }}</td>
-                  <td>{{ commUtil.formatComma(data.oxQty) }}</td>
-                  <td>{{ commUtil.formatComma(data.ozQty) }}</td>
-                  <td>{{ commUtil.formatComma(data.oAmt) }}</td>
-                  <td>{{ commUtil.formatComma(data.obAmt) }}</td>
-                </tr>
+                    <td>{{ data.prodCd === '지점계' ? (data.custsCd === '총계' ? '총계' : '지점계') : data.prodNm }}</td>
+                    <td>{{ commUtil.formatComma(data.oQty) }}</td>
+                    <td>{{ commUtil.formatComma(data.ojQty) }}</td>
+                    <td>{{ commUtil.formatComma(data.obQty) }}</td>
+                    <td>{{ commUtil.formatComma(data.oxQty) }}</td>
+                    <td>{{ commUtil.formatComma(data.ozQty) }}</td>
+                    <td>{{ commUtil.formatComma(data.oAmt) }}</td>
+                    <td>{{ commUtil.formatComma(data.obAmt) }}</td>
+                  </tr>
+                </tbody>
               </table>
               <div class="row">
                 <span class="text-subtitle2">주식회사 세종서적</span>
@@ -74,7 +78,7 @@
 </template>
 
 <script setup>
-import { defineProps, defineEmits, reactive, ref } from 'vue';
+import { reactive, ref } from 'vue';
 import printJS from 'print-js';
 import * as XLSX from 'xlsx';
 import { QBtn, QIcon, useQuasar } from 'quasar';

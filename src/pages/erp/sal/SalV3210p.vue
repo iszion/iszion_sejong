@@ -35,45 +35,50 @@
               </div>
 
               <table>
-                <tr>
-                  <th rowspan="1" colspan="1">No</th>
-                  <th rowspan="1" colspan="1">입금일자</th>
-                  <th rowspan="1" colspan="1">입금처</th>
-                  <th rowspan="1" colspan="1">현잔액</th>
-                  <th rowspan="1" colspan="1">입금액</th>
-                  <th rowspan="1" colspan="1">구분</th>
-                  <th rowspan="1" colspan="1">만기일</th>
-                  <th rowspan="1" colspan="1">유형</th>
-                  <th rowspan="1" colspan="1">발행처</th>
-                  <th rowspan="1" colspan="1">발행금액</th>
-                  <th rowspan="1" colspan="1">기타사항</th>
-                </tr>
-                <tr v-for="(data, index) in props.messages.rowData.rows || []" :key="index">
-                  <td>{{ data.rowNum }}</td>
-                  <td>{{ commUtil.formatDate(data.accDay) }}</td>
-                  <td>{{ data.custNm }}</td>
-                  <td>{{ commUtil.formatComma(data.wAmt) }}</td>
-                  <td>{{ commUtil.formatComma(data.amt) }}</td>
-                  <td>{{ data.accFgNm }}</td>
-                  <td>{{ commUtil.formatDate(data.endDay) }}</td>
-                  <td>{{ data.divCdNm }}</td>
-                  <td>{{ data.pubComp }}</td>
-                  <td>{{ commUtil.formatComma(data.billAmt) }}</td>
-                  <td>{{ data.remarks }}</td>
-                </tr>
-                <tr class="bg-grey3">
-                  <td></td>
-                  <td></td>
-                  <td>{{ props.messages.rowData.rowsSum[0].custNm }}</td>
-                  <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].wAmt) }}</td>
-                  <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].amt) }}</td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].billAmt) }}</td>
-                  <td></td>
-                </tr>
+                <thead>
+                  <tr>
+                    <th rowspan="1" colspan="1">No</th>
+                    <th rowspan="1" colspan="1">입금일자</th>
+                    <th rowspan="1" colspan="1">입금처</th>
+                    <th rowspan="1" colspan="1">현잔액</th>
+                    <th rowspan="1" colspan="1">입금액</th>
+                    <th rowspan="1" colspan="1">구분</th>
+                    <th rowspan="1" colspan="1">만기일</th>
+                    <th rowspan="1" colspan="1">유형</th>
+                    <th rowspan="1" colspan="1">발행처</th>
+                    <th rowspan="1" colspan="1">발행금액</th>
+                    <th rowspan="1" colspan="1">기타사항</th>
+                  </tr>
+                </thead>
+
+                <tbody>
+                  <tr v-for="(data, index) in props.messages.rowData.rows || []" :key="index">
+                    <td>{{ data.rowNum }}</td>
+                    <td>{{ commUtil.formatDate(data.accDay) }}</td>
+                    <td>{{ data.custNm }}</td>
+                    <td>{{ commUtil.formatComma(data.wAmt) }}</td>
+                    <td>{{ commUtil.formatComma(data.amt) }}</td>
+                    <td>{{ data.accFgNm }}</td>
+                    <td>{{ commUtil.formatDate(data.endDay) }}</td>
+                    <td>{{ data.divCdNm }}</td>
+                    <td>{{ data.pubComp }}</td>
+                    <td>{{ commUtil.formatComma(data.billAmt) }}</td>
+                    <td>{{ data.remarks }}</td>
+                  </tr>
+                  <tr class="bg-grey3">
+                    <td></td>
+                    <td></td>
+                    <td>{{ props.messages.rowData.rowsSum[0].custNm }}</td>
+                    <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].wAmt) }}</td>
+                    <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].amt) }}</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].billAmt) }}</td>
+                    <td></td>
+                  </tr>
+                </tbody>
               </table>
               <div class="row">
                 <span class="text-subtitle2">주식회사 세종서적</span>
@@ -89,7 +94,7 @@
 </template>
 
 <script setup>
-import { defineProps, defineEmits, reactive, ref } from 'vue';
+import { reactive, ref } from 'vue';
 import printJS from 'print-js';
 import * as XLSX from 'xlsx';
 import { QBtn, QIcon, useQuasar } from 'quasar';

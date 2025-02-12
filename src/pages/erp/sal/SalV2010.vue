@@ -59,6 +59,21 @@
                 </template>
               </q-input>
               <q-space />
+              <div class="">
+                <q-btn
+                  v-if="!$q.screen.xs"
+                  :disable="rowData.details.length <= 0"
+                  outline
+                  color="teal"
+                  @click="isDialogVisible = true"
+                  class="q-px-sm"
+                >
+                  <q-icon name="download" size="xs" class="q-mr-xs" />
+                  거래명세서
+                </q-btn>
+              </div>
+
+              <q-space />
               <div class="q-gutter-xs text-right">
                 <q-btn outline color="positive" @click="addDataSection"><q-icon name="add" size="xs" /> 신규 </q-btn>
                 <q-btn v-if="isShowSaveBtn" outline color="primary" :disable="isReceipt.yn" @click="saveDataSection"
@@ -332,6 +347,14 @@
     </q-card>
     <!--  end of contents list  (좌측 화면) -->
   </q-page>
+
+  <q-dialog persistent full-height v-model="isDialogVisible">
+    <q-card class="q-pa-none q-ma-none" style="width: 1200px; max-width: 80vw">
+      <q-card-section class="q-pa-none q-ma-none">
+        <sal-bill-report :messages="{ rowData: rowData }" @close="handleClose" />
+      </q-card-section>
+    </q-card>
+  </q-dialog>
 </template>
 
 <script setup>
@@ -352,6 +375,13 @@ import HelpCust from 'components/subvue/HelpCust.vue';
 import HelpProd from 'components/subvue/HelpProd.vue';
 import CompHelpProdButton from 'components/CompHelpProdButton.vue';
 import JsonUtil from 'src/js_comm/json-util';
+
+import SalBillReport from 'pages/erp/sal/SalBillReport.vue';
+const isDialogVisible = ref(false);
+function handleClose() {
+  console.log('handleClose called');
+  isDialogVisible.value = false;
+}
 
 const $q = useQuasar();
 const dense = ref(false);
@@ -383,8 +413,37 @@ const contentZoneStyle = computed(() => ({
   height: `${contentZoneHeight.value - 700}px`,
 }));
 
-const rowData = reactive({ header: [], details: [] });
+const rowData = reactive({ form: null, header: [], details: [], rowSum: [], comp: null });
 const rowDataOrdBack = ref([]);
+
+const oldFormData = ref(null);
+const formData = ref(null);
+
+const formDataInitialize = () => {
+  formData.value = {
+    dealDay: '',
+    seq: '',
+    divCd: '',
+    custCd: '',
+    custNm: '',
+    custsCd: '',
+    custSeq: '',
+    remarks: '',
+    coupRetuenDay: '',
+    receiptYn: '',
+    receiptDate: '00000000',
+    yulWt: '',
+    yulMj: '',
+    yulHm: '',
+    yulNp: '',
+    yulTb: '',
+    yulHd: '',
+    yulHs: '',
+    yulSg: '',
+    yulGt: '',
+    iuD: 'I',
+  };
+};
 
 const dateFormatter = params => {
   const dateStr = params.value;
@@ -412,10 +471,12 @@ onBeforeMount(() => {
   // console.log('aa : ', JSON.stringify(custSeqOptions.value));
 
   currentYearMonth.value = commUtil.getTodayYear() + '/' + commUtil.getTodayMonth();
-  getDataCommOption('401').then(() => {
-    getDataCommOption('402').then(() => {
-      getEventData(commUtil.getTodayYear(), commUtil.getTodayMonth()).then(() => {
-        onDateClick(currentDate.value);
+  getDataComp('1001').then(() => {
+    getDataCommOption('401').then(() => {
+      getDataCommOption('402').then(() => {
+        getEventData(commUtil.getTodayYear(), commUtil.getTodayMonth()).then(() => {
+          onDateClick(currentDate.value);
+        });
       });
     });
   });
@@ -866,35 +927,6 @@ const columnDefsDetails = ref([
   },
 ]);
 
-const oldFormData = ref(null);
-const formData = ref(null);
-
-const formDataInitialize = () => {
-  formData.value = {
-    dealDay: '',
-    seq: '',
-    divCd: '',
-    custCd: '',
-    custNm: '',
-    custsCd: '',
-    custSeq: '',
-    remarks: '',
-    coupRetuenDay: '',
-    receiptYn: '',
-    receiptDate: '00000000',
-    yulWt: '',
-    yulMj: '',
-    yulHm: '',
-    yulNp: '',
-    yulTb: '',
-    yulHd: '',
-    yulHs: '',
-    yulSg: '',
-    yulGt: '',
-    iuD: 'I',
-  };
-};
-
 const isShowStatusEdit = ref(false);
 const isShowDeleteBtn = ref(false);
 const isShowSaveBtn = ref(false);
@@ -1195,10 +1227,11 @@ const getDataSelect = async resData => {
       paramDealDay: commUtil.unFormatDate(resData.dealDay),
       paramSeq: resData.seq,
     });
-    formData.value = response.data.data[0];
+    rowData.form = response.data.data;
+    formData.value = response.data.data;
     oldFormData.value = JSON.parse(JSON.stringify(formData.value)); // 초기자료 저장
-    formData.value.dealDay = commUtil.formatDate(response.data.data[0].dealDay);
-    console.log('aa : ', JSON.stringify(formData.value));
+    formData.value.dealDay = commUtil.formatDate(response.data.data.dealDay);
+    // console.log('aa : ', JSON.stringify(formData.value));
   } catch (error) {
     console.error('Error fetching users:', error);
   }
@@ -1233,6 +1266,15 @@ const getDataSelectList = async resData => {
   }
 };
 // ***** 사용자정보 선택된 자료 가져오기 부분  *****************************//
+
+async function getDataComp(resCompCd) {
+  try {
+    const response = await api.post('/api/com/com1010_select', { paramCompCd: resCompCd });
+    rowData.comp = response.data.data;
+  } catch (error) {
+    console.error('Error fetching users:', error);
+  }
+}
 
 async function getDataCustsOption(resCustCd) {
   try {
@@ -1285,10 +1327,6 @@ const gridOptionsHeader = {
   },
   pagination: false,
   rowSelection: 'multiple' /* 'single' or 'multiple',*/,
-  enableColResize: false,
-  enableSorting: true,
-  enableFilter: false,
-  enableRangeSelection: true,
   suppressRowClickSelection: false,
   animateRows: true,
   suppressHorizontalScroll: true,
@@ -1366,21 +1404,7 @@ const gridOptionsHeader = {
   onCellValueChanged: function (event) {
     // console.log('onCellValueChanged');
   },
-  getRowNodeId: function (data) {
-    return null;
-  },
-  // 리드 상단 고정
-  setPinnedTopRowData: function (data) {
-    return null;
-  },
-  // 그리드 하단 고정
-  setPinnedBottomRowData: function (data) {
-    return null;
-  },
-  // components: {
-  //   numericCellEditor: NumericCellEditor,
-  //   moodEditor: MoodEditor,
-  // },
+
   debug: false,
 };
 
@@ -1412,6 +1436,8 @@ const handleRowHeaderClick = data => {
 // *********************************
 // rows 전체 합 구하는 부분
 const calculateTotal = () => {
+  rowData.rowsSum = [];
+
   let totalRow = {
     prodNm: '합계',
     qty: 0,
@@ -1422,6 +1448,12 @@ const calculateTotal = () => {
     totalRow.qty += row.qty || 0;
     totalRow.amt += row.amt || 0;
   });
+
+  const hasMeaningfulData = totalRow.qty !== 0 || totalRow.amt !== 0;
+
+  if (hasMeaningfulData) {
+    rowData.rowsSum.push(totalRow);
+  }
 
   return totalRow;
 };
@@ -1453,10 +1485,6 @@ const gridOptionsDetails = {
   },
   pagination: false,
   rowSelection: 'multiple' /* 'single' or 'multiple',*/,
-  enableColResize: false,
-  enableSorting: true,
-  enableFilter: false,
-  enableRangeSelection: true,
   suppressRowClickSelection: true,
   animateRows: true,
   suppressHorizontalScroll: true,
@@ -1600,21 +1628,7 @@ const gridOptionsDetails = {
 
     event.api.setGridOption('pinnedBottomRowData', [calculateTotal()]); // 자동 합계구하기
   },
-  getRowNodeId: function (data) {
-    return null;
-  },
-  // 리드 상단 고정
-  setPinnedTopRowData: function (data) {
-    return null;
-  },
-  // 그리드 하단 고정
-  setPinnedBottomRowData: function (data) {
-    return null;
-  },
-  // components: {
-  //   numericCellEditor: NumericCellEditor,
-  //   moodEditor: MoodEditor,
-  // },
+
   debug: false,
 };
 

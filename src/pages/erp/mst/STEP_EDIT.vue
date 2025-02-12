@@ -1,81 +1,72 @@
 <template>
   <div>
-    <q-input v-model="dateRange" label="Select Date Range" readonly outlined @click="showDateRangeDialog = true" />
+    <q-input borderless stack-label readonly v-model="searchValue.period.from" style="width: 230px" class="text-subtitle1">
+      <template v-slot:append>
+        <q-icon name="event" class="cursor-pointer q-pt-md" @click.stop="dateCnt = 0" />
+      </template>
 
-    <q-dialog v-model="showDateRangeDialog">
-      <q-card>
-        <q-card-section>
-          <div class="text-h6">Select Date Range</div>
-        </q-card-section>
+      <q-popup-proxy v-model="showDatePopup1" transition-show="scale" transition-hide="scale">
+        <q-date
+          minimal
+          v-model="searchValue.period.from"
+          mask="YYYY년 MM월"
+          type="month"
+          color="orange"
+          default-view="Years"
+          options-override="month"
+          navigation-min-year-month="2023/01"
+          @navigation="onNavigation('from', $event)"
+        />
+      </q-popup-proxy>
+    </q-input>
+  </div>
+  <div>
+    <q-input borderless stack-label readonly v-model="searchValue.period.to" style="width: 230px" class="text-subtitle1">
+      <template v-slot:append>
+        <q-icon name="event" class="cursor-pointer q-pt-md" @click="dateCnt = 0" />
+      </template>
 
-        <q-separator />
-
-        <q-card-section>
-          <q-date
-            v-model="dateRangeModel"
-            minimal
-            range
-            emit-immediately
-            :default-year-month="defaultYearMonth"
-            @update:model-value="updateDateRange"
-          />
-        </q-card-section>
-
-        <q-separator />
-
-        <q-card-actions align="right">
-          <q-btn flat label="Cancel" color="negative" @click="cancelDateRange" />
-          <q-btn flat label="OK" color="primary" @click="confirmDateRange" />
-        </q-card-actions>
-      </q-card>
-    </q-dialog>
+      <q-popup-proxy v-model="showDatePopup2" transition-show="scale" transition-hide="scale">
+        <q-date
+          minimal
+          v-model="searchValue.period.to"
+          mask="YYYY년 MM월"
+          type="month"
+          color="orange"
+          default-view="Years"
+          options-override="month"
+          :navigation-min-year-month="searchValue.period.from.substring(0, 4) + '/' + searchValue.period.from.substring(6, 8)"
+          @navigation="onNavigation('to', $event)"
+        />
+      </q-popup-proxy>
+    </q-input>
   </div>
 </template>
 
 <script setup>
-import { ref } from 'vue';
-import { date } from 'quasar'; // Quasar 날짜 유틸리티
-
-// 기본 날짜 설정
-const defaultFrom = '2024-12-01';
-const defaultTo = '2024-12-01';
-
-const showDateRangeDialog = ref(false);
-const format = 'YYYY-MM-DD';
-
-// 기본 날짜 모델 값 초기화
-const dateRangeModel = ref({
-  from: defaultFrom,
-  to: defaultTo,
+import { reactive, ref } from 'vue';
+import { date, QIcon } from 'quasar';
+import commUtil from 'src/js_comm/comm-util';
+const showDatePopup1 = ref(false);
+const showDatePopup2 = ref(false);
+const searchValue = reactive({
+  period: {
+    from: commUtil.getTodayYear() + '년 ' + commUtil.getTodayMonth() + '월',
+    to: commUtil.getTodayYear() + '년 ' + commUtil.getTodayMonth() + '월',
+  },
 });
 
-// 기본 날짜 범위를 읽기 전용 입력에 초기화
-const dateRange = ref(`${defaultFrom} ~ ${defaultTo}`);
-
-// 기본 년/월 설정
-const defaultYearMonth = '2024/12';
-
-function updateDateRange(value) {
-  const { from, to } = value;
-
-  if (from && to) {
-    // 날짜를 원하는 형식으로 포맷
-    const formattedFrom = date.formatDate(from, format);
-    const formattedTo = date.formatDate(to, format);
-    dateRange.value = `${formattedFrom} ~ ${formattedTo}`;
+const dateCnt = ref(0);
+const onNavigation = (fg, date) => {
+  dateCnt.value = dateCnt.value + 1;
+  console.log('dateCnt :', dateCnt);
+  console.log('Navigated to:', fg, date.year, date.month);
+  searchValue.period[fg] = date.year + '년 ' + commUtil.getDataWithZero(date.month, 2) + '월';
+  if (dateCnt.value === 2) {
+    showDatePopup1.value = false;
+    showDatePopup2.value = false;
   }
-}
-
-function cancelDateRange() {
-  // 날짜 선택 취소 시 기본 값으로 초기화
-  dateRangeModel.value = { from: defaultFrom, to: defaultTo };
-  dateRange.value = `${defaultFrom} ~ ${defaultTo}`;
-  showDateRangeDialog.value = false;
-}
-
-function confirmDateRange() {
-  showDateRangeDialog.value = false;
-}
+};
 </script>
 
 <style scoped>

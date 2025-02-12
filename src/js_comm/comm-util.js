@@ -39,6 +39,17 @@ export default {
     return rawTime ? rawTime.replace(/-/g, '') : '';
   },
 
+  formatCompNo(compNo) {
+    if (compNo) {
+      return `${compNo.slice(0, 3)}-${compNo.slice(3, 5)}-${compNo.slice(5)}`;
+    } else {
+      return '';
+    }
+  },
+  unFormatCompNo(compNo) {
+    return compNo ? compNo.replace(/\D/g, '') : '';
+  },
+
   formatComma(num) {
     if (typeof num !== 'number' || isNaN(num)) {
       return ''; // 숫자가 아니면 공백 반환

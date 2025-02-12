@@ -31,8 +31,19 @@ export default route(function (/* { store, ssrContext } */) {
     history: createHistory(process.env.VUE_ROUTER_BASE),
   });
 
-  Router.beforeEach(() => {
+  Router.beforeEach((to, from, next) => {
     LoadingBar.start();
+    let tokenValue = sessionStorage.getItem('refreshToken');
+
+    // 로그인이 필요한 페이지인지 확인
+    const isAuthRequired = to.path.startsWith('/main');
+
+    if (isAuthRequired && !tokenValue) {
+      // 토큰이 없으면 로그인 페이지로 이동
+      next('/');
+    } else {
+      next();
+    }
   });
   Router.afterEach(() => {
     LoadingBar.stop();

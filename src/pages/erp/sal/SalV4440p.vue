@@ -37,199 +37,204 @@
               </div>
 
               <table>
-                <tr>
-                  <th rowspan="2" colspan="1">No</th>
-                  <th rowspan="2" colspan="1">거래처명</th>
-                  <th rowspan="2" colspan="1">코드</th>
-                  <th rowspan="2" colspan="1">전기잔액</th>
-                  <th rowspan="1" colspan="3">당기합계</th>
-                  <th rowspan="2" colspan="1">당기잔액</th>
-                  <th rowspan="1" colspan="3">1월</th>
-                  <th rowspan="1" colspan="3">2월</th>
-                  <th rowspan="1" colspan="3">3월</th>
-                  <th rowspan="1" colspan="3">4월</th>
-                  <th rowspan="1" colspan="3">5월</th>
-                  <th rowspan="1" colspan="3">6월</th>
-                  <th rowspan="1" colspan="3">7월</th>
-                  <th rowspan="1" colspan="3">8월</th>
-                  <th rowspan="1" colspan="3">9월</th>
-                  <th rowspan="1" colspan="3">10월</th>
-                  <th rowspan="1" colspan="3">11월</th>
-                  <th rowspan="1" colspan="3">12월</th>
-                </tr>
-                <tr>
-                  <th rowspan="1" colspan="1">당기매출액</th>
-                  <th rowspan="1" colspan="1">당기반품액</th>
-                  <th rowspan="1" colspan="1">당기수금액</th>
+                <thead>
+                  <tr>
+                    <th rowspan="2" colspan="1">No</th>
+                    <th rowspan="2" colspan="1">거래처명</th>
+                    <th rowspan="2" colspan="1">코드</th>
+                    <th rowspan="2" colspan="1">전기잔액</th>
+                    <th rowspan="1" colspan="3">당기합계</th>
+                    <th rowspan="2" colspan="1">당기잔액</th>
+                    <th rowspan="1" colspan="3">1월</th>
+                    <th rowspan="1" colspan="3">2월</th>
+                    <th rowspan="1" colspan="3">3월</th>
+                    <th rowspan="1" colspan="3">4월</th>
+                    <th rowspan="1" colspan="3">5월</th>
+                    <th rowspan="1" colspan="3">6월</th>
+                    <th rowspan="1" colspan="3">7월</th>
+                    <th rowspan="1" colspan="3">8월</th>
+                    <th rowspan="1" colspan="3">9월</th>
+                    <th rowspan="1" colspan="3">10월</th>
+                    <th rowspan="1" colspan="3">11월</th>
+                    <th rowspan="1" colspan="3">12월</th>
+                  </tr>
+                  <tr>
+                    <th rowspan="1" colspan="1">당기매출액</th>
+                    <th rowspan="1" colspan="1">당기반품액</th>
+                    <th rowspan="1" colspan="1">당기수금액</th>
 
-                  <th rowspan="1" colspan="1">매출액</th>
-                  <th rowspan="1" colspan="1">반품액</th>
-                  <th rowspan="1" colspan="1">수금액</th>
+                    <th rowspan="1" colspan="1">매출액</th>
+                    <th rowspan="1" colspan="1">반품액</th>
+                    <th rowspan="1" colspan="1">수금액</th>
 
-                  <th rowspan="1" colspan="1">매출액</th>
-                  <th rowspan="1" colspan="1">반품액</th>
-                  <th rowspan="1" colspan="1">수금액</th>
+                    <th rowspan="1" colspan="1">매출액</th>
+                    <th rowspan="1" colspan="1">반품액</th>
+                    <th rowspan="1" colspan="1">수금액</th>
 
-                  <th rowspan="1" colspan="1">매출액</th>
-                  <th rowspan="1" colspan="1">반품액</th>
-                  <th rowspan="1" colspan="1">수금액</th>
+                    <th rowspan="1" colspan="1">매출액</th>
+                    <th rowspan="1" colspan="1">반품액</th>
+                    <th rowspan="1" colspan="1">수금액</th>
 
-                  <th rowspan="1" colspan="1">매출액</th>
-                  <th rowspan="1" colspan="1">반품액</th>
-                  <th rowspan="1" colspan="1">수금액</th>
+                    <th rowspan="1" colspan="1">매출액</th>
+                    <th rowspan="1" colspan="1">반품액</th>
+                    <th rowspan="1" colspan="1">수금액</th>
 
-                  <th rowspan="1" colspan="1">매출액</th>
-                  <th rowspan="1" colspan="1">반품액</th>
-                  <th rowspan="1" colspan="1">수금액</th>
+                    <th rowspan="1" colspan="1">매출액</th>
+                    <th rowspan="1" colspan="1">반품액</th>
+                    <th rowspan="1" colspan="1">수금액</th>
 
-                  <th rowspan="1" colspan="1">매출액</th>
-                  <th rowspan="1" colspan="1">반품액</th>
-                  <th rowspan="1" colspan="1">수금액</th>
+                    <th rowspan="1" colspan="1">매출액</th>
+                    <th rowspan="1" colspan="1">반품액</th>
+                    <th rowspan="1" colspan="1">수금액</th>
 
-                  <th rowspan="1" colspan="1">매출액</th>
-                  <th rowspan="1" colspan="1">반품액</th>
-                  <th rowspan="1" colspan="1">수금액</th>
+                    <th rowspan="1" colspan="1">매출액</th>
+                    <th rowspan="1" colspan="1">반품액</th>
+                    <th rowspan="1" colspan="1">수금액</th>
 
-                  <th rowspan="1" colspan="1">매출액</th>
-                  <th rowspan="1" colspan="1">반품액</th>
-                  <th rowspan="1" colspan="1">수금액</th>
+                    <th rowspan="1" colspan="1">매출액</th>
+                    <th rowspan="1" colspan="1">반품액</th>
+                    <th rowspan="1" colspan="1">수금액</th>
 
-                  <th rowspan="1" colspan="1">매출액</th>
-                  <th rowspan="1" colspan="1">반품액</th>
-                  <th rowspan="1" colspan="1">수금액</th>
+                    <th rowspan="1" colspan="1">매출액</th>
+                    <th rowspan="1" colspan="1">반품액</th>
+                    <th rowspan="1" colspan="1">수금액</th>
 
-                  <th rowspan="1" colspan="1">매출액</th>
-                  <th rowspan="1" colspan="1">반품액</th>
-                  <th rowspan="1" colspan="1">수금액</th>
+                    <th rowspan="1" colspan="1">매출액</th>
+                    <th rowspan="1" colspan="1">반품액</th>
+                    <th rowspan="1" colspan="1">수금액</th>
 
-                  <th rowspan="1" colspan="1">매출액</th>
-                  <th rowspan="1" colspan="1">반품액</th>
-                  <th rowspan="1" colspan="1">수금액</th>
+                    <th rowspan="1" colspan="1">매출액</th>
+                    <th rowspan="1" colspan="1">반품액</th>
+                    <th rowspan="1" colspan="1">수금액</th>
 
-                  <th rowspan="1" colspan="1">매출액</th>
-                  <th rowspan="1" colspan="1">반품액</th>
-                  <th rowspan="1" colspan="1">수금액</th>
-                </tr>
-                <tr v-for="(data, index) in props.messages.rowData.rows || []" :key="index">
-                  <td>{{ index + 1 }}</td>
-                  <td>{{ data.custNm }}</td>
-                  <td>{{ data.custCd }}</td>
-                  <td>{{ commUtil.formatComma(data.wAmt) }}</td>
+                    <th rowspan="1" colspan="1">매출액</th>
+                    <th rowspan="1" colspan="1">반품액</th>
+                    <th rowspan="1" colspan="1">수금액</th>
+                  </tr>
+                </thead>
 
-                  <td>{{ commUtil.formatComma(data.toAmt) }}</td>
-                  <td>{{ commUtil.formatComma(data.tobAmt) }}</td>
-                  <td>{{ commUtil.formatComma(data.tinAmt) }}</td>
+                <tbody>
+                  <tr v-for="(data, index) in props.messages.rowData.rows || []" :key="index">
+                    <td>{{ index + 1 }}</td>
+                    <td>{{ data.custNm }}</td>
+                    <td>{{ data.custCd }}</td>
+                    <td>{{ commUtil.formatComma(data.wAmt) }}</td>
 
-                  <td>{{ commUtil.formatComma(data.jAmt) }}</td>
+                    <td>{{ commUtil.formatComma(data.toAmt) }}</td>
+                    <td>{{ commUtil.formatComma(data.tobAmt) }}</td>
+                    <td>{{ commUtil.formatComma(data.tinAmt) }}</td>
 
-                  <td>{{ commUtil.formatComma(data.m01OAmt) }}</td>
-                  <td>{{ commUtil.formatComma(data.m01ObAmt) }}</td>
-                  <td>{{ commUtil.formatComma(data.m01InAmt) }}</td>
+                    <td>{{ commUtil.formatComma(data.jAmt) }}</td>
 
-                  <td>{{ commUtil.formatComma(data.m02OAmt) }}</td>
-                  <td>{{ commUtil.formatComma(data.m02ObAmt) }}</td>
-                  <td>{{ commUtil.formatComma(data.m02InAmt) }}</td>
+                    <td>{{ commUtil.formatComma(data.m01OAmt) }}</td>
+                    <td>{{ commUtil.formatComma(data.m01ObAmt) }}</td>
+                    <td>{{ commUtil.formatComma(data.m01InAmt) }}</td>
 
-                  <td>{{ commUtil.formatComma(data.m03OAmt) }}</td>
-                  <td>{{ commUtil.formatComma(data.m03ObAmt) }}</td>
-                  <td>{{ commUtil.formatComma(data.m03InAmt) }}</td>
+                    <td>{{ commUtil.formatComma(data.m02OAmt) }}</td>
+                    <td>{{ commUtil.formatComma(data.m02ObAmt) }}</td>
+                    <td>{{ commUtil.formatComma(data.m02InAmt) }}</td>
 
-                  <td>{{ commUtil.formatComma(data.m04OAmt) }}</td>
-                  <td>{{ commUtil.formatComma(data.m04ObAmt) }}</td>
-                  <td>{{ commUtil.formatComma(data.m04InAmt) }}</td>
+                    <td>{{ commUtil.formatComma(data.m03OAmt) }}</td>
+                    <td>{{ commUtil.formatComma(data.m03ObAmt) }}</td>
+                    <td>{{ commUtil.formatComma(data.m03InAmt) }}</td>
 
-                  <td>{{ commUtil.formatComma(data.m05OAmt) }}</td>
-                  <td>{{ commUtil.formatComma(data.m05ObAmt) }}</td>
-                  <td>{{ commUtil.formatComma(data.m05InAmt) }}</td>
+                    <td>{{ commUtil.formatComma(data.m04OAmt) }}</td>
+                    <td>{{ commUtil.formatComma(data.m04ObAmt) }}</td>
+                    <td>{{ commUtil.formatComma(data.m04InAmt) }}</td>
 
-                  <td>{{ commUtil.formatComma(data.m06OAmt) }}</td>
-                  <td>{{ commUtil.formatComma(data.m06ObAmt) }}</td>
-                  <td>{{ commUtil.formatComma(data.m06InAmt) }}</td>
+                    <td>{{ commUtil.formatComma(data.m05OAmt) }}</td>
+                    <td>{{ commUtil.formatComma(data.m05ObAmt) }}</td>
+                    <td>{{ commUtil.formatComma(data.m05InAmt) }}</td>
 
-                  <td>{{ commUtil.formatComma(data.m07OAmt) }}</td>
-                  <td>{{ commUtil.formatComma(data.m07ObAmt) }}</td>
-                  <td>{{ commUtil.formatComma(data.m07InAmt) }}</td>
+                    <td>{{ commUtil.formatComma(data.m06OAmt) }}</td>
+                    <td>{{ commUtil.formatComma(data.m06ObAmt) }}</td>
+                    <td>{{ commUtil.formatComma(data.m06InAmt) }}</td>
 
-                  <td>{{ commUtil.formatComma(data.m08OAmt) }}</td>
-                  <td>{{ commUtil.formatComma(data.m08ObAmt) }}</td>
-                  <td>{{ commUtil.formatComma(data.m08InAmt) }}</td>
+                    <td>{{ commUtil.formatComma(data.m07OAmt) }}</td>
+                    <td>{{ commUtil.formatComma(data.m07ObAmt) }}</td>
+                    <td>{{ commUtil.formatComma(data.m07InAmt) }}</td>
 
-                  <td>{{ commUtil.formatComma(data.m09OAmt) }}</td>
-                  <td>{{ commUtil.formatComma(data.m09ObAmt) }}</td>
-                  <td>{{ commUtil.formatComma(data.m09InAmt) }}</td>
+                    <td>{{ commUtil.formatComma(data.m08OAmt) }}</td>
+                    <td>{{ commUtil.formatComma(data.m08ObAmt) }}</td>
+                    <td>{{ commUtil.formatComma(data.m08InAmt) }}</td>
 
-                  <td>{{ commUtil.formatComma(data.m10OAmt) }}</td>
-                  <td>{{ commUtil.formatComma(data.m10ObAmt) }}</td>
-                  <td>{{ commUtil.formatComma(data.m10InAmt) }}</td>
+                    <td>{{ commUtil.formatComma(data.m09OAmt) }}</td>
+                    <td>{{ commUtil.formatComma(data.m09ObAmt) }}</td>
+                    <td>{{ commUtil.formatComma(data.m09InAmt) }}</td>
 
-                  <td>{{ commUtil.formatComma(data.m11OAmt) }}</td>
-                  <td>{{ commUtil.formatComma(data.m11ObAmt) }}</td>
-                  <td>{{ commUtil.formatComma(data.m11InAmt) }}</td>
+                    <td>{{ commUtil.formatComma(data.m10OAmt) }}</td>
+                    <td>{{ commUtil.formatComma(data.m10ObAmt) }}</td>
+                    <td>{{ commUtil.formatComma(data.m10InAmt) }}</td>
 
-                  <td>{{ commUtil.formatComma(data.m12OAmt) }}</td>
-                  <td>{{ commUtil.formatComma(data.m12ObAmt) }}</td>
-                  <td>{{ commUtil.formatComma(data.m12InAmt) }}</td>
-                </tr>
-                <tr class="bg-grey3">
-                  <td></td>
-                  <td style="text-align: center">{{ props.messages.rowData.rowsSum[0].custNm }}</td>
-                  <td></td>
-                  <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].wAmt) }}</td>
+                    <td>{{ commUtil.formatComma(data.m11OAmt) }}</td>
+                    <td>{{ commUtil.formatComma(data.m11ObAmt) }}</td>
+                    <td>{{ commUtil.formatComma(data.m11InAmt) }}</td>
 
-                  <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].toAmt) }}</td>
-                  <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].tobAmt) }}</td>
-                  <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].tinAmt) }}</td>
+                    <td>{{ commUtil.formatComma(data.m12OAmt) }}</td>
+                    <td>{{ commUtil.formatComma(data.m12ObAmt) }}</td>
+                    <td>{{ commUtil.formatComma(data.m12InAmt) }}</td>
+                  </tr>
+                  <tr class="bg-grey3">
+                    <td></td>
+                    <td style="text-align: center">{{ props.messages.rowData.rowsSum[0].custNm }}</td>
+                    <td></td>
+                    <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].wAmt) }}</td>
 
-                  <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].jAmt) }}</td>
+                    <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].toAmt) }}</td>
+                    <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].tobAmt) }}</td>
+                    <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].tinAmt) }}</td>
 
-                  <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].m01OAmt) }}</td>
-                  <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].m01ObAmt) }}</td>
-                  <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].m01InAmt) }}</td>
+                    <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].jAmt) }}</td>
 
-                  <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].m02OAmt) }}</td>
-                  <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].m02ObAmt) }}</td>
-                  <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].m02InAmt) }}</td>
+                    <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].m01OAmt) }}</td>
+                    <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].m01ObAmt) }}</td>
+                    <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].m01InAmt) }}</td>
 
-                  <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].m03OAmt) }}</td>
-                  <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].m03ObAmt) }}</td>
-                  <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].m03InAmt) }}</td>
+                    <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].m02OAmt) }}</td>
+                    <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].m02ObAmt) }}</td>
+                    <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].m02InAmt) }}</td>
 
-                  <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].m04OAmt) }}</td>
-                  <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].m04ObAmt) }}</td>
-                  <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].m04InAmt) }}</td>
+                    <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].m03OAmt) }}</td>
+                    <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].m03ObAmt) }}</td>
+                    <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].m03InAmt) }}</td>
 
-                  <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].m05OAmt) }}</td>
-                  <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].m05ObAmt) }}</td>
-                  <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].m05InAmt) }}</td>
+                    <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].m04OAmt) }}</td>
+                    <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].m04ObAmt) }}</td>
+                    <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].m04InAmt) }}</td>
 
-                  <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].m06OAmt) }}</td>
-                  <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].m06ObAmt) }}</td>
-                  <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].m06InAmt) }}</td>
+                    <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].m05OAmt) }}</td>
+                    <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].m05ObAmt) }}</td>
+                    <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].m05InAmt) }}</td>
 
-                  <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].m07OAmt) }}</td>
-                  <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].m07ObAmt) }}</td>
-                  <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].m07InAmt) }}</td>
+                    <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].m06OAmt) }}</td>
+                    <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].m06ObAmt) }}</td>
+                    <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].m06InAmt) }}</td>
 
-                  <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].m08OAmt) }}</td>
-                  <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].m08ObAmt) }}</td>
-                  <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].m08InAmt) }}</td>
+                    <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].m07OAmt) }}</td>
+                    <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].m07ObAmt) }}</td>
+                    <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].m07InAmt) }}</td>
 
-                  <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].m09OAmt) }}</td>
-                  <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].m09ObAmt) }}</td>
-                  <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].m09InAmt) }}</td>
+                    <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].m08OAmt) }}</td>
+                    <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].m08ObAmt) }}</td>
+                    <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].m08InAmt) }}</td>
 
-                  <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].m10OAmt) }}</td>
-                  <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].m10ObAmt) }}</td>
-                  <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].m10InAmt) }}</td>
+                    <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].m09OAmt) }}</td>
+                    <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].m09ObAmt) }}</td>
+                    <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].m09InAmt) }}</td>
 
-                  <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].m11OAmt) }}</td>
-                  <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].m11ObAmt) }}</td>
-                  <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].m11InAmt) }}</td>
+                    <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].m10OAmt) }}</td>
+                    <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].m10ObAmt) }}</td>
+                    <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].m10InAmt) }}</td>
 
-                  <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].m12OAmt) }}</td>
-                  <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].m12ObAmt) }}</td>
-                  <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].m12InAmt) }}</td>
-                </tr>
+                    <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].m11OAmt) }}</td>
+                    <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].m11ObAmt) }}</td>
+                    <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].m11InAmt) }}</td>
+
+                    <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].m12OAmt) }}</td>
+                    <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].m12ObAmt) }}</td>
+                    <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].m12InAmt) }}</td>
+                  </tr>
+                </tbody>
               </table>
               <div class="row">
                 <span class="text-subtitle2">주식회사 세종서적</span>
@@ -245,7 +250,7 @@
 </template>
 
 <script setup>
-import { defineProps, defineEmits, reactive, ref } from 'vue';
+import { reactive, ref } from 'vue';
 import printJS from 'print-js';
 import * as XLSX from 'xlsx';
 import { QBtn, QIcon, useQuasar } from 'quasar';

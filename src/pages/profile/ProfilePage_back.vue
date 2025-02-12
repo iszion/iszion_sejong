@@ -70,7 +70,7 @@ onBeforeMount(() => {
 const userImageName = ref(null);
 const getData = async () => {
   try {
-    const response = await api.post('/api/mst/mst1010_select', { paramStdYear: storeYear.setYear, paramEmpCd: storeUser.setEmpCd });
+    const response = await api.post('/api/mst/mst1010_select', { paramStdYear: storeYear.setYear, paramEmpCd: storeUser.userId });
     userImageName.value = response.data.data[0].imageFileNm;
   } catch (error) {
     console.error('Error fetching users:', error);

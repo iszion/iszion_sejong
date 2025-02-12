@@ -691,10 +691,6 @@ const gridOptions = {
     editable: false,
   },
   rowSelection: 'multiple' /* 'single' or 'multiple',*/,
-  enableColResize: false,
-  enableSorting: true,
-  enableFilter: false,
-  enableRangeSelection: true,
   suppressRowClickSelection: false,
   animateRows: true,
   suppressHorizontalScroll: true,
@@ -780,23 +776,8 @@ const gridOptions = {
   },
   onCellValueChanged: function (event) {
     // console.log('onCellValueChanged');
-    onCellValueChanged();
   },
-  getRowNodeId: function (data) {
-    return null;
-  },
-  // 리드 상단 고정
-  setPinnedTopRowData: function (data) {
-    return null;
-  },
-  // 그리드 하단 고정
-  setPinnedBottomRowData: function (data) {
-    return null;
-  },
-  // components: {
-  //   numericCellEditor: NumericCellEditor,
-  //   moodEditor: MoodEditor,
-  // },
+
   debug: false,
 };
 </script>

@@ -214,7 +214,7 @@
               dense
               color="dark"
               @click="
-                getDataDocU(selectedProgId, storeUser.setEmpCd);
+                getDataDocU(selectedProgId, storeUser.userId);
                 selectedDocUedit = false;
               "
               ><q-icon name="close" size="xs" class="q-mr-xs" />편집모드 닫기</q-btn
@@ -289,7 +289,7 @@ const manualDocB = ref({
 });
 const manualDocU = ref({
   progId: '',
-  empCd: storeUser.setEmpCd,
+  empCd: storeUser.userId,
   contents: '',
 });
 
@@ -316,7 +316,7 @@ onMounted(() => {
   selectedProgId.value = resMsgProp.message.menuData.progId;
   getDataDocA(resMsgProp.message.menuData.progId);
   getDataDocB(selectedProgId.value);
-  getDataDocU(selectedProgId.value, storeUser.setEmpCd);
+  getDataDocU(selectedProgId.value, storeUser.userId);
 
   drawerRight.value = false;
   selectedDocBedit.value = false;
@@ -433,7 +433,7 @@ const handleNodeClick = () => {
     selectedProgNm.value = nodeValue.value.menuData.label;
     getDataDocA(selectedProgId.value);
     getDataDocB(selectedProgId.value);
-    getDataDocU(selectedProgId.value, storeUser.setEmpCd);
+    getDataDocU(selectedProgId.value, storeUser.userId);
   }
 };
 function findValueById(data, id) {
@@ -460,7 +460,7 @@ function findValueById(data, id) {
 
 // ***** DataBase 서브메뉴자료 가져오기 부분 *****************************//
 const getSubMenuData = async () => {
-  const paramData = { paramGroupCd: selectedGroup.value, paramUserId: storeUser.setEmpCd };
+  const paramData = { paramGroupCd: selectedGroup.value, paramUserId: storeUser.userId };
   try {
     const response = await api.post('/api/sys/menu_sub_list', paramData);
 
@@ -566,7 +566,7 @@ const saveDataDocUhandleResult = resFormData => {
       saveStatus.rtnMsg = res.data.rtnMsg;
       notifySave.notifyView(saveStatus);
 
-      getDataDocU(selectedProgId.value, storeUser.setEmpCd);
+      getDataDocU(selectedProgId.value, storeUser.userId);
     })
     .catch(error => {
       console.log('error: ', error);

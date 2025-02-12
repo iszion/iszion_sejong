@@ -19,7 +19,7 @@
                 <q-item-section side>
                   <div class="text-grey q-gutter-xs">
                     <q-btn
-                      v-if="data.empCd === storeUser.setEmpCd"
+                      v-if="data.empCd === storeUser.userId"
                       class="cursor-pointer"
                       size="12px"
                       flat
@@ -29,7 +29,7 @@
                       @click="deleteDataSection(data.no)"
                     />
                     <q-btn
-                      v-if="data.empCd === storeUser.setEmpCd"
+                      v-if="data.empCd === storeUser.userId"
                       class="cursor-pointer"
                       size="12px"
                       flat
@@ -175,7 +175,7 @@ const resetFormData = () => {
   formData.value.salesCd = params.paramSalesCd;
   formData.value.seq = params.paramSeq;
   formData.value.no = maxNo.value + 1;
-  formData.value.empCd = storeUser.setEmpCd;
+  formData.value.empCd = storeUser.userId;
   formData.value.empNm = '';
   formData.value.reply = '';
   formData.value.rating = 0;

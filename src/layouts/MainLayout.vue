@@ -6,15 +6,16 @@
           ><q-icon name="menu" size="sm" />
         </q-btn>
 
-        <q-avatar square size="sm" @click="handleHomeClick" class="cursor-pointer">
-          <img src="../assets/images/iszion_logo.png" />
-        </q-avatar>
+        <!--        <q-avatar square size="sm" @click="handleHomeClick" class="cursor-pointer">-->
+        <!--          <img src="../assets/images/iszion_logo.png" />-->
+        <!--        </q-avatar>-->
         <div
           class="text-h6 text-bold text-deep-orange q-pl-sm self-center cursor-pointer"
           :class="$q.dark.isActive ? 'text-white' : 'text-dark'"
           @click="handleHomeClick"
         >
-          {{ $t('project_name') }}
+          <!--          {{ $t('project_name') }}-->
+          {{ storeUser.compNm }}
         </div>
 
         <q-space />
@@ -90,9 +91,9 @@
         <q-btn flat size="sm" class="q-pa-none q-ml-sm">
           <div v-if="!$q.screen.xs">
             <div v-show="$q.screen.gt.md" class="text-subtitle2 text-bold q-mr-sm text-orange" style="font-size: 1.2em">
-              {{ storeUser.setDeptNm }}
+              {{ storeUser.deptNm }}
             </div>
-            <div class="text-subtitle2 text-bold q-mr-sm" :class="$q.dark.isActive ? 'text-white' : 'text-dark'">{{ storeUser.setEmpNm }}</div>
+            <div class="text-subtitle2 text-bold q-mr-sm" :class="$q.dark.isActive ? 'text-white' : 'text-dark'">{{ storeUser.userNm }}</div>
           </div>
           <q-avatar rounded color="white" class="flex flex-center">
             <q-img
@@ -110,7 +111,7 @@
                 <q-item-section>{{ $t('header_menu_profile') }}</q-item-section>
               </q-item>
               <q-separator />
-              <q-item clickable v-close-popup to="/auth/sign-in">
+              <q-item clickable v-close-popup>
                 <q-item-section @click="logout">{{ $t('header_menu_logout') }}</q-item-section>
               </q-item>
             </q-list>
@@ -216,10 +217,9 @@ import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
 import { api } from '/src/boot/axios';
 import PageManual from 'components/comm/PageManual.vue';
-import { useUserInfoStore } from 'src/store/setUserInfo';
-import { useYearInfoStore } from 'src/store/setYearInfo';
 import notifySave from 'src/js_comm/notify-save';
 import JsonUtil from 'src/js_comm/json-util';
+import { useUserInfoStore } from 'src/store/setUserInfo';
 
 const storeUser = useUserInfoStore();
 
@@ -328,7 +328,7 @@ const { locale } = useI18n();
 
 onBeforeMount(() => {
   selectLanguage('ko-KR');
-  storeUser.setEmpCd = SessionStorage.getItem('empCd');
+  storeUser.userId = SessionStorage.getItem('userId');
   getDataSetUserInfo().then(() => {
     getDataMainMenu();
   });
@@ -431,28 +431,30 @@ const logout = () => {
 const userImageName = ref(null);
 const getDataSetUserInfo = async () => {
   try {
-    const response = await api.post('/api/sys/user_info', { paramUserId: storeUser.setEmpCd });
-    userImageName.value = response.data.data[0].imageFileNm;
+    const response = await api.post('/api/com/user_info', { paramUserId: storeUser.userId });
+    userImageName.value = response.data.data.imageFileNm;
     storgeUserInfoGroupSave(
-      response.data.data[0].empCd +
+      response.data.data.userId +
         '|' +
-        response.data.data[0].salesNm +
+        response.data.data.userNm +
         '|' +
-        response.data.data[0].salesNmx +
+        response.data.data.userNmx +
         '|' +
-        response.data.data[0].salesCd +
+        response.data.data.compCd +
         '|' +
-        response.data.data[0].deptCd +
+        response.data.data.compNm +
         '|' +
-        response.data.data[0].deptNm +
+        response.data.data.deptCd +
         '|' +
-        response.data.data[0].pstnCd +
+        response.data.data.deptNm +
         '|' +
-        response.data.data[0].pstnNm +
+        response.data.data.titlCd +
         '|' +
-        response.data.data[0].levelCd.charAt(response.data.data[0].levelCd.length - 1) +
+        response.data.data.titlNm +
         '|' +
-        response.data.data[0].levelNm,
+        response.data.data.levelCd.charAt(response.data.data.levelCd.length - 1) +
+        '|' +
+        response.data.data.levelNm,
     );
   } catch (error) {
     console.error('Error fetching users:', error);
@@ -466,16 +468,17 @@ const storgeUserInfoGroupSave = resSetUserInfoGroup => {
 
 const getStorgeSetUserInfoGroup = () => {
   const _value = SessionStorage.getItem('setUserInfoGroup').split('|');
-  storeUser.setEmpCd = _value[0];
-  storeUser.setEmpNm = _value[1];
-  storeUser.setEmpNmx = _value[2];
-  storeUser.setSalesCd = _value[3];
-  storeUser.setDeptCd = _value[4];
-  storeUser.setDeptNm = _value[5];
-  storeUser.setPstnCd = _value[6];
-  storeUser.setPstnNm = _value[7];
-  storeUser.setLevelCd = _value[8];
-  storeUser.setLevelNm = _value[9];
+  storeUser.userId = _value[0];
+  storeUser.userNm = _value[1];
+  storeUser.userNmx = _value[2];
+  storeUser.compCd = _value[3];
+  storeUser.compNm = _value[4];
+  storeUser.deptCd = _value[5];
+  storeUser.deptNm = _value[6];
+  storeUser.titlCd = _value[7];
+  storeUser.titlNm = _value[8];
+  storeUser.levelCd = _value[9];
+  storeUser.levelNm = _value[10];
 };
 // ***** 유저정보 처리 부분 끝 *****************************//
 
@@ -486,7 +489,7 @@ const menuListData = reactive({
 });
 const getDataMainMenu = async () => {
   try {
-    const response = await api.post('/api/sys/menu_main_list', { paramUserId: storeUser.setEmpCd });
+    const response = await api.post('/api/com/menu_main_list', { paramUserId: storeUser.userId });
     menuListData.mainMenu = response.data.data;
   } catch (error) {
     console.error('Error fetching users:', error);
@@ -496,7 +499,11 @@ const getDataMainMenu = async () => {
 // ***** DataBase 서브메뉴자료 가져오기 부분 *****************************//
 const getSubMenuData = async param => {
   try {
-    const response = await api.post('/api/sys/menu_sub_list', { paramGroupCd: param, paramUserId: storeUser.setEmpCd });
+    const response = await api.post('/api/com/menu_sub_list', {
+      paramCompCd: storeUser.compCd,
+      paramGroupCd: param,
+      paramUserId: storeUser.userId,
+    });
 
     const tmpMenu = response.data.data;
 
@@ -513,9 +520,6 @@ const getSubMenuData = async param => {
 
     // 평가기간 작업 유형에 따른 메뉴 셋팅부분
     let _disable = false;
-    // if (storeUser.setLevelCd > '2' || storeUser.setLevelCd === '') {
-    //   _disable = storeYear.setLocCh !== '1';
-    // }
     const _menuList = setMenuList.map(item => {
       if (item.progId !== '') {
         return { ...item, disabled: _disable };
@@ -537,7 +541,7 @@ const getSubMenuData = async param => {
 
 // 즐겨찾기
 const getFavMenuData = async param => {
-  const paramData = { paramUserId: storeUser.setEmpCd };
+  const paramData = { paramUserId: storeUser.userId };
   try {
     const response = await api.post('/api/sys/menu_fav_list', paramData);
 
@@ -554,9 +558,6 @@ const getFavMenuData = async param => {
 };
 function addDisabled(obj) {
   let _disable = false;
-  // if (storeUser.setLevelCd > '2' || storeUser.setLevelCd === '') {
-  //   _disable = storeYear.setLocCh !== '1';
-  // }
   if (obj.progId !== '') {
     obj.disabled = _disable;
   }
@@ -594,7 +595,7 @@ const addFavorites = () => {
       let iu = [];
       let iuD = [];
       let jsonFormData = {
-        userId: storeUser.setEmpCd,
+        userId: storeUser.userId,
         location: 'fav',
         progNm: resData.label,
         progId: resData.progId,

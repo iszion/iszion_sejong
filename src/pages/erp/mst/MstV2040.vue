@@ -74,28 +74,16 @@ import 'ag-grid-community/styles/ag-theme-quartz.css';
 import 'ag-grid-community/styles/ag-theme-alpine.css';
 import 'ag-grid-community/styles/ag-theme-balham.css';
 import { AgGridVue } from 'ag-grid-vue3';
-import { QBtn, QIcon, QToggle, useQuasar } from 'quasar';
-import { computed, defineProps, onBeforeMount, onBeforeUnmount, onMounted, reactive, ref, watch } from 'vue';
+import { QBtn, QIcon, useQuasar } from 'quasar';
+import { computed, onBeforeMount, onBeforeUnmount, onMounted, reactive, ref, watch } from 'vue';
 import { api } from '/src/boot/axios';
 
-import { isEmpty, isEqual } from 'lodash';
-import jsonUtil from 'src/js_comm/json-util';
+import { isEqual } from 'lodash';
 import notifySave from 'src/js_comm/notify-save';
 import commUtil from 'src/js_comm/comm-util';
-import HelpCust from 'components/subvue/HelpCust.vue';
-import HelpProd from 'components/subvue/HelpProd.vue';
-import CompHelpProdButton from 'components/CompHelpProdButton.vue';
-import { createRouter as Vue } from 'vue-router/dist/vue-router.esm-browser.prod';
 import JsonUtil from 'src/js_comm/json-util';
-import HelpAgent from 'components/subvue/HelpAgent.vue';
 
 const $q = useQuasar();
-
-const props = defineProps({
-  messages: {
-    searchValue: String,
-  },
-});
 
 const searchValue = reactive({
   textValue: '',

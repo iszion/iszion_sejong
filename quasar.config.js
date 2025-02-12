@@ -61,6 +61,10 @@ module.exports = configure(function (/* ctx */) {
       },
 
       vueRouterMode: 'history', // available values: 'hash', 'history'
+      // 캐시무효화를 위한 설정
+      extendWebpack(cfg) {
+        cfg.output.filename = '[name].[hash].js';
+      },
       // vueRouterBase,
       // vueDevtools,
       // vueOptionsAPI: false,
@@ -183,6 +187,10 @@ module.exports = configure(function (/* ctx */) {
       // extendInjectManifestOptions (cfg) {},
       // extendManifestJson (json) {}
       // extendPWACustomSWConf (esbuildConf) {}
+      workboxOptions: {
+        skipWaiting: true,
+        clientsClaim: true,
+      },
     },
 
     // Full list of options: https://v2.quasar.dev/quasar-cli-vite/developing-cordova-apps/configuring-cordova

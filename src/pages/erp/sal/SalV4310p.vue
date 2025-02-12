@@ -37,48 +37,59 @@
               </div>
 
               <table>
-                <tr>
-                  <th rowspan="1" colspan="1">거래일자</th>
-                  <th rowspan="1" colspan="1">거래내역</th>
-                  <th rowspan="1" colspan="1">지점명</th>
-                  <th rowspan="1" colspan="1">외종</th>
-                  <th rowspan="1" colspan="1">출고수량</th>
-                  <th rowspan="1" colspan="1">출고금액</th>
-                  <th rowspan="1" colspan="1">반품수량</th>
-                  <th rowspan="1" colspan="1">반품금액</th>
-                  <th rowspan="1" colspan="1">수금액</th>
-                  <th rowspan="1" colspan="1">미수잔액</th>
-                </tr>
-                <tr
-                  v-for="(data, index) in props.messages.rowData.rows || []"
-                  :key="index"
-                  :class="
-                    data.rowNum === '0' ? 'bg-grey3' : data.rowNum == null && data.saleYm == null ? 'bg-grey2' : data.rowNum == null ? 'bg-grey1' : ''
-                  "
-                >
-                  <!--                  <td v-if="data.saleYm === '총계'">총계</td>-->
-                  <!--                  <td v-else-if="data.saleDay === '월계'">월계</td>-->
-                  <!--                  <td v-else-if="data.custNm === '일계'">일계</td>-->
-                  <!--                  <td v-else>{{ commUtil.formatDate(data.saleDay) }}</td>-->
+                <thead>
+                  <tr>
+                    <th rowspan="1" colspan="1">거래일자</th>
+                    <th rowspan="1" colspan="1">거래내역</th>
+                    <th rowspan="1" colspan="1">지점명</th>
+                    <th rowspan="1" colspan="1">외종</th>
+                    <th rowspan="1" colspan="1">출고수량</th>
+                    <th rowspan="1" colspan="1">출고금액</th>
+                    <th rowspan="1" colspan="1">반품수량</th>
+                    <th rowspan="1" colspan="1">반품금액</th>
+                    <th rowspan="1" colspan="1">수금액</th>
+                    <th rowspan="1" colspan="1">미수잔액</th>
+                  </tr>
+                </thead>
 
-                  <td v-if="data.rowNum === '0' || data.rowNum == null"></td>
-                  <td v-else>{{ commUtil.formatDate(data.saleDay) }}</td>
+                <tbody>
+                  <tr
+                    v-for="(data, index) in props.messages.rowData.rows || []"
+                    :key="index"
+                    :class="
+                      data.rowNum === '0'
+                        ? 'bg-grey3'
+                        : data.rowNum == null && data.saleYm == null
+                        ? 'bg-grey2'
+                        : data.rowNum == null
+                        ? 'bg-grey1'
+                        : ''
+                    "
+                  >
+                    <!--                  <td v-if="data.saleYm === '총계'">총계</td>-->
+                    <!--                  <td v-else-if="data.saleDay === '월계'">월계</td>-->
+                    <!--                  <td v-else-if="data.custNm === '일계'">일계</td>-->
+                    <!--                  <td v-else>{{ commUtil.formatDate(data.saleDay) }}</td>-->
 
-                  <td>{{ data.prodNm }}</td>
+                    <td v-if="data.rowNum === '0' || data.rowNum == null"></td>
+                    <td v-else>{{ commUtil.formatDate(data.saleDay) }}</td>
 
-                  <td v-if="data.rowNum === '0' || data.rowNum == null"></td>
-                  <td v-else>{{ data.custsCd }}</td>
+                    <td>{{ data.prodNm }}</td>
 
-                  <td v-if="data.rowNum === '0' || data.rowNum == null"></td>
-                  <td v-else>{{ commUtil.formatComma(data.cnt) }}</td>
+                    <td v-if="data.rowNum === '0' || data.rowNum == null"></td>
+                    <td v-else>{{ data.custsCd }}</td>
 
-                  <td>{{ commUtil.formatComma(data.oQty) }}</td>
-                  <td>{{ commUtil.formatComma(data.oAmt) }}</td>
-                  <td>{{ commUtil.formatComma(data.bQty) }}</td>
-                  <td>{{ commUtil.formatComma(data.bAmt) }}</td>
-                  <td>{{ commUtil.formatComma(data.accAmt) }}</td>
-                  <td>{{ commUtil.formatComma(data.jAmt) }}</td>
-                </tr>
+                    <td v-if="data.rowNum === '0' || data.rowNum == null"></td>
+                    <td v-else>{{ commUtil.formatComma(data.cnt) }}</td>
+
+                    <td>{{ commUtil.formatComma(data.oQty) }}</td>
+                    <td>{{ commUtil.formatComma(data.oAmt) }}</td>
+                    <td>{{ commUtil.formatComma(data.bQty) }}</td>
+                    <td>{{ commUtil.formatComma(data.bAmt) }}</td>
+                    <td>{{ commUtil.formatComma(data.accAmt) }}</td>
+                    <td>{{ commUtil.formatComma(data.jAmt) }}</td>
+                  </tr>
+                </tbody>
               </table>
               <div class="row">
                 <span class="text-subtitle2">주식회사 세종서적</span>
@@ -94,7 +105,7 @@
 </template>
 
 <script setup>
-import { defineProps, defineEmits, reactive, ref } from 'vue';
+import { reactive, ref } from 'vue';
 import printJS from 'print-js';
 import * as XLSX from 'xlsx';
 import { QBtn, QIcon, useQuasar } from 'quasar';

@@ -116,7 +116,7 @@ const onSubmit = () => {
           sessionStorage.setItem('refreshToken', JSON.stringify(res.data.data.refreshToken));
           router.push({ path: '/main' });
           try {
-            SessionStorage.set('empCd', form.value.id);
+            SessionStorage.set('userId', form.value.id);
           } catch (e) {
             // data wasn't successfully saved due to
             // a Web Storage API error

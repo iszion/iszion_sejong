@@ -20,7 +20,7 @@
       <q-toolbar class="q-px-sm q-pt-none">
         <q-input stack-label readonly v-model="searchValue.yymm" label="출고년월" label-color="orange" style="width: 130px" class="text-subtitle1">
           <template v-slot:append>
-            <q-icon name="event" class="cursor-pointer q-pt-md" />
+            <q-icon name="event" class="cursor-pointer q-pt-md" @click="beforeYymm = null" />
           </template>
 
           <q-popup-proxy v-model="showDatePopup" transition-show="scale" transition-hide="scale">
@@ -32,7 +32,7 @@
               color="orange"
               default-view="Years"
               options-override="month"
-              @update:model-value="onDateSelect"
+              @navigation="onNavigation('yymm', $event)"
             />
           </q-popup-proxy>
         </q-input>
@@ -99,10 +99,16 @@ const minHeight = ref(90); // 최소 높이 (예: 300px) rowHeight의 3배
 const $q = useQuasar();
 
 const showDatePopup = ref(false);
-const onDateSelect = newValue => {
-  const [year, month] = newValue.split('-');
-  console.log('Selected Year-Month1:', newValue, showDatePopup.value);
-  showDatePopup.value = false;
+const beforeYymm = ref(null);
+const onNavigation = (fg, date) => {
+  searchValue[fg] = date.year + '년 ' + commUtil.getDataWithZero(date.month, 2) + '월';
+
+  if (!beforeYymm.value) {
+    showDatePopup.value = false;
+    beforeYymm.value = date;
+  } else {
+    beforeYymm.value = date;
+  }
 };
 
 function handleClose() {
@@ -460,10 +466,10 @@ const myGridOptions = {
     editable: false,
   },
   rowSelection: 'single' /* 'single' or 'multiple',*/,
-  enableColResize: true,
-  enableSorting: true,
-  enableFilter: true,
-  enableRangeSelection: true,
+  // enableColResize: true,
+  // enableSorting: true,
+  // enableFilter: true,
+  // enableRangeSelection: true,
   suppressRowClickSelection: false,
   animateRows: true,
   suppressHorizontalScroll: true,
@@ -533,18 +539,18 @@ const myGridOptions = {
   onCellValueChanged: function (event) {
     // console.log('onCellValueChanged');
   },
-  getRowNodeId: function (event) {
-    // console.log('getRowNodeId');
-    return null;
-  },
+  // getRowNodeId: function (event) {
+  // console.log('getRowNodeId');
+  // return null;
+  // },
   // 리드 상단 고정
-  setPinnedTopRowData: function (data) {
-    return null;
-  },
+  // setPinnedTopRowData: function (data) {
+  //   return null;
+  // },
   // 그리드 하단 고정
-  setPinnedBottomRowData: function (data) {
-    return null;
-  },
+  // setPinnedBottomRowData: function (data) {
+  //   return null;
+  // },
   // components: {
   //   numericCellEditor: NumericCellEditor,
   //   moodEditor: MoodEditor,

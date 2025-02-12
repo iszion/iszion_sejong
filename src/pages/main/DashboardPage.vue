@@ -19,7 +19,6 @@
 
 <script setup>
 import { reactive } from 'vue';
-import AuxPage from 'pages/main/AuxPage.vue';
 import BoardList from 'pages/main/BoardList.vue';
 import EventView from 'pages/main/EventView.vue';
 

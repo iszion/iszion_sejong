@@ -35,53 +35,58 @@
               </div>
 
               <table>
-                <tr>
-                  <th rowspan="2" colspan="1">No</th>
-                  <th rowspan="2" colspan="1">도서명</th>
-                  <th rowspan="2" colspan="1">정가</th>
-                  <th rowspan="2" colspan="1">이월</th>
-                  <th rowspan="2" colspan="1">입고</th>
-                  <th rowspan="1" colspan="4">출고현황</th>
-                  <th rowspan="2" colspan="1">조정</th>
-                  <th rowspan="2" colspan="1">재고</th>
-                  <th rowspan="2" colspan="1">순출고계</th>
-                  <th rowspan="2" colspan="1">비고</th>
-                </tr>
-                <tr>
-                  <th rowspan="1" colspan="1">출고</th>
-                  <th rowspan="1" colspan="1">증정</th>
-                  <th rowspan="1" colspan="1">반품</th>
-                  <th rowspan="1" colspan="1">폐기</th>
-                </tr>
-                <tr v-for="(data, index) in props.messages.rowData.rows || []" :key="index">
-                  <td>{{ index + 1 }}</td>
-                  <td>{{ data.prodNm }}</td>
-                  <td>{{ commUtil.formatComma(data.sPrice) }}</td>
-                  <td>{{ commUtil.formatComma(data.wjQty) }}</td>
-                  <td>{{ commUtil.formatComma(data.iQty) }}</td>
-                  <td>{{ commUtil.formatComma(data.oQty) }}</td>
-                  <td>{{ commUtil.formatComma(data.jQty) }}</td>
-                  <td>{{ commUtil.formatComma(data.bQty) }}</td>
-                  <td>{{ commUtil.formatComma(data.xQty) }}</td>
-                  <td>{{ commUtil.formatComma(data.zQty) }}</td>
-                  <td>{{ commUtil.formatComma(data.yjQty) }}</td>
-                  <td>{{ commUtil.formatComma(data.tQty) }}</td>
-                  <td></td>
-                </tr>
-                <tr class="bg-grey3">
-                  <td></td>
-                  <td>{{ props.messages.rowData.rowsSum[0].prodNm }}</td>
-                  <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].wjQty) }}</td>
-                  <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].iQty) }}</td>
-                  <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].oQty) }}</td>
-                  <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].jQty) }}</td>
-                  <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].bQty) }}</td>
-                  <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].xQty) }}</td>
-                  <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].zQty) }}</td>
-                  <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].yjQty) }}</td>
-                  <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].tQty) }}</td>
-                  <td></td>
-                </tr>
+                <thead>
+                  <tr>
+                    <th rowspan="2" colspan="1">No</th>
+                    <th rowspan="2" colspan="1">도서명</th>
+                    <th rowspan="2" colspan="1">정가</th>
+                    <th rowspan="2" colspan="1">이월</th>
+                    <th rowspan="2" colspan="1">입고</th>
+                    <th rowspan="1" colspan="4">출고현황</th>
+                    <th rowspan="2" colspan="1">조정</th>
+                    <th rowspan="2" colspan="1">재고</th>
+                    <th rowspan="2" colspan="1">순출고계</th>
+                    <th rowspan="2" colspan="1">비고</th>
+                  </tr>
+                  <tr>
+                    <th rowspan="1" colspan="1">출고</th>
+                    <th rowspan="1" colspan="1">증정</th>
+                    <th rowspan="1" colspan="1">반품</th>
+                    <th rowspan="1" colspan="1">폐기</th>
+                  </tr>
+                </thead>
+
+                <tbody>
+                  <tr v-for="(data, index) in props.messages.rowData.rows || []" :key="index">
+                    <td>{{ index + 1 }}</td>
+                    <td>{{ data.prodNm }}</td>
+                    <td>{{ commUtil.formatComma(data.sPrice) }}</td>
+                    <td>{{ commUtil.formatComma(data.wjQty) }}</td>
+                    <td>{{ commUtil.formatComma(data.iQty) }}</td>
+                    <td>{{ commUtil.formatComma(data.oQty) }}</td>
+                    <td>{{ commUtil.formatComma(data.jQty) }}</td>
+                    <td>{{ commUtil.formatComma(data.bQty) }}</td>
+                    <td>{{ commUtil.formatComma(data.xQty) }}</td>
+                    <td>{{ commUtil.formatComma(data.zQty) }}</td>
+                    <td>{{ commUtil.formatComma(data.yjQty) }}</td>
+                    <td>{{ commUtil.formatComma(data.tQty) }}</td>
+                    <td></td>
+                  </tr>
+                  <tr class="bg-grey3">
+                    <td></td>
+                    <td>{{ props.messages.rowData.rowsSum[0].prodNm }}</td>
+                    <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].wjQty) }}</td>
+                    <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].iQty) }}</td>
+                    <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].oQty) }}</td>
+                    <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].jQty) }}</td>
+                    <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].bQty) }}</td>
+                    <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].xQty) }}</td>
+                    <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].zQty) }}</td>
+                    <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].yjQty) }}</td>
+                    <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].tQty) }}</td>
+                    <td></td>
+                  </tr>
+                </tbody>
               </table>
               <div class="row">
                 <span class="text-subtitle2">주식회사 세종서적</span>
@@ -97,7 +102,7 @@
 </template>
 
 <script setup>
-import { defineProps, defineEmits, reactive, ref } from 'vue';
+import { reactive, ref } from 'vue';
 import printJS from 'print-js';
 import * as XLSX from 'xlsx';
 import { QBtn, QIcon, useQuasar } from 'quasar';

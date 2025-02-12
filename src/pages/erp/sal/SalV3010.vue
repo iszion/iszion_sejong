@@ -19,9 +19,9 @@
         <div class="row q-gutter-lg">
           <q-input stack-label readonly v-model="searchValue.yymm" label="매출년월" label-color="orange" style="width: 130px" class="text-subtitle1">
             <template v-slot:append>
-              <q-icon name="event" class="cursor-pointer q-pt-md" />
+              <q-icon name="event" class="cursor-pointer q-pt-md" @click="beforeYymm = null" />
             </template>
-            <q-popup-proxy v-model="showDatePopupYymm" transition-show="scale" transition-hide="scale">
+            <q-popup-proxy v-model="showDatePopup" transition-show="scale" transition-hide="scale">
               <q-date
                 minimal
                 v-model="searchValue.yymm"
@@ -30,7 +30,7 @@
                 color="orange"
                 default-view="Years"
                 options-override="month"
-                @update:model-value="onDateSelectYymm"
+                @navigation="onNavigation('yymm', $event)"
               />
             </q-popup-proxy>
           </q-input>
@@ -297,18 +297,24 @@ import notifySave from 'src/js_comm/notify-save';
 import commUtil from 'src/js_comm/comm-util';
 import HelpCust from 'components/subvue/HelpCust.vue';
 import CompHelpCustButton from 'components/CompHelpCustButton.vue';
-import JsonUtil from 'src/js_comm/json-util';
 
 const $q = useQuasar();
 const dense = ref(false);
 const isSaveFg = ref(null);
 const billUse = ref(false);
 
-const showDatePopupYymm = ref(false);
+const showDatePopup = ref(false);
 const maxSeq = ref(0);
-const onDateSelectYymm = newValue => {
-  const [year, month] = newValue.split('-');
-  showDatePopupYymm.value = false;
+const beforeYymm = ref(null);
+const onNavigation = (fg, date) => {
+  searchValue[fg] = date.year + '년 ' + commUtil.getDataWithZero(date.month, 2) + '월';
+
+  if (!beforeYymm.value) {
+    showDatePopup.value = false;
+    beforeYymm.value = date;
+  } else {
+    beforeYymm.value = date;
+  }
 };
 
 const searchValue = reactive({

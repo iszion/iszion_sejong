@@ -34,6 +34,7 @@ export default {
   main_menu_fee: 'Royalty',
   main_menu_sal: 'Sale',
   main_menu_cos: 'Profit & Loss',
+  main_menu_com: 'Manager',
 
   /* *****  Sub Menu MST 부분  *****  */
   sub_menu_mst1010: 'Product Information',

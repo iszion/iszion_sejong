@@ -37,45 +37,49 @@
               </div>
 
               <table>
-                <tr>
-                  <th rowspan="1" colspan="1">No</th>
-                  <th rowspan="1" colspan="1">도서명</th>
-                  <th rowspan="1" colspan="1">코드</th>
-                  <th rowspan="1" colspan="1">에이젠시명</th>
-                  <th rowspan="1" colspan="1">코드</th>
-                  <th rowspan="1" colspan="1">적용월</th>
-                  <th rowspan="1" colspan="1">
-                    <span v-if="props.messages.searchValue.prodCl === '1'">기지급금액</span>
-                    <span v-if="props.messages.searchValue.prodCl === '2'">선인세</span>
-                  </th>
-                  <th rowspan="1" colspan="1">인세정산금액</th>
-                  <th rowspan="1" colspan="1">인세정산수량</th>
-                  <th rowspan="1" colspan="1">비고</th>
-                </tr>
-                <tr v-for="(data, index) in props.messages.rowData.rows || []" :key="index">
-                  <td>{{ index + 1 }}</td>
-                  <td>{{ data.prodNm }}</td>
-                  <td>{{ data.prodCd }}</td>
-                  <td>{{ data.agentNm }}</td>
-                  <td>{{ data.agentCd }}</td>
-                  <td>{{ data.procMonth }}</td>
-                  <td>{{ commUtil.formatComma(data.sAmt) }}</td>
-                  <td>{{ commUtil.formatComma(data.oAmt) }}</td>
-                  <td>{{ commUtil.formatComma(data.oQty) }}</td>
-                  <td>{{ data.remarks }}</td>
-                </tr>
-                <tr class="bg-grey3">
-                  <td></td>
-                  <td style="text-align: center">{{ props.messages.rowData.rowsSum[0].prodNm }}</td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].sAmt) }}</td>
-                  <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].oAmt) }}</td>
-                  <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].oQty) }}</td>
-                  <td></td>
-                </tr>
+                <thead>
+                  <tr>
+                    <th rowspan="1" colspan="1">No</th>
+                    <th rowspan="1" colspan="1">도서명</th>
+                    <th rowspan="1" colspan="1">코드</th>
+                    <th rowspan="1" colspan="1">에이젠시명</th>
+                    <th rowspan="1" colspan="1">코드</th>
+                    <th rowspan="1" colspan="1">적용월</th>
+                    <th rowspan="1" colspan="1">
+                      <span v-if="props.messages.searchValue.prodCl === '1'">기지급금액</span>
+                      <span v-if="props.messages.searchValue.prodCl === '2'">선인세</span>
+                    </th>
+                    <th rowspan="1" colspan="1">인세정산금액</th>
+                    <th rowspan="1" colspan="1">인세정산수량</th>
+                    <th rowspan="1" colspan="1">비고</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="(data, index) in props.messages.rowData.rows || []" :key="index">
+                    <td>{{ index + 1 }}</td>
+                    <td>{{ data.prodNm }}</td>
+                    <td>{{ data.prodCd }}</td>
+                    <td>{{ data.agentNm }}</td>
+                    <td>{{ data.agentCd }}</td>
+                    <td>{{ data.procMonth }}</td>
+                    <td>{{ commUtil.formatComma(data.sAmt) }}</td>
+                    <td>{{ commUtil.formatComma(data.oAmt) }}</td>
+                    <td>{{ commUtil.formatComma(data.oQty) }}</td>
+                    <td>{{ data.remarks }}</td>
+                  </tr>
+                  <tr class="bg-grey3">
+                    <td></td>
+                    <td style="text-align: center">{{ props.messages.rowData.rowsSum[0].prodNm }}</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].sAmt) }}</td>
+                    <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].oAmt) }}</td>
+                    <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].oQty) }}</td>
+                    <td></td>
+                  </tr>
+                </tbody>
               </table>
               <div class="row">
                 <span class="text-subtitle2">주식회사 세종서적</span>
@@ -91,7 +95,7 @@
 </template>
 
 <script setup>
-import { defineProps, defineEmits, reactive, ref, onBeforeMount } from 'vue';
+import { reactive, ref, onBeforeMount } from 'vue';
 import printJS from 'print-js';
 import * as XLSX from 'xlsx';
 import { QBtn, QIcon, useQuasar } from 'quasar';

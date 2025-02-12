@@ -35,46 +35,51 @@
               </div>
 
               <table>
-                <tr>
-                  <th rowspan="2" colspan="1">기일자</th>
-                  <th rowspan="2" colspan="1">입고수량</th>
-                  <th rowspan="1" colspan="3">출고</th>
-                  <th rowspan="2" colspan="1">출고계</th>
-                  <th rowspan="2" colspan="1">재고조정</th>
-                  <th rowspan="2" colspan="1">반품</th>
-                  <th rowspan="2" colspan="1">총재고</th>
-                  <th rowspan="2" colspan="1">비고</th>
-                </tr>
-                <tr>
-                  <th rowspan="1" colspan="1">출고수량</th>
-                  <th rowspan="1" colspan="1">증정수량</th>
-                  <th rowspan="1" colspan="1">폐기수량</th>
-                </tr>
-                <tr v-for="(data, index) in props.messages.rowData.rows || []" :key="index">
-                  <td>{{ data.stockDay }}</td>
+                <thead>
+                  <tr>
+                    <th rowspan="2" colspan="1">기일자</th>
+                    <th rowspan="2" colspan="1">입고수량</th>
+                    <th rowspan="1" colspan="3">출고</th>
+                    <th rowspan="2" colspan="1">출고계</th>
+                    <th rowspan="2" colspan="1">재고조정</th>
+                    <th rowspan="2" colspan="1">반품</th>
+                    <th rowspan="2" colspan="1">총재고</th>
+                    <th rowspan="2" colspan="1">비고</th>
+                  </tr>
+                  <tr>
+                    <th rowspan="1" colspan="1">출고수량</th>
+                    <th rowspan="1" colspan="1">증정수량</th>
+                    <th rowspan="1" colspan="1">폐기수량</th>
+                  </tr>
+                </thead>
 
-                  <td>{{ commUtil.formatComma(data.iQty) }}</td>
-                  <td>{{ commUtil.formatComma(data.oQty) }}</td>
-                  <td>{{ commUtil.formatComma(data.ojQty) }}</td>
-                  <td>{{ commUtil.formatComma(data.oxQty) }}</td>
-                  <td>{{ commUtil.formatComma(data.otQty) }}</td>
-                  <td>{{ commUtil.formatComma(data.ozQty) }}</td>
-                  <td>{{ commUtil.formatComma(data.obQty) }}</td>
-                  <td>{{ commUtil.formatComma(data.jQty) }}</td>
-                  <td></td>
-                </tr>
-                <tr class="bg-grey3">
-                  <td>{{ props.messages.rowData.rowsSum[0].stockDay }}</td>
-                  <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].iQty) }}</td>
-                  <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].oQty) }}</td>
-                  <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].ojQty) }}</td>
-                  <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].oxQty) }}</td>
-                  <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].otQty) }}</td>
-                  <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].ozQty) }}</td>
-                  <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].obQty) }}</td>
-                  <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].jQty) }}</td>
-                  <td></td>
-                </tr>
+                <tbody>
+                  <tr v-for="(data, index) in props.messages.rowData.rows || []" :key="index">
+                    <td>{{ data.stockDay }}</td>
+
+                    <td>{{ commUtil.formatComma(data.iQty) }}</td>
+                    <td>{{ commUtil.formatComma(data.oQty) }}</td>
+                    <td>{{ commUtil.formatComma(data.ojQty) }}</td>
+                    <td>{{ commUtil.formatComma(data.oxQty) }}</td>
+                    <td>{{ commUtil.formatComma(data.otQty) }}</td>
+                    <td>{{ commUtil.formatComma(data.ozQty) }}</td>
+                    <td>{{ commUtil.formatComma(data.obQty) }}</td>
+                    <td>{{ commUtil.formatComma(data.jQty) }}</td>
+                    <td></td>
+                  </tr>
+                  <tr class="bg-grey3">
+                    <td>{{ props.messages.rowData.rowsSum[0].stockDay }}</td>
+                    <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].iQty) }}</td>
+                    <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].oQty) }}</td>
+                    <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].ojQty) }}</td>
+                    <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].oxQty) }}</td>
+                    <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].otQty) }}</td>
+                    <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].ozQty) }}</td>
+                    <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].obQty) }}</td>
+                    <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].jQty) }}</td>
+                    <td></td>
+                  </tr>
+                </tbody>
               </table>
               <div class="row">
                 <span class="text-subtitle2">주식회사 세종서적</span>
@@ -90,7 +95,7 @@
 </template>
 
 <script setup>
-import { defineProps, defineEmits, reactive, ref, onBeforeMount } from 'vue';
+import { reactive, ref, onBeforeMount } from 'vue';
 import printJS from 'print-js';
 import * as XLSX from 'xlsx';
 import { QBtn, QIcon, useQuasar } from 'quasar';

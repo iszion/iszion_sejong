@@ -21,7 +21,7 @@
         <div class="row q-gutter-lg">
           <q-input stack-label readonly v-model="searchValue.yymm" label="매출년월" label-color="orange" style="width: 130px" class="text-subtitle1">
             <template v-slot:append>
-              <q-icon name="event" class="cursor-pointer q-pt-md" />
+              <q-icon name="event" class="cursor-pointer q-pt-md" @click="beforeYymm = null" />
             </template>
             <q-popup-proxy v-model="showDatePopupYymm" transition-show="scale" transition-hide="scale">
               <q-date
@@ -32,7 +32,7 @@
                 color="orange"
                 default-view="Years"
                 options-override="month"
-                @update:model-value="onDateSelectYymm"
+                @navigation="onNavigation('yymm', $event)"
               />
             </q-popup-proxy>
           </q-input>
@@ -120,11 +120,19 @@ const $q = useQuasar();
 
 const showDatePopupYymm = ref(false);
 const showDatePopupDay = ref(false);
-const onDateSelectYymm = newValue => {
-  const [year, month] = newValue.split('-');
-  console.log('Selected Year-Month1:', newValue, showDatePopupYymm.value);
-  showDatePopupYymm.value = false;
+
+const beforeYymm = ref(null);
+const onNavigation = (fg, date) => {
+  searchValue[fg] = date.year + '년 ' + commUtil.getDataWithZero(date.month, 2) + '월';
+
+  if (!beforeYymm.value) {
+    showDatePopupYymm.value = false;
+    beforeYymm.value = date;
+  } else {
+    beforeYymm.value = date;
+  }
 };
+
 const onDateSelectDay = newValue => {
   const [year, month, day] = newValue.split('-');
   console.log('Selected Year-Month1:', newValue, showDatePopupDay.value);
@@ -660,10 +668,6 @@ const myGridOptions = {
     editable: false,
   },
   rowSelection: 'single' /* 'single' or 'multiple',*/,
-  enableColResize: true,
-  enableSorting: true,
-  enableFilter: true,
-  enableRangeSelection: true,
   suppressRowClickSelection: false,
   animateRows: true,
   suppressHorizontalScroll: true,
@@ -733,22 +737,7 @@ const myGridOptions = {
   onCellValueChanged: function (event) {
     // console.log('onCellValueChanged');
   },
-  getRowNodeId: function (event) {
-    // console.log('getRowNodeId');
-    return null;
-  },
-  // 리드 상단 고정
-  setPinnedTopRowData: function (data) {
-    return null;
-  },
-  // 그리드 하단 고정
-  setPinnedBottomRowData: function (data) {
-    return null;
-  },
-  // components: {
-  //   numericCellEditor: NumericCellEditor,
-  //   moodEditor: MoodEditor,
-  // },
+
   debug: false,
 };
 

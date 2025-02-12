@@ -35,346 +35,351 @@
               </div>
 
               <table>
-                <tr>
-                  <th rowspan="3" colspan="1">No</th>
-                  <th rowspan="3" colspan="1">거래처명</th>
-                  <th rowspan="3" colspan="1">코드</th>
-                  <th rowspan="1" colspan="6">합계</th>
-                  <th rowspan="1" colspan="6">1월</th>
-                  <th rowspan="1" colspan="6">2월</th>
-                  <th rowspan="1" colspan="6">3월</th>
-                  <th rowspan="1" colspan="6">4월</th>
-                  <th rowspan="1" colspan="6">5월</th>
-                  <th rowspan="1" colspan="6">6월</th>
-                  <th rowspan="1" colspan="6">7월</th>
-                  <th rowspan="1" colspan="6">8월</th>
-                  <th rowspan="1" colspan="6">9월</th>
-                  <th rowspan="1" colspan="6">10월</th>
-                  <th rowspan="1" colspan="6">11월</th>
-                  <th rowspan="1" colspan="6">12월</th>
-                </tr>
-                <tr>
-                  <th rowspan="1" colspan="2">출고</th>
-                  <th rowspan="1" colspan="2">반품</th>
-                  <th rowspan="2" colspan="1">재생</th>
-                  <th rowspan="2" colspan="1">폐기</th>
+                <thead>
+                  <tr>
+                    <th rowspan="3" colspan="1">No</th>
+                    <th rowspan="3" colspan="1">거래처명</th>
+                    <th rowspan="3" colspan="1">코드</th>
+                    <th rowspan="1" colspan="6">합계</th>
+                    <th rowspan="1" colspan="6">1월</th>
+                    <th rowspan="1" colspan="6">2월</th>
+                    <th rowspan="1" colspan="6">3월</th>
+                    <th rowspan="1" colspan="6">4월</th>
+                    <th rowspan="1" colspan="6">5월</th>
+                    <th rowspan="1" colspan="6">6월</th>
+                    <th rowspan="1" colspan="6">7월</th>
+                    <th rowspan="1" colspan="6">8월</th>
+                    <th rowspan="1" colspan="6">9월</th>
+                    <th rowspan="1" colspan="6">10월</th>
+                    <th rowspan="1" colspan="6">11월</th>
+                    <th rowspan="1" colspan="6">12월</th>
+                  </tr>
+                  <tr>
+                    <th rowspan="1" colspan="2">출고</th>
+                    <th rowspan="1" colspan="2">반품</th>
+                    <th rowspan="2" colspan="1">재생</th>
+                    <th rowspan="2" colspan="1">폐기</th>
 
-                  <th rowspan="1" colspan="2">출고</th>
-                  <th rowspan="1" colspan="2">반품</th>
-                  <th rowspan="2" colspan="1">재생</th>
-                  <th rowspan="2" colspan="1">폐기</th>
+                    <th rowspan="1" colspan="2">출고</th>
+                    <th rowspan="1" colspan="2">반품</th>
+                    <th rowspan="2" colspan="1">재생</th>
+                    <th rowspan="2" colspan="1">폐기</th>
 
-                  <th rowspan="1" colspan="2">출고</th>
-                  <th rowspan="1" colspan="2">반품</th>
-                  <th rowspan="2" colspan="1">재생</th>
-                  <th rowspan="2" colspan="1">폐기</th>
+                    <th rowspan="1" colspan="2">출고</th>
+                    <th rowspan="1" colspan="2">반품</th>
+                    <th rowspan="2" colspan="1">재생</th>
+                    <th rowspan="2" colspan="1">폐기</th>
 
-                  <th rowspan="1" colspan="2">출고</th>
-                  <th rowspan="1" colspan="2">반품</th>
-                  <th rowspan="2" colspan="1">재생</th>
-                  <th rowspan="2" colspan="1">폐기</th>
+                    <th rowspan="1" colspan="2">출고</th>
+                    <th rowspan="1" colspan="2">반품</th>
+                    <th rowspan="2" colspan="1">재생</th>
+                    <th rowspan="2" colspan="1">폐기</th>
 
-                  <th rowspan="1" colspan="2">출고</th>
-                  <th rowspan="1" colspan="2">반품</th>
-                  <th rowspan="2" colspan="1">재생</th>
-                  <th rowspan="2" colspan="1">폐기</th>
+                    <th rowspan="1" colspan="2">출고</th>
+                    <th rowspan="1" colspan="2">반품</th>
+                    <th rowspan="2" colspan="1">재생</th>
+                    <th rowspan="2" colspan="1">폐기</th>
 
-                  <th rowspan="1" colspan="2">출고</th>
-                  <th rowspan="1" colspan="2">반품</th>
-                  <th rowspan="2" colspan="1">재생</th>
-                  <th rowspan="2" colspan="1">폐기</th>
+                    <th rowspan="1" colspan="2">출고</th>
+                    <th rowspan="1" colspan="2">반품</th>
+                    <th rowspan="2" colspan="1">재생</th>
+                    <th rowspan="2" colspan="1">폐기</th>
 
-                  <th rowspan="1" colspan="2">출고</th>
-                  <th rowspan="1" colspan="2">반품</th>
-                  <th rowspan="2" colspan="1">재생</th>
-                  <th rowspan="2" colspan="1">폐기</th>
+                    <th rowspan="1" colspan="2">출고</th>
+                    <th rowspan="1" colspan="2">반품</th>
+                    <th rowspan="2" colspan="1">재생</th>
+                    <th rowspan="2" colspan="1">폐기</th>
 
-                  <th rowspan="1" colspan="2">출고</th>
-                  <th rowspan="1" colspan="2">반품</th>
-                  <th rowspan="2" colspan="1">재생</th>
-                  <th rowspan="2" colspan="1">폐기</th>
+                    <th rowspan="1" colspan="2">출고</th>
+                    <th rowspan="1" colspan="2">반품</th>
+                    <th rowspan="2" colspan="1">재생</th>
+                    <th rowspan="2" colspan="1">폐기</th>
 
-                  <th rowspan="1" colspan="2">출고</th>
-                  <th rowspan="1" colspan="2">반품</th>
-                  <th rowspan="2" colspan="1">재생</th>
-                  <th rowspan="2" colspan="1">폐기</th>
+                    <th rowspan="1" colspan="2">출고</th>
+                    <th rowspan="1" colspan="2">반품</th>
+                    <th rowspan="2" colspan="1">재생</th>
+                    <th rowspan="2" colspan="1">폐기</th>
 
-                  <th rowspan="1" colspan="2">출고</th>
-                  <th rowspan="1" colspan="2">반품</th>
-                  <th rowspan="2" colspan="1">재생</th>
-                  <th rowspan="2" colspan="1">폐기</th>
+                    <th rowspan="1" colspan="2">출고</th>
+                    <th rowspan="1" colspan="2">반품</th>
+                    <th rowspan="2" colspan="1">재생</th>
+                    <th rowspan="2" colspan="1">폐기</th>
 
-                  <th rowspan="1" colspan="2">출고</th>
-                  <th rowspan="1" colspan="2">반품</th>
-                  <th rowspan="2" colspan="1">재생</th>
-                  <th rowspan="2" colspan="1">폐기</th>
+                    <th rowspan="1" colspan="2">출고</th>
+                    <th rowspan="1" colspan="2">반품</th>
+                    <th rowspan="2" colspan="1">재생</th>
+                    <th rowspan="2" colspan="1">폐기</th>
 
-                  <th rowspan="1" colspan="2">출고</th>
-                  <th rowspan="1" colspan="2">반품</th>
-                  <th rowspan="2" colspan="1">재생</th>
-                  <th rowspan="2" colspan="1">폐기</th>
+                    <th rowspan="1" colspan="2">출고</th>
+                    <th rowspan="1" colspan="2">반품</th>
+                    <th rowspan="2" colspan="1">재생</th>
+                    <th rowspan="2" colspan="1">폐기</th>
 
-                  <th rowspan="1" colspan="2">출고</th>
-                  <th rowspan="1" colspan="2">반품</th>
-                  <th rowspan="2" colspan="1">재생</th>
-                  <th rowspan="2" colspan="1">폐기</th>
-                </tr>
-                <tr>
-                  <th rowspan="1" colspan="1">수량</th>
-                  <th rowspan="1" colspan="1">금액</th>
-                  <th rowspan="1" colspan="1">수량</th>
-                  <th rowspan="1" colspan="1">금액</th>
+                    <th rowspan="1" colspan="2">출고</th>
+                    <th rowspan="1" colspan="2">반품</th>
+                    <th rowspan="2" colspan="1">재생</th>
+                    <th rowspan="2" colspan="1">폐기</th>
+                  </tr>
+                  <tr>
+                    <th rowspan="1" colspan="1">수량</th>
+                    <th rowspan="1" colspan="1">금액</th>
+                    <th rowspan="1" colspan="1">수량</th>
+                    <th rowspan="1" colspan="1">금액</th>
 
-                  <th rowspan="1" colspan="1">수량</th>
-                  <th rowspan="1" colspan="1">금액</th>
-                  <th rowspan="1" colspan="1">수량</th>
-                  <th rowspan="1" colspan="1">금액</th>
+                    <th rowspan="1" colspan="1">수량</th>
+                    <th rowspan="1" colspan="1">금액</th>
+                    <th rowspan="1" colspan="1">수량</th>
+                    <th rowspan="1" colspan="1">금액</th>
 
-                  <th rowspan="1" colspan="1">수량</th>
-                  <th rowspan="1" colspan="1">금액</th>
-                  <th rowspan="1" colspan="1">수량</th>
-                  <th rowspan="1" colspan="1">금액</th>
+                    <th rowspan="1" colspan="1">수량</th>
+                    <th rowspan="1" colspan="1">금액</th>
+                    <th rowspan="1" colspan="1">수량</th>
+                    <th rowspan="1" colspan="1">금액</th>
 
-                  <th rowspan="1" colspan="1">수량</th>
-                  <th rowspan="1" colspan="1">금액</th>
-                  <th rowspan="1" colspan="1">수량</th>
-                  <th rowspan="1" colspan="1">금액</th>
+                    <th rowspan="1" colspan="1">수량</th>
+                    <th rowspan="1" colspan="1">금액</th>
+                    <th rowspan="1" colspan="1">수량</th>
+                    <th rowspan="1" colspan="1">금액</th>
 
-                  <th rowspan="1" colspan="1">수량</th>
-                  <th rowspan="1" colspan="1">금액</th>
-                  <th rowspan="1" colspan="1">수량</th>
-                  <th rowspan="1" colspan="1">금액</th>
+                    <th rowspan="1" colspan="1">수량</th>
+                    <th rowspan="1" colspan="1">금액</th>
+                    <th rowspan="1" colspan="1">수량</th>
+                    <th rowspan="1" colspan="1">금액</th>
 
-                  <th rowspan="1" colspan="1">수량</th>
-                  <th rowspan="1" colspan="1">금액</th>
-                  <th rowspan="1" colspan="1">수량</th>
-                  <th rowspan="1" colspan="1">금액</th>
+                    <th rowspan="1" colspan="1">수량</th>
+                    <th rowspan="1" colspan="1">금액</th>
+                    <th rowspan="1" colspan="1">수량</th>
+                    <th rowspan="1" colspan="1">금액</th>
 
-                  <th rowspan="1" colspan="1">수량</th>
-                  <th rowspan="1" colspan="1">금액</th>
-                  <th rowspan="1" colspan="1">수량</th>
-                  <th rowspan="1" colspan="1">금액</th>
+                    <th rowspan="1" colspan="1">수량</th>
+                    <th rowspan="1" colspan="1">금액</th>
+                    <th rowspan="1" colspan="1">수량</th>
+                    <th rowspan="1" colspan="1">금액</th>
 
-                  <th rowspan="1" colspan="1">수량</th>
-                  <th rowspan="1" colspan="1">금액</th>
-                  <th rowspan="1" colspan="1">수량</th>
-                  <th rowspan="1" colspan="1">금액</th>
+                    <th rowspan="1" colspan="1">수량</th>
+                    <th rowspan="1" colspan="1">금액</th>
+                    <th rowspan="1" colspan="1">수량</th>
+                    <th rowspan="1" colspan="1">금액</th>
 
-                  <th rowspan="1" colspan="1">수량</th>
-                  <th rowspan="1" colspan="1">금액</th>
-                  <th rowspan="1" colspan="1">수량</th>
-                  <th rowspan="1" colspan="1">금액</th>
+                    <th rowspan="1" colspan="1">수량</th>
+                    <th rowspan="1" colspan="1">금액</th>
+                    <th rowspan="1" colspan="1">수량</th>
+                    <th rowspan="1" colspan="1">금액</th>
 
-                  <th rowspan="1" colspan="1">수량</th>
-                  <th rowspan="1" colspan="1">금액</th>
-                  <th rowspan="1" colspan="1">수량</th>
-                  <th rowspan="1" colspan="1">금액</th>
+                    <th rowspan="1" colspan="1">수량</th>
+                    <th rowspan="1" colspan="1">금액</th>
+                    <th rowspan="1" colspan="1">수량</th>
+                    <th rowspan="1" colspan="1">금액</th>
 
-                  <th rowspan="1" colspan="1">수량</th>
-                  <th rowspan="1" colspan="1">금액</th>
-                  <th rowspan="1" colspan="1">수량</th>
-                  <th rowspan="1" colspan="1">금액</th>
+                    <th rowspan="1" colspan="1">수량</th>
+                    <th rowspan="1" colspan="1">금액</th>
+                    <th rowspan="1" colspan="1">수량</th>
+                    <th rowspan="1" colspan="1">금액</th>
 
-                  <th rowspan="1" colspan="1">수량</th>
-                  <th rowspan="1" colspan="1">금액</th>
-                  <th rowspan="1" colspan="1">수량</th>
-                  <th rowspan="1" colspan="1">금액</th>
+                    <th rowspan="1" colspan="1">수량</th>
+                    <th rowspan="1" colspan="1">금액</th>
+                    <th rowspan="1" colspan="1">수량</th>
+                    <th rowspan="1" colspan="1">금액</th>
 
-                  <th rowspan="1" colspan="1">수량</th>
-                  <th rowspan="1" colspan="1">금액</th>
-                  <th rowspan="1" colspan="1">수량</th>
-                  <th rowspan="1" colspan="1">금액</th>
-                </tr>
-                <tr v-for="(data, index) in props.messages.rowData.rows || []" :key="index">
-                  <td>{{ index + 1 }}</td>
-                  <td>{{ data.custNm }}</td>
-                  <td>{{ data.custCd }}</td>
-                  <td>{{ commUtil.formatComma(data.tOQty) }}</td>
-                  <td>{{ commUtil.formatComma(data.tOAmt) }}</td>
-                  <td>{{ commUtil.formatComma(data.tObQty) }}</td>
-                  <td>{{ commUtil.formatComma(data.tObAmt) }}</td>
-                  <td>{{ commUtil.formatComma(data.tOjQty) }}</td>
-                  <td>{{ commUtil.formatComma(data.tOxQty) }}</td>
+                    <th rowspan="1" colspan="1">수량</th>
+                    <th rowspan="1" colspan="1">금액</th>
+                    <th rowspan="1" colspan="1">수량</th>
+                    <th rowspan="1" colspan="1">금액</th>
+                  </tr>
+                </thead>
 
-                  <td>{{ commUtil.formatComma(data.oM01Qty) }}</td>
-                  <td>{{ commUtil.formatComma(data.oM01Amt) }}</td>
-                  <td>{{ commUtil.formatComma(data.obM01Qty) }}</td>
-                  <td>{{ commUtil.formatComma(data.obM01Amt) }}</td>
-                  <td>{{ commUtil.formatComma(data.ojM01Qty) }}</td>
-                  <td>{{ commUtil.formatComma(data.oxM01Qty) }}</td>
+                <tbody>
+                  <tr v-for="(data, index) in props.messages.rowData.rows || []" :key="index">
+                    <td>{{ index + 1 }}</td>
+                    <td>{{ data.custNm }}</td>
+                    <td>{{ data.custCd }}</td>
+                    <td>{{ commUtil.formatComma(data.tOQty) }}</td>
+                    <td>{{ commUtil.formatComma(data.tOAmt) }}</td>
+                    <td>{{ commUtil.formatComma(data.tObQty) }}</td>
+                    <td>{{ commUtil.formatComma(data.tObAmt) }}</td>
+                    <td>{{ commUtil.formatComma(data.tOjQty) }}</td>
+                    <td>{{ commUtil.formatComma(data.tOxQty) }}</td>
 
-                  <td>{{ commUtil.formatComma(data.oM02Qty) }}</td>
-                  <td>{{ commUtil.formatComma(data.oM02Amt) }}</td>
-                  <td>{{ commUtil.formatComma(data.obM02Qty) }}</td>
-                  <td>{{ commUtil.formatComma(data.obM02Amt) }}</td>
-                  <td>{{ commUtil.formatComma(data.ojM02Qty) }}</td>
-                  <td>{{ commUtil.formatComma(data.oxM02Qty) }}</td>
+                    <td>{{ commUtil.formatComma(data.oM01Qty) }}</td>
+                    <td>{{ commUtil.formatComma(data.oM01Amt) }}</td>
+                    <td>{{ commUtil.formatComma(data.obM01Qty) }}</td>
+                    <td>{{ commUtil.formatComma(data.obM01Amt) }}</td>
+                    <td>{{ commUtil.formatComma(data.ojM01Qty) }}</td>
+                    <td>{{ commUtil.formatComma(data.oxM01Qty) }}</td>
 
-                  <td>{{ commUtil.formatComma(data.oM03Qty) }}</td>
-                  <td>{{ commUtil.formatComma(data.oM03Amt) }}</td>
-                  <td>{{ commUtil.formatComma(data.obM03Qty) }}</td>
-                  <td>{{ commUtil.formatComma(data.obM03Amt) }}</td>
-                  <td>{{ commUtil.formatComma(data.ojM03Qty) }}</td>
-                  <td>{{ commUtil.formatComma(data.oxM03Qty) }}</td>
+                    <td>{{ commUtil.formatComma(data.oM02Qty) }}</td>
+                    <td>{{ commUtil.formatComma(data.oM02Amt) }}</td>
+                    <td>{{ commUtil.formatComma(data.obM02Qty) }}</td>
+                    <td>{{ commUtil.formatComma(data.obM02Amt) }}</td>
+                    <td>{{ commUtil.formatComma(data.ojM02Qty) }}</td>
+                    <td>{{ commUtil.formatComma(data.oxM02Qty) }}</td>
 
-                  <td>{{ commUtil.formatComma(data.oM04Qty) }}</td>
-                  <td>{{ commUtil.formatComma(data.oM04Amt) }}</td>
-                  <td>{{ commUtil.formatComma(data.obM04Qty) }}</td>
-                  <td>{{ commUtil.formatComma(data.obM04Amt) }}</td>
-                  <td>{{ commUtil.formatComma(data.ojM04Qty) }}</td>
-                  <td>{{ commUtil.formatComma(data.oxM04Qty) }}</td>
+                    <td>{{ commUtil.formatComma(data.oM03Qty) }}</td>
+                    <td>{{ commUtil.formatComma(data.oM03Amt) }}</td>
+                    <td>{{ commUtil.formatComma(data.obM03Qty) }}</td>
+                    <td>{{ commUtil.formatComma(data.obM03Amt) }}</td>
+                    <td>{{ commUtil.formatComma(data.ojM03Qty) }}</td>
+                    <td>{{ commUtil.formatComma(data.oxM03Qty) }}</td>
 
-                  <td>{{ commUtil.formatComma(data.oM05Qty) }}</td>
-                  <td>{{ commUtil.formatComma(data.oM05Amt) }}</td>
-                  <td>{{ commUtil.formatComma(data.obM05Qty) }}</td>
-                  <td>{{ commUtil.formatComma(data.obM05Amt) }}</td>
-                  <td>{{ commUtil.formatComma(data.ojM05Qty) }}</td>
-                  <td>{{ commUtil.formatComma(data.oxM05Qty) }}</td>
+                    <td>{{ commUtil.formatComma(data.oM04Qty) }}</td>
+                    <td>{{ commUtil.formatComma(data.oM04Amt) }}</td>
+                    <td>{{ commUtil.formatComma(data.obM04Qty) }}</td>
+                    <td>{{ commUtil.formatComma(data.obM04Amt) }}</td>
+                    <td>{{ commUtil.formatComma(data.ojM04Qty) }}</td>
+                    <td>{{ commUtil.formatComma(data.oxM04Qty) }}</td>
 
-                  <td>{{ commUtil.formatComma(data.oM06Qty) }}</td>
-                  <td>{{ commUtil.formatComma(data.oM06Amt) }}</td>
-                  <td>{{ commUtil.formatComma(data.obM06Qty) }}</td>
-                  <td>{{ commUtil.formatComma(data.obM06Amt) }}</td>
-                  <td>{{ commUtil.formatComma(data.ojM06Qty) }}</td>
-                  <td>{{ commUtil.formatComma(data.oxM06Qty) }}</td>
+                    <td>{{ commUtil.formatComma(data.oM05Qty) }}</td>
+                    <td>{{ commUtil.formatComma(data.oM05Amt) }}</td>
+                    <td>{{ commUtil.formatComma(data.obM05Qty) }}</td>
+                    <td>{{ commUtil.formatComma(data.obM05Amt) }}</td>
+                    <td>{{ commUtil.formatComma(data.ojM05Qty) }}</td>
+                    <td>{{ commUtil.formatComma(data.oxM05Qty) }}</td>
 
-                  <td>{{ commUtil.formatComma(data.oM07Qty) }}</td>
-                  <td>{{ commUtil.formatComma(data.oM07Amt) }}</td>
-                  <td>{{ commUtil.formatComma(data.obM07Qty) }}</td>
-                  <td>{{ commUtil.formatComma(data.obM07Amt) }}</td>
-                  <td>{{ commUtil.formatComma(data.ojM07Qty) }}</td>
-                  <td>{{ commUtil.formatComma(data.oxM07Qty) }}</td>
+                    <td>{{ commUtil.formatComma(data.oM06Qty) }}</td>
+                    <td>{{ commUtil.formatComma(data.oM06Amt) }}</td>
+                    <td>{{ commUtil.formatComma(data.obM06Qty) }}</td>
+                    <td>{{ commUtil.formatComma(data.obM06Amt) }}</td>
+                    <td>{{ commUtil.formatComma(data.ojM06Qty) }}</td>
+                    <td>{{ commUtil.formatComma(data.oxM06Qty) }}</td>
 
-                  <td>{{ commUtil.formatComma(data.oM08Qty) }}</td>
-                  <td>{{ commUtil.formatComma(data.oM08Amt) }}</td>
-                  <td>{{ commUtil.formatComma(data.obM08Qty) }}</td>
-                  <td>{{ commUtil.formatComma(data.obM08Amt) }}</td>
-                  <td>{{ commUtil.formatComma(data.ojM08Qty) }}</td>
-                  <td>{{ commUtil.formatComma(data.oxM08Qty) }}</td>
+                    <td>{{ commUtil.formatComma(data.oM07Qty) }}</td>
+                    <td>{{ commUtil.formatComma(data.oM07Amt) }}</td>
+                    <td>{{ commUtil.formatComma(data.obM07Qty) }}</td>
+                    <td>{{ commUtil.formatComma(data.obM07Amt) }}</td>
+                    <td>{{ commUtil.formatComma(data.ojM07Qty) }}</td>
+                    <td>{{ commUtil.formatComma(data.oxM07Qty) }}</td>
 
-                  <td>{{ commUtil.formatComma(data.oM09Qty) }}</td>
-                  <td>{{ commUtil.formatComma(data.oM09Amt) }}</td>
-                  <td>{{ commUtil.formatComma(data.obM09Qty) }}</td>
-                  <td>{{ commUtil.formatComma(data.obM09Amt) }}</td>
-                  <td>{{ commUtil.formatComma(data.ojM09Qty) }}</td>
-                  <td>{{ commUtil.formatComma(data.oxM09Qty) }}</td>
+                    <td>{{ commUtil.formatComma(data.oM08Qty) }}</td>
+                    <td>{{ commUtil.formatComma(data.oM08Amt) }}</td>
+                    <td>{{ commUtil.formatComma(data.obM08Qty) }}</td>
+                    <td>{{ commUtil.formatComma(data.obM08Amt) }}</td>
+                    <td>{{ commUtil.formatComma(data.ojM08Qty) }}</td>
+                    <td>{{ commUtil.formatComma(data.oxM08Qty) }}</td>
 
-                  <td>{{ commUtil.formatComma(data.oM10Qty) }}</td>
-                  <td>{{ commUtil.formatComma(data.oM10Amt) }}</td>
-                  <td>{{ commUtil.formatComma(data.obM10Qty) }}</td>
-                  <td>{{ commUtil.formatComma(data.obM10Amt) }}</td>
-                  <td>{{ commUtil.formatComma(data.ojM10Qty) }}</td>
-                  <td>{{ commUtil.formatComma(data.oxM10Qty) }}</td>
+                    <td>{{ commUtil.formatComma(data.oM09Qty) }}</td>
+                    <td>{{ commUtil.formatComma(data.oM09Amt) }}</td>
+                    <td>{{ commUtil.formatComma(data.obM09Qty) }}</td>
+                    <td>{{ commUtil.formatComma(data.obM09Amt) }}</td>
+                    <td>{{ commUtil.formatComma(data.ojM09Qty) }}</td>
+                    <td>{{ commUtil.formatComma(data.oxM09Qty) }}</td>
 
-                  <td>{{ commUtil.formatComma(data.oM11Qty) }}</td>
-                  <td>{{ commUtil.formatComma(data.oM11Amt) }}</td>
-                  <td>{{ commUtil.formatComma(data.obM11Qty) }}</td>
-                  <td>{{ commUtil.formatComma(data.obM11Amt) }}</td>
-                  <td>{{ commUtil.formatComma(data.ojM11Qty) }}</td>
-                  <td>{{ commUtil.formatComma(data.oxM11Qty) }}</td>
+                    <td>{{ commUtil.formatComma(data.oM10Qty) }}</td>
+                    <td>{{ commUtil.formatComma(data.oM10Amt) }}</td>
+                    <td>{{ commUtil.formatComma(data.obM10Qty) }}</td>
+                    <td>{{ commUtil.formatComma(data.obM10Amt) }}</td>
+                    <td>{{ commUtil.formatComma(data.ojM10Qty) }}</td>
+                    <td>{{ commUtil.formatComma(data.oxM10Qty) }}</td>
 
-                  <td>{{ commUtil.formatComma(data.oM12Qty) }}</td>
-                  <td>{{ commUtil.formatComma(data.oM12Amt) }}</td>
-                  <td>{{ commUtil.formatComma(data.obM12Qty) }}</td>
-                  <td>{{ commUtil.formatComma(data.obM12Amt) }}</td>
-                  <td>{{ commUtil.formatComma(data.ojM12Qty) }}</td>
-                  <td>{{ commUtil.formatComma(data.oxM12Qty) }}</td>
-                </tr>
-                <tr class="bg-grey3">
-                  <td></td>
-                  <td style="text-align: center">{{ props.messages.rowData.rowsSum[0].custNm }}</td>
-                  <td></td>
-                  <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].tOQty) }}</td>
-                  <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].tOAmt) }}</td>
-                  <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].tObQty) }}</td>
-                  <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].tObAmt) }}</td>
-                  <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].tOjQty) }}</td>
-                  <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].tOxQty) }}</td>
+                    <td>{{ commUtil.formatComma(data.oM11Qty) }}</td>
+                    <td>{{ commUtil.formatComma(data.oM11Amt) }}</td>
+                    <td>{{ commUtil.formatComma(data.obM11Qty) }}</td>
+                    <td>{{ commUtil.formatComma(data.obM11Amt) }}</td>
+                    <td>{{ commUtil.formatComma(data.ojM11Qty) }}</td>
+                    <td>{{ commUtil.formatComma(data.oxM11Qty) }}</td>
 
-                  <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].oM01Qty) }}</td>
-                  <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].oM01Amt) }}</td>
-                  <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].obM01Qty) }}</td>
-                  <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].obM01Amt) }}</td>
-                  <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].ojM01Qty) }}</td>
-                  <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].oxM01Qty) }}</td>
+                    <td>{{ commUtil.formatComma(data.oM12Qty) }}</td>
+                    <td>{{ commUtil.formatComma(data.oM12Amt) }}</td>
+                    <td>{{ commUtil.formatComma(data.obM12Qty) }}</td>
+                    <td>{{ commUtil.formatComma(data.obM12Amt) }}</td>
+                    <td>{{ commUtil.formatComma(data.ojM12Qty) }}</td>
+                    <td>{{ commUtil.formatComma(data.oxM12Qty) }}</td>
+                  </tr>
+                  <tr class="bg-grey3">
+                    <td></td>
+                    <td style="text-align: center">{{ props.messages.rowData.rowsSum[0].custNm }}</td>
+                    <td></td>
+                    <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].tOQty) }}</td>
+                    <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].tOAmt) }}</td>
+                    <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].tObQty) }}</td>
+                    <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].tObAmt) }}</td>
+                    <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].tOjQty) }}</td>
+                    <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].tOxQty) }}</td>
 
-                  <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].oM02Qty) }}</td>
-                  <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].oM02Amt) }}</td>
-                  <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].obM02Qty) }}</td>
-                  <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].obM02Amt) }}</td>
-                  <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].ojM02Qty) }}</td>
-                  <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].oxM02Qty) }}</td>
+                    <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].oM01Qty) }}</td>
+                    <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].oM01Amt) }}</td>
+                    <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].obM01Qty) }}</td>
+                    <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].obM01Amt) }}</td>
+                    <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].ojM01Qty) }}</td>
+                    <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].oxM01Qty) }}</td>
 
-                  <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].oM03Qty) }}</td>
-                  <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].oM03Amt) }}</td>
-                  <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].obM03Qty) }}</td>
-                  <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].obM03Amt) }}</td>
-                  <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].ojM03Qty) }}</td>
-                  <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].oxM03Qty) }}</td>
+                    <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].oM02Qty) }}</td>
+                    <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].oM02Amt) }}</td>
+                    <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].obM02Qty) }}</td>
+                    <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].obM02Amt) }}</td>
+                    <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].ojM02Qty) }}</td>
+                    <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].oxM02Qty) }}</td>
 
-                  <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].oM04Qty) }}</td>
-                  <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].oM04Amt) }}</td>
-                  <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].obM04Qty) }}</td>
-                  <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].obM04Amt) }}</td>
-                  <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].ojM04Qty) }}</td>
-                  <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].oxM04Qty) }}</td>
+                    <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].oM03Qty) }}</td>
+                    <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].oM03Amt) }}</td>
+                    <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].obM03Qty) }}</td>
+                    <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].obM03Amt) }}</td>
+                    <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].ojM03Qty) }}</td>
+                    <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].oxM03Qty) }}</td>
 
-                  <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].oM05Qty) }}</td>
-                  <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].oM05Amt) }}</td>
-                  <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].obM05Qty) }}</td>
-                  <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].obM05Amt) }}</td>
-                  <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].ojM05Qty) }}</td>
-                  <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].oxM05Qty) }}</td>
+                    <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].oM04Qty) }}</td>
+                    <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].oM04Amt) }}</td>
+                    <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].obM04Qty) }}</td>
+                    <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].obM04Amt) }}</td>
+                    <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].ojM04Qty) }}</td>
+                    <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].oxM04Qty) }}</td>
 
-                  <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].oM06Qty) }}</td>
-                  <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].oM06Amt) }}</td>
-                  <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].obM06Qty) }}</td>
-                  <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].obM06Amt) }}</td>
-                  <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].ojM06Qty) }}</td>
-                  <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].oxM06Qty) }}</td>
+                    <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].oM05Qty) }}</td>
+                    <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].oM05Amt) }}</td>
+                    <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].obM05Qty) }}</td>
+                    <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].obM05Amt) }}</td>
+                    <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].ojM05Qty) }}</td>
+                    <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].oxM05Qty) }}</td>
 
-                  <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].oM07Qty) }}</td>
-                  <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].oM07Amt) }}</td>
-                  <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].obM07Qty) }}</td>
-                  <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].obM07Amt) }}</td>
-                  <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].ojM07Qty) }}</td>
-                  <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].oxM07Qty) }}</td>
+                    <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].oM06Qty) }}</td>
+                    <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].oM06Amt) }}</td>
+                    <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].obM06Qty) }}</td>
+                    <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].obM06Amt) }}</td>
+                    <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].ojM06Qty) }}</td>
+                    <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].oxM06Qty) }}</td>
 
-                  <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].oM08Qty) }}</td>
-                  <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].oM08Amt) }}</td>
-                  <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].obM08Qty) }}</td>
-                  <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].obM08Amt) }}</td>
-                  <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].ojM08Qty) }}</td>
-                  <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].oxM08Qty) }}</td>
+                    <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].oM07Qty) }}</td>
+                    <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].oM07Amt) }}</td>
+                    <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].obM07Qty) }}</td>
+                    <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].obM07Amt) }}</td>
+                    <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].ojM07Qty) }}</td>
+                    <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].oxM07Qty) }}</td>
 
-                  <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].oM09Qty) }}</td>
-                  <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].oM09Amt) }}</td>
-                  <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].obM09Qty) }}</td>
-                  <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].obM09Amt) }}</td>
-                  <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].ojM09Qty) }}</td>
-                  <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].oxM09Qty) }}</td>
+                    <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].oM08Qty) }}</td>
+                    <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].oM08Amt) }}</td>
+                    <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].obM08Qty) }}</td>
+                    <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].obM08Amt) }}</td>
+                    <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].ojM08Qty) }}</td>
+                    <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].oxM08Qty) }}</td>
 
-                  <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].oM10Qty) }}</td>
-                  <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].oM10Amt) }}</td>
-                  <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].obM10Qty) }}</td>
-                  <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].obM10Amt) }}</td>
-                  <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].ojM10Qty) }}</td>
-                  <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].oxM10Qty) }}</td>
+                    <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].oM09Qty) }}</td>
+                    <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].oM09Amt) }}</td>
+                    <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].obM09Qty) }}</td>
+                    <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].obM09Amt) }}</td>
+                    <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].ojM09Qty) }}</td>
+                    <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].oxM09Qty) }}</td>
 
-                  <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].oM11Qty) }}</td>
-                  <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].oM11Amt) }}</td>
-                  <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].obM11Qty) }}</td>
-                  <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].obM11Amt) }}</td>
-                  <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].ojM11Qty) }}</td>
-                  <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].oxM11Qty) }}</td>
+                    <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].oM10Qty) }}</td>
+                    <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].oM10Amt) }}</td>
+                    <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].obM10Qty) }}</td>
+                    <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].obM10Amt) }}</td>
+                    <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].ojM10Qty) }}</td>
+                    <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].oxM10Qty) }}</td>
 
-                  <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].oM12Qty) }}</td>
-                  <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].oM12Amt) }}</td>
-                  <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].obM12Qty) }}</td>
-                  <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].obM12Amt) }}</td>
-                  <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].ojM12Qty) }}</td>
-                  <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].oxM12Qty) }}</td>
-                </tr>
+                    <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].oM11Qty) }}</td>
+                    <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].oM11Amt) }}</td>
+                    <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].obM11Qty) }}</td>
+                    <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].obM11Amt) }}</td>
+                    <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].ojM11Qty) }}</td>
+                    <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].oxM11Qty) }}</td>
+
+                    <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].oM12Qty) }}</td>
+                    <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].oM12Amt) }}</td>
+                    <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].obM12Qty) }}</td>
+                    <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].obM12Amt) }}</td>
+                    <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].ojM12Qty) }}</td>
+                    <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].oxM12Qty) }}</td>
+                  </tr>
+                </tbody>
               </table>
               <div class="row">
                 <span class="text-subtitle2">주식회사 세종서적</span>
@@ -390,7 +395,7 @@
 </template>
 
 <script setup>
-import { defineProps, defineEmits, reactive, ref } from 'vue';
+import { reactive, ref } from 'vue';
 import printJS from 'print-js';
 import * as XLSX from 'xlsx';
 import { QBtn, QIcon, useQuasar } from 'quasar';

@@ -35,34 +35,39 @@
               </div>
 
               <table>
-                <tr>
-                  <th rowspan="1" colspan="1">No</th>
-                  <th rowspan="1" colspan="1">출고일</th>
-                  <th rowspan="1" colspan="1">출고처</th>
-                  <th rowspan="1" colspan="1">전표번호</th>
-                  <th rowspan="1" colspan="1">구분</th>
-                  <th rowspan="1" colspan="1">도서명</th>
-                  <th rowspan="1" colspan="1">수량</th>
-                  <th rowspan="1" colspan="1">단가</th>
-                  <th rowspan="1" colspan="1">금액</th>
-                  <th rowspan="1" colspan="1">비율</th>
-                  <th rowspan="1" colspan="1">지점명</th>
-                  <th rowspan="1" colspan="1">기타사항</th>
-                </tr>
-                <tr v-for="(data, index) in props.messages.rowData || []" :key="index">
-                  <td>{{ data.rowNum }}</td>
-                  <td>{{ commUtil.formatDate(data.dealDay) }}</td>
-                  <td>{{ data.custNm }}</td>
-                  <td>{{ data.seq }} - {{ data.cnt }}</td>
-                  <td>{{ data.dealFgNm }}</td>
-                  <td>{{ data.prodNm }}</td>
-                  <td>{{ commUtil.formatComma(data.qty) }}</td>
-                  <td>{{ commUtil.formatComma(data.price) }}</td>
-                  <td>{{ commUtil.formatComma(data.amt) }}</td>
-                  <td>{{ data.buyYul }}</td>
-                  <td>{{ data.custsCd }}</td>
-                  <td>{{ data.remarks }}</td>
-                </tr>
+                <thead>
+                  <tr>
+                    <th rowspan="1" colspan="1">No</th>
+                    <th rowspan="1" colspan="1">출고일</th>
+                    <th rowspan="1" colspan="1">출고처</th>
+                    <th rowspan="1" colspan="1">전표번호</th>
+                    <th rowspan="1" colspan="1">구분</th>
+                    <th rowspan="1" colspan="1">도서명</th>
+                    <th rowspan="1" colspan="1">수량</th>
+                    <th rowspan="1" colspan="1">단가</th>
+                    <th rowspan="1" colspan="1">금액</th>
+                    <th rowspan="1" colspan="1">비율</th>
+                    <th rowspan="1" colspan="1">지점명</th>
+                    <th rowspan="1" colspan="1">기타사항</th>
+                  </tr>
+                </thead>
+
+                <tbody>
+                  <tr v-for="(data, index) in props.messages.rowData || []" :key="index">
+                    <td>{{ data.rowNum }}</td>
+                    <td>{{ commUtil.formatDate(data.dealDay) }}</td>
+                    <td>{{ data.custNm }}</td>
+                    <td>{{ data.seq }} - {{ data.cnt }}</td>
+                    <td>{{ data.dealFgNm }}</td>
+                    <td>{{ data.prodNm }}</td>
+                    <td>{{ commUtil.formatComma(data.qty) }}</td>
+                    <td>{{ commUtil.formatComma(data.price) }}</td>
+                    <td>{{ commUtil.formatComma(data.amt) }}</td>
+                    <td>{{ data.buyYul }}</td>
+                    <td>{{ data.custsCd }}</td>
+                    <td>{{ data.remarks }}</td>
+                  </tr>
+                </tbody>
               </table>
               <div class="row">
                 <span class="text-subtitle2">주식회사 세종서적</span>
@@ -78,7 +83,7 @@
 </template>
 
 <script setup>
-import { defineProps, defineEmits, reactive, ref } from 'vue';
+import { reactive, ref } from 'vue';
 import printJS from 'print-js';
 import * as XLSX from 'xlsx';
 import { QBtn, QIcon, useQuasar } from 'quasar';

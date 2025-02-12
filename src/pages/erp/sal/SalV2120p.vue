@@ -37,39 +37,42 @@
               </div>
 
               <table>
-                <tr>
-                  <th rowspan="1" colspan="1">No</th>
-                  <th rowspan="1" colspan="1">거래일자</th>
-                  <th rowspan="1" colspan="1">전표번호</th>
-                  <th rowspan="1" colspan="1">업체명</th>
-                  <th rowspan="1" colspan="1">자료수</th>
-                  <th rowspan="1" colspan="1">총수량</th>
-                  <th rowspan="1" colspan="1">합계금액</th>
-                  <th rowspan="1" colspan="1">비고</th>
-                </tr>
-
-                <tr v-for="(data, index) in props.messages.rowData.rows || []" :key="index">
-                  <td>{{ data.rowNum }}</td>
-                  <td>{{ commUtil.formatDate(data.dealDay) }}</td>
-                  <td>{{ data.seq }}</td>
-                  <td>{{ data.custNm }}</td>
-                  <td>{{ commUtil.formatComma(data.cnt) }}</td>
-                  <td>{{ commUtil.formatComma(data.sumQty) }}</td>
-                  <td>{{ commUtil.formatComma(data.sumAmt) }}</td>
-                  <td>{{ data.remarks }}</td>
-                </tr>
-                <tr class="bg-grey3">
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td style="text-align: center">
-                    {{ props.messages.rowData.rowsSum[0].custNm }}
-                  </td>
-                  <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].cnt) }}</td>
-                  <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].sumQty) }}</td>
-                  <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].sumAmt) }}</td>
-                  <td></td>
-                </tr>
+                <thead>
+                  <tr>
+                    <th rowspan="1" colspan="1">No</th>
+                    <th rowspan="1" colspan="1">거래일자</th>
+                    <th rowspan="1" colspan="1">전표번호</th>
+                    <th rowspan="1" colspan="1">업체명</th>
+                    <th rowspan="1" colspan="1">자료수</th>
+                    <th rowspan="1" colspan="1">총수량</th>
+                    <th rowspan="1" colspan="1">합계금액</th>
+                    <th rowspan="1" colspan="1">비고</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="(data, index) in props.messages.rowData.rows || []" :key="index">
+                    <td>{{ data.rowNum }}</td>
+                    <td>{{ commUtil.formatDate(data.dealDay) }}</td>
+                    <td>{{ data.seq }}</td>
+                    <td>{{ data.custNm }}</td>
+                    <td>{{ commUtil.formatComma(data.cnt) }}</td>
+                    <td>{{ commUtil.formatComma(data.sumQty) }}</td>
+                    <td>{{ commUtil.formatComma(data.sumAmt) }}</td>
+                    <td>{{ data.remarks }}</td>
+                  </tr>
+                  <tr class="bg-grey3">
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td style="text-align: center">
+                      {{ props.messages.rowData.rowsSum[0].custNm }}
+                    </td>
+                    <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].cnt) }}</td>
+                    <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].sumQty) }}</td>
+                    <td>{{ commUtil.formatComma(props.messages.rowData.rowsSum[0].sumAmt) }}</td>
+                    <td></td>
+                  </tr>
+                </tbody>
               </table>
               <div class="row">
                 <span class="text-subtitle2">주식회사 세종서적</span>
@@ -85,7 +88,7 @@
 </template>
 
 <script setup>
-import { defineProps, defineEmits, reactive, ref } from 'vue';
+import { reactive, ref } from 'vue';
 import printJS from 'print-js';
 import * as XLSX from 'xlsx';
 import { QBtn, QIcon, useQuasar } from 'quasar';

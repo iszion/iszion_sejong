@@ -206,7 +206,6 @@ import commUtil from 'src/js_comm/comm-util';
 import HelpCust from 'components/subvue/HelpCust.vue';
 import HelpProd from 'components/subvue/HelpProd.vue';
 import CompHelpProdButton from 'components/CompHelpProdButton.vue';
-import { createRouter as Vue } from 'vue-router/dist/vue-router.esm-browser.prod';
 import JsonUtil from 'src/js_comm/json-util';
 
 const $q = useQuasar();

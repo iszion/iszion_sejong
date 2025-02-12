@@ -164,7 +164,7 @@ const passwordChangeSave = () => {
   if (form.value.newPassword === form.value.newPasswordX) {
     api
       .post('/api/sys/passwordCheck', {
-        paramUserId: storeUser.setEmpCd,
+        paramUserId: storeUser.userId,
         paramOldPassword: form.value.oldPassword,
         paramNewPassword: form.value.newPassword,
       })
@@ -202,7 +202,7 @@ const passwdSave = () => {
   let iuD = [];
 
   let formData = {};
-  formData.userId = storeUser.setEmpCd;
+  formData.userId = storeUser.userId;
   formData.newPasswd = form.value.newPassword;
   let tmpJson = '{"mode": "U","data":' + JSON.stringify(formData) + '}';
   iu.push(tmpJson);
@@ -256,7 +256,7 @@ const saveDataAndHandleResult = async resFormData => {
 // ***** 유저정보 처리 부분 *****************************//
 const getData = async () => {
   try {
-    const response = await api.post('/api/mst/mst1010_select', { paramStdYear: storeYear.setYear, paramEmpCd: storeUser.setEmpCd });
+    const response = await api.post('/api/mst/mst1010_select', { paramStdYear: storeYear.setYear, paramEmpCd: storeUser.userId });
     rowData.value = response.data.data[0];
   } catch (error) {
     console.error('Error fetching users:', error);

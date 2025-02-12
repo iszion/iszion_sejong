@@ -108,7 +108,7 @@
           <q-bar class="q-px-sm">
             <q-icon name="list_alt" />
             <span class="text-subtitle2 q-px-sm"
-              >사용자전용 ( <span class="text-subtitle1 text-bold"> {{ storeUser.setEmpCd }} : {{ storeUser.setEmpNm }}</span> )</span
+              >사용자전용 ( <span class="text-subtitle1 text-bold"> {{ storeUser.userId }} : {{ storeUser.userNm }}</span> )</span
             >
             <q-space />
             <q-chip v-if="isShowStatusEdit" size="sm" outline :color="$q.dark.isActive ? 'white' : 'dark'" class="q-px-md">
@@ -215,7 +215,7 @@ const resetFilter = () => {
 const oldFormData = ref(null);
 const formData = ref({
   progId: '',
-  empCd: storeUser.setEmpCd,
+  empCd: storeUser.userId,
   contents: '',
 });
 
@@ -256,7 +256,7 @@ const handleNodeClick = () => {
     selectedProgId.value = null;
     selectedProgNm.value = null;
     formData.value.progId = null;
-    formData.value.empCd = storeUser.setEmpCd;
+    formData.value.empCd = storeUser.userId;
     formData.value.contents = null;
   }
 };
@@ -406,13 +406,13 @@ const getSubMenuData = async () => {
 
 // ***** DataBase 메뉴얼자료 가져오기 부분 *****************************//
 const getDataDoc = async resProgId => {
-  const paramData = { paramProgId: resProgId, paramEmpCd: storeUser.setEmpCd };
+  const paramData = { paramProgId: resProgId, paramEmpCd: storeUser.userId };
   try {
     const response = await api.post('/api/sys/sys4030_docU_select', paramData);
     if (isEmpty(response.data.data)) {
       isSaveFg = 'I';
       formData.value.progId = selectedProgId.value;
-      formData.value.empCd = storeUser.setEmpCd;
+      formData.value.empCd = storeUser.userId;
       formData.value.contents = '';
       isShowStatusEdit.value = true;
       statusEdit.icon = 'edit_note';

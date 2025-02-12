@@ -5,7 +5,7 @@
         <div class="text-h4 text-center text-weight-bold">패스워드 변경</div>
       </q-card-section>
       <q-card-section>
-        <div class="text-h6 text-center text-weight-bold">{{ storeUser.setEmpNm }} ({{ storeUser.setEmpCd }})</div>
+        <div class="text-h6 text-center text-weight-bold">{{ storeUser.userNm }} ({{ storeUser.userId }})</div>
         <div class="text-center text-subtitle2 text-grey">패스워드 변경 시 다시 로그인합니다. 😊</div>
       </q-card-section>
       <q-card-section>
@@ -56,7 +56,7 @@ const form = ref({
 const onSubmit = () => {
   if (form.value.oldPassword) {
     api
-      .post('/api/sys/passwordCheck', { paramUserId: storeUser.setEmpCd, paramOldPassword: form.value.oldPassword })
+      .post('/api/sys/passwordCheck', { paramUserId: storeUser.userId, paramOldPassword: form.value.oldPassword })
       .then(res => {
         if (res.data.data.check) {
           alert('ok');

@@ -856,10 +856,6 @@ const gridOptions = {
   },
   pagination: false,
   rowSelection: 'single' /* 'single' or 'multiple',*/,
-  enableColResize: false,
-  enableSorting: true,
-  enableFilter: false,
-  enableRangeSelection: true,
   suppressRowClickSelection: false,
   animateRows: true,
   suppressHorizontalScroll: true,
@@ -930,21 +926,7 @@ const gridOptions = {
   onCellValueChanged: function (event) {
     // console.log('onCellValueChanged');
   },
-  getRowNodeId: function (data) {
-    return null;
-  },
-  // 리드 상단 고정
-  setPinnedTopRowData: function (data) {
-    return null;
-  },
-  // 그리드 하단 고정
-  setPinnedBottomRowData: function (data) {
-    return null;
-  },
-  // components: {
-  //   numericCellEditor: NumericCellEditor,
-  //   moodEditor: MoodEditor,
-  // },
+
   debug: false,
 };
 
@@ -961,10 +943,6 @@ const gridOptionsSel = {
   },
   pagination: false,
   rowSelection: 'single' /* 'single' or 'multiple',*/,
-  enableColResize: false,
-  enableSorting: true,
-  enableFilter: false,
-  enableRangeSelection: true,
   suppressRowClickSelection: false,
   animateRows: true,
   suppressHorizontalScroll: true,
@@ -1024,21 +1002,7 @@ const gridOptionsSel = {
   onCellValueChanged: function (event) {
     // console.log('onCellValueChanged');
   },
-  getRowNodeId: function (data) {
-    return null;
-  },
-  // 리드 상단 고정
-  setPinnedTopRowData: function (data) {
-    return null;
-  },
-  // 그리드 하단 고정
-  setPinnedBottomRowData: function (data) {
-    return null;
-  },
-  // components: {
-  //   numericCellEditor: NumericCellEditor,
-  //   moodEditor: MoodEditor,
-  // },
+
   debug: false,
 };
 
@@ -1055,10 +1019,6 @@ const gridOptionsSet = {
   },
   pagination: false,
   rowSelection: 'single' /* 'single' or 'multiple',*/,
-  enableColResize: false,
-  enableSorting: true,
-  enableFilter: false,
-  enableRangeSelection: true,
   suppressRowClickSelection: false,
   animateRows: true,
   suppressHorizontalScroll: true,
@@ -1117,21 +1077,7 @@ const gridOptionsSet = {
   onCellValueChanged: function (event) {
     // console.log('onCellValueChanged');
   },
-  getRowNodeId: function (data) {
-    return null;
-  },
-  // 리드 상단 고정
-  setPinnedTopRowData: function (data) {
-    return null;
-  },
-  // 그리드 하단 고정
-  setPinnedBottomRowData: function (data) {
-    return null;
-  },
-  // components: {
-  //   numericCellEditor: NumericCellEditor,
-  //   moodEditor: MoodEditor,
-  // },
+
   debug: false,
 };
 </script>
