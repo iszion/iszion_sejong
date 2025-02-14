@@ -3516,7 +3516,7 @@ import { ref } from 'vue';
 const iconClass = ref(null);
 const props = defineProps(['iconValue']);
 const emit = defineEmits(['update']);
-console.log('props: ', props.iconValue);
+// console.log('props: ', props.iconValue);
 const iconClick = event => {
   const clickedElement = event.target; // Get the clicked element
   // console.log('aa : ', clickedElement);

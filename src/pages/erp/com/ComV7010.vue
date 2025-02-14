@@ -367,8 +367,8 @@ const onCellValueChangedGroup = () => {
 };
 
 const onCellValueChanged = () => {
-  console.log('rowData.rows : ', JSON.stringify(rowData.rows));
-  console.log('rowData.update : ', JSON.stringify(rowData.update));
+  // console.log('rowData.rows : ', JSON.stringify(rowData.rows));
+  // console.log('rowData.update : ', JSON.stringify(rowData.update));
   updateData.value = [];
   for (let i = 0; rowDataBack.value.length > i; i++) {
     if (JSON.stringify(rowDataBack.value[i]) !== JSON.stringify(rowData.rows[i])) {
@@ -629,7 +629,7 @@ onMounted(() => {
 const saveDataAndHandleResultGroup = resFormData => {
   // console.log('aaa::: ', JSON.stringify(resFormData));
   api
-    .post('/api/com/com9090_group_save', resFormData)
+    .post('/api/com/com7010_group_save', resFormData)
     .then(res => {
       showSaveBtnGroup.value = false;
       let saveStatus = {};
@@ -644,7 +644,7 @@ const saveDataAndHandleResultGroup = resFormData => {
 
 const saveDataAndHandleResult = resFormData => {
   api
-    .post('/api/com/com9090_save', resFormData)
+    .post('/api/com/com7010_save', resFormData)
     .then(res => {
       showSaveBtn.value = false;
       let saveStatus = {};
@@ -660,7 +660,7 @@ const saveDataAndHandleResult = resFormData => {
 // ***** 공통코드정보 목록 자료 가져오기 부분  *****************************//
 const getGroupData = async () => {
   try {
-    const response = await api.post('/api/com/com9090_list', {});
+    const response = await api.post('/api/com/com7010_list', {});
     rowDataGroup.rows = response.data.data;
     rowDataGroupBack.value = JSON.parse(JSON.stringify(response.data.data));
     updateData.value = [];
@@ -673,7 +673,7 @@ const getGroupData = async () => {
 // ***** 공통코드정보 선택된 자료 가져오기 부분  *****************************//
 const getSelectData = async () => {
   try {
-    const response = await api.post('/api/com/com9090_select', { paramCommCd1: paramComm.value.commCd1 });
+    const response = await api.post('/api/com/com7010_select', { paramCommCd1: paramComm.value.commCd1 });
     rowData.rows = response.data.data;
     rowDataBack.value = JSON.parse(JSON.stringify(response.data.data));
     updateData.value = [];

@@ -1,26 +1,10 @@
 <template>
   <q-page class="q-pa-xs-xs q-pa-sm-md" :style-fn="myTweak">
-    <!-- contents title bar -->
-    <div class="row">
-      <div class="col-auto flex flex-center">
-        <q-icon name="font_download" size="sm" class="text-orange" />
-        <span class="text-subtitle1" :class="$q.dark.isActive ? 'text-orange' : 'text-primary'">{{ menuLabel }}</span>
-      </div>
-      <q-space />
-      <q-breadcrumbs v-if="!$q.screen.xs" active-color="grey" style="font-size: 14px" class="self-end">
-        <q-breadcrumbs-el label="판매관리" icon="home" />
-        <q-breadcrumbs-el label="출고관리" icon="widgets" />
-        <q-breadcrumbs-el :label="menuLabel" />
-      </q-breadcrumbs>
-    </div>
-    <!-- end of contents title bar -->
-    <q-separator class="q-mb-sm" color="cyan" size="0.2rem" />
-
     <q-banner rounded :class="$q.dark.isActive ? 'bg-grey-9' : 'bg-grey-3'">
       <template v-slot:avatar>
         <q-icon name="menu_book" color="primary" />
       </template>
-      <span class="text-subtitle1 text-bold"> 메뉴설정 작업입니다.</span><br />
+      <span class="text-subtitle1 text-bold"> 즐겨찾기 메뉴설정 작업입니다.</span><br />
       1. 프로그램 목록은 모든 프로그램의 목록을 보여 줍니다.<br />
       <span class="material-icons-outlined"> folder </span>
 
@@ -77,15 +61,15 @@
                 dense
                 label-color="orange"
                 class="super-small"
-                label="메인그룹명"
-                v-model="selectedGroup"
-                :options="groupOptions"
-                option-value="groupCd"
-                option-label="groupNm"
+                label="사용자"
+                v-model="selectedUserId"
+                :options="usersOptions"
+                option-value="userId"
+                option-label="userNm"
                 options-dense
                 emit-value
                 map-options
-                @update:model-value="handleSelectedGroup"
+                @update:model-value="handleSelectedUser"
               />
             </div>
             <div class="col-9 text-right q-gutter-xs">
@@ -129,13 +113,12 @@ import 'jstree';
 import 'jstree/dist/themes/default/style.min.css';
 import 'jstree/dist/themes/default-dark/style.min.css';
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue';
-import { QIcon, useQuasar } from 'quasar';
+import { useQuasar } from 'quasar';
 import IconList from 'components/IconList.vue';
 import { api } from '/src/boot/axios';
-import jsonUtil from 'src/js_comm/json-util';
 import notifySave from 'src/js_comm/notify-save';
+import jsonUtil from 'src/js_comm/json-util';
 import { useUserInfoStore } from 'src/store/setUserInfo';
-
 const storeUser = useUserInfoStore();
 
 const $q = useQuasar();
@@ -175,9 +158,7 @@ const text = ref(null);
 const prog_tree_data = ref([]);
 const menu_tree_data = ref([]);
 
-const menuLabel = ref('');
 onMounted(() => {
-  menuLabel.value = window.history.state.label;
   // 그룹선택
 
   $('#progTree').jstree({
@@ -392,8 +373,8 @@ onMounted(() => {
       // 삭제 후 이벤트
     })
     .bind('delete_node.jstree', function (e, data) {
-      // console.log('delete data old : 	' + data.node);
-      // console.log('delete data : 		' + data.node.id + ' = ' + data.node.parent + ' = ' + data.node.text);
+      console.log('delete data old : 	' + data.node);
+      console.log('delete data : 		' + data.node.id + ' = ' + data.node.parent + ' = ' + data.node.text);
 
       let tmpAry;
       let iu1 = [];
@@ -409,14 +390,13 @@ onMounted(() => {
         .each((index, elem) => {
           let obj_data = {};
           obj_data.menuId = elem.id;
-          // console.log('del id : ' + elem.id);
+          console.log('del id : ' + elem.id);
           tmpAry = { mode: 'D', data: obj_data };
           iu1Del.push(JSON.stringify(tmpAry));
         });
       let obj = jsonUtil.jsonFiller('no1', iu1, iu1Del);
-      // console.log('del ::', iu1Del);
+      console.log('del ::', iu1Del);
       let paramData = JSON.stringify(obj).replace(/null/gi, '');
-      // deleteDataAndHandleResult(paramData);
     });
   $(document)
     .bind('dnd_stop.vakata', function (evt, data) {
@@ -440,8 +420,8 @@ onMounted(() => {
 });
 
 const newRootBtn = () => {
-  if (!selectedGroup.value) {
-    alert('안내', '메인그룹명을 선택하세요');
+  if (!selectedUserId.value) {
+    alert('안내', '사원을 선택하세요');
     return false;
   }
   $('#menuTree').jstree('create_node', '#', { text: '새로운 그룹명', type: 'folder1' }, 'last');
@@ -497,8 +477,8 @@ const saveBtn = () => {
           setType = treeData[i].a_attr.type;
         }
         jsonData = {
-          compCd: storeUser.compCd,
-          groupCd: selectedGroup.value,
+          userId: selectedUserId.value,
+          groupCd: '',
           seq: i,
           menuId: treeData[i].id,
           menuParent: treeData[i].parent,
@@ -585,11 +565,9 @@ const progReloadBtn = () => {
 // ***** 메뉴 목록 가져오기 부분 **********************************//
 const menuReloadBtn = () => {
   menu_tree_data.value = [];
-  // console.log('menuReloadBtn');
   api
-    .post('/api/com/com5020_menu_list', { paramCompCd: storeUser.compCd, paramSelectedGroup: selectedGroup.value })
+    .post('/api/sys/sys5030_fav_menu_list', { paramUserId: selectedUserId.value })
     .then(res => {
-      // console.log('res :::: ', res.data);
       if (res.data.data.length > 0) {
         menu_tree_data.value = res.data.data;
 
@@ -605,7 +583,7 @@ const menuReloadBtn = () => {
           menu_tree_data.value[i].a_attr = obj;
         }
       } else {
-        menu_tree_data.value = { id: 'j1_1', parent: '#', seq: 0, text: '새로운 그룹명', icon: 'fa fa-folder' };
+        menu_tree_data.value = { id: 'j1_1', parent: '#', seq: 0, text: '새로운 그룹명', icon: 'fa fa-folder-open' };
       }
       $('#menuTree').jstree(true).settings.core.data = menu_tree_data.value;
       $('#menuTree').jstree(true).refresh();
@@ -616,19 +594,29 @@ const menuReloadBtn = () => {
 };
 
 // ***** DataBase 그룹자료 가져오기 부분 *****************************//
-const groupOptions = ref([]);
-const selectedGroup = ref(null);
+const usersOptions = ref([]);
+const selectedUserId = ref(null);
 const getGroupData = async () => {
   try {
-    const response = await api.post('/api/com/prog_group_list', { paramUserId: '' });
+    const response = await api.post('/api/com/com1020_list_user', { paramCompCd: storeUser.compCd, paramValue: '' });
+    // console.log('da : ', JSON.stringify(response.data.data));
+    usersOptions.value = [];
     // 옵션 초기화
-    groupOptions.value = [];
-
-    response.data.data.forEach(group => {
-      if (!selectedGroup.value) {
-        selectedGroup.value = group.groupCd;
+    usersOptions.value = response.data.data;
+    usersOptions.value.sort((a, b) => {
+      if (a.userNm < b.userNm) {
+        return -1;
       }
-      groupOptions.value.push(group);
+      if (a.userNm > b.userNm) {
+        return 1;
+      }
+      return 0;
+    });
+    usersOptions.value.forEach(user => {
+      if (!selectedUserId.value) {
+        selectedUserId.value = user.userId;
+      }
+      // usersOptions.value.push({ userId: user.userId, userNm: user.userNm });
     });
     menuReloadBtn();
   } catch (error) {
@@ -636,10 +624,10 @@ const getGroupData = async () => {
   }
 };
 
-// ***** 자료저장 및 삭제 처리부분 *****************************//
 const saveDataAndHandleResult = resFormData => {
+  console.log('save : ', JSON.stringify(resFormData));
   api
-    .post('/api/com/com5020_save', resFormData)
+    .post('/api/sys/sys5030_fav_save', resFormData)
     .then(res => {
       let saveStatus = {};
       saveStatus.rtn = res.data.rtn;
@@ -657,8 +645,8 @@ const saveDataAndHandleResult = resFormData => {
 // **************************************************************//
 
 // ***** 검색 선택 처리 부분 ***********************************//
-const handleSelectedGroup = resSelectedGroup => {
-  // console.log('selected group: ', resSelectedGroup);
+const handleSelectedUser = resSelectedUserId => {
+  console.log('selected user: ', resSelectedUserId);
   menuReloadBtn();
 };
 // ***** 검색 선택 자동 처리 부분 끝 *****************************//

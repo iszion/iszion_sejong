@@ -35,9 +35,10 @@ export default {
 
   /* *****  Sub Menu MST 부분  *****  */
   sub_menu_mst1010: '인사정보관리',
+  sub_menu_mst1020: 'Customer Information',
 
   /* *****  Sub Menu SYS 부분  *****  */
-  sub_menu_sys1010: '사용자정보',
-  sub_menu_sys5010: '프로그램등록',
-  sub_menu_sys5020: '기본메뉴설정',
+  sub_menu_sys1010: '회사정보',
+  sub_menu_sys5010: 'Register menu list',
+  sub_menu_sys5020: 'Menu Settings',
 };

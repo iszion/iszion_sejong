@@ -1,5 +1,21 @@
 <template>
   <q-page class="q-pa-xs-xs q-pa-sm-md" :style-fn="myTweak">
+    <!-- contents title bar -->
+    <div class="row">
+      <div class="col-auto flex flex-center">
+        <q-icon name="font_download" size="sm" class="text-orange" />
+        <span class="text-subtitle1" :class="$q.dark.isActive ? 'text-orange' : 'text-primary'">{{ menuLabel }}</span>
+      </div>
+      <q-space />
+      <q-breadcrumbs v-if="!$q.screen.xs" active-color="grey" style="font-size: 14px" class="self-end">
+        <q-breadcrumbs-el label="판매관리" icon="home" />
+        <q-breadcrumbs-el label="출고관리" icon="widgets" />
+        <q-breadcrumbs-el :label="menuLabel" />
+      </q-breadcrumbs>
+    </div>
+    <!-- end of contents title bar -->
+    <q-separator class="q-mb-sm" color="cyan" size="0.2rem" />
+
     <!-- contents zone -->
     <div class="row q-col-gutter-md">
       <!-- contents List -->
@@ -131,12 +147,8 @@
                 {{ selectedProgNm }} ( {{ selectedProgId }} )</span
               >
               <q-space />
-              <q-btn v-if="selectedProgId" outline dense color="primary" @click="saveDataDocSection" class="q-px-sm q-mr-sm"
-                ><q-icon class="q-mr-xs" name="save" size="xs" /> 저장
-              </q-btn>
-              <q-btn v-if="showDeleteBtn" outline dense color="negative" @click="deleteDataDocSection" class="q-px-sm q-mr-sm"
-                ><q-icon class="q-mr-xs" name="delete" size="xs" /> 삭제
-              </q-btn>
+              <q-btn v-if="selectedProgId" outline icon="save" label="저장" color="primary" @click="saveDataDocSection" class="q-px-sm q-mr-sm" />
+              <q-btn v-if="showDeleteBtn" outline icon="delete" label="삭제" color="negative" @click="deleteDataDocSection" class="q-px-sm q-mr-sm" />
             </q-toolbar>
           </q-card-actions>
 
@@ -265,7 +277,7 @@ const handleNodeClick = () => {
     selectedProgId.value = null;
     selectedProgNm.value = null;
     formData.value.progId = null;
-    formData.value.contents = null;
+    formData.value.contents = '';
   }
 };
 function findValueById(data, id) {
@@ -307,8 +319,11 @@ onBeforeMount(() => {
     handleSelectedGroup();
   }, 500);
 });
+
+const menuLabel = ref('');
 onMounted(() => {
   window.addEventListener('resize', handleResize);
+  menuLabel.value = window.history.state.label;
   handleResize();
 });
 const saveDataDocSection = () => {
@@ -361,10 +376,9 @@ const handleSelectedGroup = () => {
   getSubMenuData();
 };
 
-let tree = [];
 const treeExpanded = ref([]);
 function buildTreeMenuData(data) {
-  tree = [];
+  const tree = [];
   const map = {};
 
   // First pass: create a map of all items using mn1 and mn2
@@ -397,9 +411,8 @@ function buildTreeMenuData(data) {
 
 // ***** DataBase 서브메뉴자료 가져오기 부분 *****************************//
 const getSubMenuData = async () => {
-  const paramData = { paramGroupCd: selectedGroup.value };
   try {
-    const response = await api.post('/api/com/com8010_list', paramData);
+    const response = await api.post('/api/com/com8010_list', { paramCompCd: storeUser.compCd, paramGroupCd: selectedGroup.value });
 
     menuList.value = buildTreeMenuData(response.data.data);
   } catch (error) {

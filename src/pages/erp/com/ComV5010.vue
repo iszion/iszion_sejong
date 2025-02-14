@@ -1,14 +1,22 @@
 <template>
   <q-page class="q-pa-xs-xs q-pa-sm-md" :style-fn="myScreenBasicHeight">
+    <!-- contents title bar -->
+    <div class="row">
+      <div class="col-auto flex flex-center">
+        <q-icon name="font_download" size="sm" class="text-orange" />
+        <span class="text-subtitle1" :class="$q.dark.isActive ? 'text-orange' : 'text-primary'">{{ menuLabel }}</span>
+      </div>
+      <q-space />
+      <q-breadcrumbs v-if="!$q.screen.xs" active-color="grey" style="font-size: 14px" class="self-end">
+        <q-breadcrumbs-el label="판매관리" icon="home" />
+        <q-breadcrumbs-el label="출고관리" icon="widgets" />
+        <q-breadcrumbs-el :label="menuLabel" />
+      </q-breadcrumbs>
+    </div>
+    <!-- end of contents title bar -->
+    <q-separator class="q-mb-sm" color="cyan" size="0.2rem" />
+
     <q-card bordered>
-      <q-bar class="q-px-sm">
-        <q-icon name="list_alt" />
-        <span class="text-subtitle2 q-px-sm">프로그램정보 리스트</span>
-        <q-space />
-        <q-chip v-if="isDialogVisible || showDeleteBtn" size="sm" outline :color="statusEdit.color" class="q-px-md">
-          <q-icon :name="statusEdit.iconNm" class="q-mr-sm" size="15px" /> {{ statusEdit.message }}
-        </q-chip>
-      </q-bar>
       <q-card-section class="q-pa-xs">
         <q-toolbar class="row">
           <div class="q-gutter-xs q-mr-md">
@@ -32,17 +40,17 @@
             label="그룹선택"
             @update:model-value="handleSelectedGroup"
           />
-          <q-btn dense outline class="q-px-md" color="teal" @:click="reloadDataSection()"
-            ><q-icon name="refresh" size="xs" class="q-pr-sm-sm" /><span v-if="$q.screen.gt.sm">다시불러오기</span></q-btn
+          <q-btn outline class="q-px-md" icon="refresh" color="teal" @:click="reloadDataSection()"
+            ><span v-if="$q.screen.gt.sm">다시불러오기</span></q-btn
           >
           <q-space />
           <div class="q-gutter-xs">
             <div class="col-6 text-right">
-              <q-btn v-if="!showDeleteBtn" dense outline class="q-px-md" color="teal" @:click="addDataSection()"
-                ><q-icon name="add" size="xs" class="q-pr-sm-sm" /><span v-if="$q.screen.gt.sm">신규</span></q-btn
+              <q-btn v-if="!showDeleteBtn" icon="add" outline class="q-px-md" color="teal" @:click="addDataSection()"
+                ><span v-if="$q.screen.gt.sm">신규</span></q-btn
               >
-              <q-btn v-if="showDeleteBtn && !isDialogVisible" dense outline class="q-px-md" color="negative" @:click="deleteDataSection()"
-                ><q-icon name="delete" size="xs" class="q-pr-sm-sm" /><span v-if="$q.screen.gt.sm">삭제</span></q-btn
+              <q-btn v-if="showDeleteBtn && !isDialogVisible" icon="delete" outline class="q-px-md" color="negative" @:click="deleteDataSection()"
+                ><span v-if="$q.screen.gt.sm">삭제</span></q-btn
               >
             </div>
           </div>
@@ -334,8 +342,11 @@ onBeforeUnmount(() => {
   // Remove the resize event listener when the component is destroyed
   window.removeEventListener('resize', handleResize);
 });
+
+const menuLabel = ref('');
 onMounted(() => {
   window.addEventListener('resize', handleResize);
+  menuLabel.value = window.history.state.label;
   handleResize();
 });
 ////******* Screen Height resize check 부분 끝 *********************************//

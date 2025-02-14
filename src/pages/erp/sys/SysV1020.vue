@@ -1,21 +1,5 @@
 <template>
   <q-page class="q-pa-xs-xs q-pa-sm-md" :style-fn="myTweak">
-    <!-- contents title bar -->
-    <div class="row">
-      <div class="col-auto flex flex-center">
-        <q-icon name="font_download" size="sm" class="text-orange" />
-        <span class="text-subtitle1" :class="$q.dark.isActive ? 'text-orange' : 'text-primary'">{{ menuLabel }}</span>
-      </div>
-      <q-space />
-      <q-breadcrumbs v-if="!$q.screen.xs" active-color="grey" style="font-size: 14px" class="self-end">
-        <q-breadcrumbs-el label="판매관리" icon="home" />
-        <q-breadcrumbs-el label="출고관리" icon="widgets" />
-        <q-breadcrumbs-el :label="menuLabel" />
-      </q-breadcrumbs>
-    </div>
-    <!-- end of contents title bar -->
-    <q-separator class="q-mb-sm" color="cyan" size="0.2rem" />
-
     <!-- contents zone -->
     <div class="row q-col-gutter-md">
       <!-- contents List -->
@@ -24,7 +8,7 @@
           <!-- contents list title bar -->
           <q-bar class="q-px-sm">
             <q-icon name="list_alt" />
-            <span class="q-px-sm text-subtitle2">자료리스트</span>
+            <span class="q-px-sm text-bold text-subtitle1" :class="$q.dark.isActive ? 'text-orange' : 'text-primary'">{{ menuLabel }}</span>
             <q-space />
             <q-btn
               class="q-pa-xs"
@@ -47,22 +31,6 @@
           <q-card-actions align="right" class="">
             <q-toolbar>
               <div class="row q-col-gutter-md q-py-none">
-                <q-select
-                  stack-label
-                  options-dense
-                  class="q-py-none q-mr-lg"
-                  label-color="orange"
-                  v-model="searchValue.compCd"
-                  :options="searchValue.compOptions"
-                  option-value="compCd"
-                  option-label="compNm"
-                  option-disable="inactive"
-                  emit-value
-                  map-options
-                  style="min-width: 130px; max-width: 130px"
-                  label="소속업체"
-                  @update:model-value="getData"
-                />
                 <q-input
                   stack-label
                   bottom-slots
@@ -84,10 +52,7 @@
               </q-btn>
               <q-space />
               <div class="q-gutter-xs">
-                <q-btn outline color="positive" @click="getData"><q-icon name="search" size="xs" /> 조회 </q-btn>
-                <q-btn v-if="isShowDeleteBtn" outline color="negative" dnse @click="deleteDataSection">
-                  <q-icon name="delete" size="xs" /> 삭제</q-btn
-                >
+                <q-btn outline color="positive" icon="search" label="조회" @click="getData" />
               </div>
             </q-toolbar>
           </q-card-actions>
@@ -128,8 +93,7 @@
               <div class="q-gutter-xs"></div>
               <q-space />
               <div class="q-gutter-xs">
-                <q-btn v-if="isShowSaveBtn" outline color="primary" @click="saveDataSection"><q-icon name="save" size="xs" /> 저장 </q-btn>
-                <q-btn v-if="searchValue.compCd !== ''" outline color="positive" @click="addDataSection"><q-icon name="add" size="xs" /> 신규 </q-btn>
+                <q-btn v-if="isShowSaveBtn" icon="save" label="저장" outline color="primary" @click="saveDataSection" />
               </div>
             </q-toolbar>
           </q-card-actions>
@@ -182,13 +146,8 @@
                   label="사원번호"
                   label-color="orange"
                   :disable="formDisableUserId"
-                >
-                  <template v-slot:append>
-                    <q-icon v-show="formData.userId !== ''" size="0.8em" name="done" class="cursor-pointer q-mt-lg" @click="getDataUserIdCheck">
-                      <q-tooltip transition-show="rotate" transition-hide="rotate" class="bg-amber text-black shadow-4"> ID 중복체크 </q-tooltip>
-                    </q-icon>
-                  </template>
-                </q-input>
+                  readonly
+                />
 
                 <q-input ref="userNmFocus" v-model="formData.userNm" label="성명" label-color="orange" :disable="formDisable" />
                 <q-input v-model="formData.userNmx" label="닉네임" label-color="orange" :disable="formDisable" />
@@ -280,7 +239,6 @@
 
             <div class="row q-col-gutter-x-xl">
               <q-input class="col-xs-12 col-sm-6" :disable="formDisable" v-model="formData.inDay" type="date" label="입사일" label-color="orange" />
-              <q-input class="col-xs-12 col-sm-6" :disable="formDisable" v-model="formData.outDay" type="date" label="퇴사일" label-color="orange" />
             </div>
 
             <div class="col-12">
@@ -310,6 +268,9 @@ import notifySave from 'src/js_comm/notify-save';
 import commUtil from 'src/js_comm/comm-util';
 
 import ImageView from 'components/ImageView.vue';
+import { useUserInfoStore } from 'src/store/setUserInfo';
+
+const storeUser = useUserInfoStore();
 
 const $q = useQuasar();
 
@@ -323,8 +284,6 @@ const isImageDelete = ref(true);
 const isSignDelete = ref(true);
 
 const searchValue = reactive({
-  compCd: '',
-  compOptions: [],
   textValue: '',
 });
 const statusEdit = reactive({
@@ -340,11 +299,9 @@ onBeforeUnmount(() => {
 
 onBeforeMount(() => {
   formDataInitialize();
-  getDataComp().then(() => {
-    getDataCommOption('501').then(() => {
-      getDataCommOption('502').then(() => {
-        getData();
-      });
+  getDataCommOption('501').then(() => {
+    getDataCommOption('502').then(() => {
+      getData();
     });
   });
 });
@@ -392,22 +349,6 @@ const columnDefs = reactive({
         return params.node.rowIndex + 1;
       },
       cellStyle: { textAlign: 'center' },
-    },
-    {
-      headerName: '',
-      field: '',
-      maxWidth: 50,
-      minWidth: 50,
-      checkboxSelection: true,
-      headerCheckboxSelection: true,
-      filter: false,
-      pinned: 'left',
-    },
-    {
-      headerName: '소속회사명',
-      field: 'compNm',
-      pinned: 'left',
-      minWidth: 120,
     },
     {
       headerName: 'ID',
@@ -492,14 +433,6 @@ const columnDefs = reactive({
       cellStyle: { textAlign: 'center' },
     },
     {
-      headerName: '퇴사일',
-      field: 'outDay',
-      valueFormatter: dateFormatter,
-      maxWidth: 130,
-      minWidth: 130,
-      cellStyle: { textAlign: 'center' },
-    },
-    {
       headerName: '이미지파일명',
       field: 'imageFileNm',
       minWidth: 150,
@@ -509,10 +442,8 @@ const columnDefs = reactive({
 
 const oldFormData = ref(null);
 const formData = ref({
-  userId: '',
   userNm: '',
   userNmx: '',
-  compCd: '',
   deptCd: '',
   titlCd: '',
   manager: '',
@@ -520,19 +451,15 @@ const formData = ref({
   tel: '',
   email: '',
   inDay: '',
-  outDay: '',
   birthday: '',
-  role: '',
   explains: '',
   imageFileNm: '',
   imageFileNmFull: '',
 });
 
 const formDataInitialize = () => {
-  formData.value.userId = '';
   formData.value.userNm = '';
   formData.value.userNmx = '';
-  formData.value.compCd = '';
   formData.value.deptCd = '';
   formData.value.titlCd = '';
   formData.value.manager = '';
@@ -540,26 +467,14 @@ const formDataInitialize = () => {
   formData.value.tel = '';
   formData.value.email = '';
   formData.value.inDay = '';
-  formData.value.outDay = '';
   formData.value.birthday = '';
-  formData.value.role = '';
   formData.value.explains = '';
   formData.value.imageFileNm = '';
   formData.value.imageFileNmFull = '';
 };
 
-const selectedComp = computed(() => {
-  const selectedOption = searchValue.compOptions.find(option => option.compCd === formData.value.compCd);
-  return selectedOption ? selectedOption.compNm : null;
-});
-
 const selectedDept = computed(() => {
   const selectedOption = deptOptions.value.find(option => option.commCd === formData.value.deptCd);
-  return selectedOption ? selectedOption.commNm : null;
-});
-
-const selectedPstn = computed(() => {
-  const selectedOption = pstnOptions.value.find(option => option.commCd === formData.value.pstnCd);
   return selectedOption ? selectedOption.commNm : null;
 });
 
@@ -575,60 +490,10 @@ const isShowSaveBtn = ref(false);
 
 const userIdFocus = ref(null);
 const userNmFocus = ref(null);
-const addDataSection = () => {
-  formDataInitialize();
-  oldFormData.value = {};
-  isShowStatusEdit.value = true;
-  statusEdit.icon = 'edit';
-  statusEdit.message = '신규입력모드 입니다';
-  statusEdit.color = 'primary';
-  isSaveFg = 'I';
-  isShowSaveBtn.value = true;
-  formDisableUserId.value = false;
-  formDisable.value = true;
-  formData.value.compCd = searchValue.compCd;
-  formData.value.outDay = '9999-12-31';
-  formData.value.manager = 'N';
-  setTimeout(() => {
-    userIdFocus.value.focus();
-  }, 100);
-};
-const deleteDataSection = () => {
-  $q.dialog({
-    dark: true,
-    title: '자료삭제',
-    message: '선택된 자료를 삭제하시겠습니까? ',
-    ok: {
-      push: true,
-      color: 'negative',
-    },
-    cancel: {
-      push: true,
-      color: 'grey-7',
-    },
-    // persistent: true,
-  })
-    .onOk(() => {
-      isSaveFg = 'D';
 
-      let iu = [];
-      let iuD = [];
-      for (let i = 0; i < selectedRows.value.length; i++) {
-        // console.log('del : ', JSON.stringify(selectedRows.value[i]));
-        let tmpJson = '{"mode":"D","data":' + JSON.stringify(selectedRows.value[i]) + '}';
-        iuD.push(tmpJson);
-      }
-      saveDataAndHandleResult(jsonUtil.jsonFiller('no1', iu, iuD));
-    })
-    .onCancel(() => {})
-    .onDismiss(() => {
-      // 확인/취소 모두 실행되었을때
-    });
-};
 const saveDataSection = () => {
   formData.value.birthday = commUtil.unFormatDate(formData.value.birthday);
   formData.value.inDay = commUtil.unFormatDate(formData.value.inDay);
-  formData.value.outDay = commUtil.unFormatDate(formData.value.outDay);
 
   if (isEqual(formData.value, oldFormData.value)) {
     $q.dialog({
@@ -788,14 +653,13 @@ const imageDeleteCall = async () => {
 const saveDataAndHandleResult = resFormData => {
   // console.log('save::: ', JSON.stringify(resFormData));
   api
-    .post('/api/com/com1020_save', resFormData)
+    .post('/api/com/com1020_save_user', resFormData)
     .then(res => {
       if (res.data.rtn === '0') {
         if (isSaveFg === 'I') {
           formData.value.oldUserId = formData.value.userId;
 
           let newData = [formData.value];
-          newData[0].compNm = selectedComp.value;
           newData[0].deptNm = selectedDept.value;
           newData[0].titlNm = selectedTitl.value;
           myGrid.value.api.applyTransaction({
@@ -806,7 +670,6 @@ const saveDataAndHandleResult = resFormData => {
           const selectedData = myGrid.value.api.getSelectedRows();
           // selectedData[0] = { ...formData.value };
           selectedData[0].userId = formData.value.userId;
-          selectedData[0].oldUserId = formData.value.userId;
           selectedData[0].userNm = formData.value.userNm;
           selectedData[0].userNmx = formData.value.userNmx;
           selectedData[0].deptCd = formData.value.deptCd;
@@ -816,7 +679,6 @@ const saveDataAndHandleResult = resFormData => {
           selectedData[0].email = formData.value.email;
           selectedData[0].manager = formData.value.manager;
           selectedData[0].inDay = formData.value.inDay;
-          selectedData[0].outDay = formData.value.outDay;
 
           selectedData[0].imageFileNm = formData.value.imageFileNm;
           selectedData[0].imageFileNmFull = formData.value.imageFileNmFull;
@@ -845,8 +707,8 @@ const saveDataAndHandleResult = resFormData => {
 // ***** 인사정보 목록 자료 가져오기 부분  *****************************//
 const getData = async () => {
   try {
-    const response = await api.post('/api/com/com1020_list', {
-      paramCompCd: searchValue.compCd,
+    const response = await api.post('/api/com/com1020_list_user', {
+      paramCompCd: storeUser.compCd,
       paramValue: searchValue.textValue,
     });
     rowData.rows = response.data.data;
@@ -859,7 +721,7 @@ const getData = async () => {
 // ***** 인사정보 선택된 자료 가져오기 부분  *****************************//
 const getDataSelect = async resUserId => {
   try {
-    const response = await api.post('/api/com/com1020_select', { paramUserId: resUserId });
+    const response = await api.post('/api/com/com1020_select_user', { paramUserId: resUserId });
     formData.value = response.data.data;
 
     oldFormData.value = JSON.parse(JSON.stringify(formData.value)); // 초기자료 저장
@@ -911,16 +773,6 @@ const savePasswordDataAndHandleResult = resFormData => {
     });
 };
 
-async function getDataComp() {
-  try {
-    const response = await api.post('/api/com/com1010_list', {});
-    searchValue.compOptions = response.data.data;
-    searchValue.compOptions.unshift({ compCd: '', compNm: '전체' });
-  } catch (error) {
-    console.error('Error fetching users:', error);
-  }
-}
-
 async function getDataCommOption(resCommCd1) {
   try {
     const response = await api.post('/api/com/xComm_option_list', { paramCommCd1: resCommCd1 });
@@ -959,7 +811,7 @@ const gridOptions = {
     floatingFilter: false,
     editable: false,
   },
-  rowSelection: 'multiple' /* 'single' or 'multiple',*/,
+  rowSelection: 'single' /* 'single' or 'multiple',*/,
   suppressRowClickSelection: false,
   animateRows: true,
   suppressHorizontalScroll: true,

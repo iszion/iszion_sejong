@@ -67,15 +67,15 @@
                 <template #header-file="props">
                   <div class="row items-center">
                     <q-icon
-                      :color="props.node.docUyn === 'Y' ? ($q.dark.isActive ? 'white' : 'dark') : $q.dark.isActive ? 'grey-7' : 'grey-5'"
-                      :class="props.node.docUyn === 'Y' ? 'text-bold' : ''"
+                      :color="props.node.docYn === 'Y' ? ($q.dark.isActive ? 'white' : 'dark') : $q.dark.isActive ? 'grey-7' : 'grey-5'"
+                      :class="props.node.docYn === 'Y' ? 'text-bold' : ''"
                       size="12px"
                       class="q-mr-sm"
                       :name="props.node.icon || 'share'"
                     />
                     <div
                       :class="
-                        props.node.docUyn === 'Y'
+                        props.node.docYn === 'Y'
                           ? $q.dark.isActive
                             ? 'text-bold text-white'
                             : 'text-bold text-dark'
@@ -122,12 +122,8 @@
                 {{ selectedProgNm }} ( {{ selectedProgId }} )</span
               >
               <q-space />
-              <q-btn v-if="selectedProgId" outline dense color="primary" @click="saveDataDocSection" class="q-px-sm q-mr-sm"
-                ><q-icon class="q-mr-xs" name="save" size="xs" /> 저장
-              </q-btn>
-              <q-btn v-if="showDeleteBtn" outline dense color="negative" @click="deleteDataDocSection" class="q-px-sm q-mr-sm"
-                ><q-icon class="q-mr-xs" name="delete" size="xs" /> 삭제
-              </q-btn>
+              <q-btn v-if="selectedProgId" outline icon="save" label="저장" color="primary" @click="saveDataDocSection" class="q-px-sm q-mr-sm" />
+              <q-btn v-if="showDeleteBtn" outline icon="delete" label="삭제" color="negative" @click="deleteDataDocSection" class="q-px-sm q-mr-sm" />
             </q-toolbar>
           </q-card-actions>
 
@@ -181,14 +177,14 @@ import { AgGridVue } from 'ag-grid-vue3';
 import { QBtn, QIcon, useQuasar } from 'quasar';
 import { computed, h, onBeforeMount, onBeforeUnmount, onMounted, onUpdated, reactive, ref, watch } from 'vue';
 import { api } from '/src/boot/axios';
-import { useUserInfoStore } from 'src/store/setUserInfo';
 
 import { isEmpty, isEqual } from 'lodash';
 import jsonUtil from 'src/js_comm/json-util';
 import notifySave from 'src/js_comm/notify-save';
+import { useUserInfoStore } from 'src/store/setUserInfo';
+const storeUser = useUserInfoStore();
 
 const $q = useQuasar();
-const storeUser = useUserInfoStore();
 
 const contentZoneHeight = ref(500);
 const treeZoneStyle = computed(() => ({
@@ -215,7 +211,7 @@ const resetFilter = () => {
 const oldFormData = ref(null);
 const formData = ref({
   progId: '',
-  empCd: storeUser.userId,
+  userId: storeUser.userId,
   contents: '',
 });
 
@@ -256,8 +252,8 @@ const handleNodeClick = () => {
     selectedProgId.value = null;
     selectedProgNm.value = null;
     formData.value.progId = null;
-    formData.value.empCd = storeUser.userId;
-    formData.value.contents = null;
+    formData.value.userId = storeUser.userId;
+    formData.value.contents = '';
   }
 };
 function findValueById(data, id) {
@@ -389,15 +385,14 @@ function buildTreeMenuData(data) {
 
 // ***** DataBase 서브메뉴자료 가져오기 부분 *****************************//
 const getSubMenuData = async () => {
-  const paramData = { paramGroupCd: selectedGroup.value };
   try {
-    const response = await api.post('/api/sys/sys4030_list', paramData);
+    const response = await api.post('/api/sys/sys4030_list', { paramGroupCd: selectedGroup.value, paramUserId: storeUser.userId });
 
     menuList.value = buildTreeMenuData(response.data.data);
     selectedProgId.value = null;
     selectedProgNm.value = null;
     formData.value.progId = null;
-    formData.value.contents = null;
+    formData.value.contents = '';
     showSaveBtn.value = false;
   } catch (error) {
     console.error('Error fetching users:', error);
@@ -406,13 +401,12 @@ const getSubMenuData = async () => {
 
 // ***** DataBase 메뉴얼자료 가져오기 부분 *****************************//
 const getDataDoc = async resProgId => {
-  const paramData = { paramProgId: resProgId, paramEmpCd: storeUser.userId };
   try {
-    const response = await api.post('/api/sys/sys4030_docU_select', paramData);
+    const response = await api.post('/api/sys/sys4030_docU_select', { paramProgId: resProgId, paramUserId: storeUser.userId });
     if (isEmpty(response.data.data)) {
       isSaveFg = 'I';
       formData.value.progId = selectedProgId.value;
-      formData.value.empCd = storeUser.userId;
+      formData.value.userId = storeUser.userId;
       formData.value.contents = '';
       isShowStatusEdit.value = true;
       statusEdit.icon = 'edit_note';
@@ -421,7 +415,7 @@ const getDataDoc = async resProgId => {
     } else {
       isSaveFg = 'U';
       formData.value.progId = response.data.data[0].progId;
-      formData.value.empCd = response.data.data[0].empCd;
+      formData.value.userId = response.data.data[0].userId;
       formData.value.contents = response.data.data[0].contents;
       isShowStatusEdit.value = true;
       statusEdit.icon = 'edit_note';
@@ -460,7 +454,7 @@ const groupOptions = ref([]);
 
 const getGroupData = async () => {
   try {
-    const response = await api.post('/api/sys/prog_group_list', { paramUserId: '' });
+    const response = await api.post('/api/com/prog_group_list_comp', {});
     // 옵션 초기화
     groupOptions.value = [];
 

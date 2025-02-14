@@ -6,6 +6,11 @@ const routes = [
       { path: '', component: () => import('pages/main/DashboardPage.vue'), props: true },
       { path: 'noticeboard', name: 'noticeBoard', component: () => import('pages/main/NoticeBoard.vue'), props: true },
 
+      { path: 'aux1010', component: () => import('pages/erp/aux/auxV1010.vue') },
+
+      { path: 'cos1010', component: () => import('pages/erp/cos/CosV1010.vue') },
+      { path: 'cos1020', component: () => import('pages/erp/cos/CosV1020.vue') },
+
       { path: 'sal1010', component: () => import('pages/erp/sal/SalV1010.vue') },
       { path: 'sal1020', component: () => import('pages/erp/sal/SalV1020.vue') },
       { path: 'sal2010', component: () => import('pages/erp/sal/SalV2010.vue') },
@@ -70,8 +75,10 @@ const routes = [
       { path: 'stepEdit', component: () => import('pages/erp/mst/STEP_EDIT.vue') },
 
       { path: 'sys1010', component: () => import('pages/erp/sys/SysV1010.vue') },
+      { path: 'sys1020', component: () => import('pages/erp/sys/SysV1020.vue') },
       { path: 'sys4020', component: () => import('pages/erp/sys/SysV4020.vue') },
       { path: 'sys4030', component: () => import('pages/erp/sys/SysV4030.vue') },
+      { path: 'sys5030', component: () => import('pages/erp/sys/SysV5030.vue') },
 
       { path: 'com1010', component: () => import('pages/erp/com/ComV1010.vue') },
       { path: 'com1020', component: () => import('pages/erp/com/ComV1020.vue') },
@@ -80,8 +87,8 @@ const routes = [
       { path: 'com2030', component: () => import('pages/erp/com/ComV2030.vue') },
       { path: 'com5010', component: () => import('pages/erp/com/ComV5010.vue') },
       { path: 'com5020', component: () => import('pages/erp/com/ComV5020.vue') },
+      { path: 'com7010', component: () => import('pages/erp/com/ComV7010.vue') },
       { path: 'com8010', component: () => import('pages/erp/com/ComV8010.vue') },
-      { path: 'com9090', component: () => import('pages/erp/com/ComV9090.vue') },
 
       {
         path: 'profile',

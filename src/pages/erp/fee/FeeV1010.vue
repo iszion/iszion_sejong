@@ -371,7 +371,6 @@ const columnDefs1 = ref([
     headerName: '등록수',
     field: 'hCnt',
     pinned: !$q.screen.xs && !$q.screen.sm ? 'left' : null,
-    valueFormatter: dateFormatter,
     minWidth: 90,
     maxWidth: 90,
     cellStyle: () => {
@@ -718,7 +717,7 @@ const saveDataSection = () => {
     const _obj_no2 = obj_no2.slice(1, -1); // 앞뒤 {} 제거
 
     const saveData = '{' + _obj_no1 + ',' + _obj_no2 + '}'; // 제거된 object 하나로 묶기
-    console.log('save : ', JSON.stringify(saveData));
+    // console.log('save : ', JSON.stringify(saveData));
     saveDataAndHandleResult(saveData).then(val => {
       handleGetData(selectedRows.rowsList[0]);
     });

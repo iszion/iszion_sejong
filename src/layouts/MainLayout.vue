@@ -220,7 +220,6 @@ import PageManual from 'components/comm/PageManual.vue';
 import notifySave from 'src/js_comm/notify-save';
 import JsonUtil from 'src/js_comm/json-util';
 import { useUserInfoStore } from 'src/store/setUserInfo';
-
 const storeUser = useUserInfoStore();
 
 const $q = useQuasar();
@@ -489,7 +488,7 @@ const menuListData = reactive({
 });
 const getDataMainMenu = async () => {
   try {
-    const response = await api.post('/api/com/menu_main_list', { paramUserId: storeUser.userId });
+    const response = await api.post('/api/com/menu_main_list', { paramCompCd: storeUser.compCd, paramUserId: storeUser.userId });
     menuListData.mainMenu = response.data.data;
   } catch (error) {
     console.error('Error fetching users:', error);
@@ -499,7 +498,7 @@ const getDataMainMenu = async () => {
 // ***** DataBase 서브메뉴자료 가져오기 부분 *****************************//
 const getSubMenuData = async param => {
   try {
-    const response = await api.post('/api/com/menu_sub_list', {
+    const response = await api.post('/api/sys/menu_sub_list', {
       paramCompCd: storeUser.compCd,
       paramGroupCd: param,
       paramUserId: storeUser.userId,

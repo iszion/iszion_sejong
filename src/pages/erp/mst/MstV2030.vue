@@ -1,20 +1,30 @@
 <template>
   <q-page class="q-pa-xs-xs q-pa-sm-md">
+    <!-- contents title bar -->
+    <div class="row">
+      <div class="col-auto flex flex-center">
+        <q-icon name="font_download" size="sm" class="text-orange" />
+        <span class="text-subtitle1" :class="$q.dark.isActive ? 'text-orange' : 'text-primary'">{{ menuLabel }}</span>
+      </div>
+      <q-space />
+      <q-breadcrumbs v-if="!$q.screen.xs" active-color="grey" style="font-size: 14px" class="self-end">
+        <q-breadcrumbs-el label="판매관리" icon="home" />
+        <q-breadcrumbs-el label="출고관리" icon="widgets" />
+        <q-breadcrumbs-el :label="menuLabel" />
+      </q-breadcrumbs>
+    </div>
+    <!-- end of contents title bar -->
+    <q-separator class="q-mb-sm" color="cyan" size="0.2rem" />
+
     <!-- contents zone -->
     <!-- contents List (좌측 화면) -->
     <q-card bordered>
-      <!-- contents list title bar -->
-      <q-bar class="q-px-sm">
-        <q-icon name="list_alt" />
-        <span class="q-px-sm text-bold text-subtitle1" :class="$q.dark.isActive ? 'text-orange' : 'text-primary'">{{ menuLabel }}</span>
-        <q-space />
-      </q-bar>
-      <!--  end of contents list title bar -->
-      <q-card-actions class="q-px-md q-pt-md">
+      <q-card-actions class="q-pa-md">
         <q-btn icon="refresh" outline color="positive" @click="getData" label="다시불러오기" />
         <q-space />
         <q-btn icon="add" outline color="positive" @click="addRowData" label="신규" />
       </q-card-actions>
+      <q-separator />
       <!--      <div v-for="m in rowData.rows" :key="m" class="col-6 col-md-4">-->
       <q-scroll-area :style="contentLeftZoneStyle" class="q-pa-md">
         <div class="q-gutter-y-xs">
@@ -185,7 +195,7 @@ const contentZoneStyle = computed(() => ({
   height: `${contentZoneHeight.value - 160}px`,
 }));
 const contentLeftZoneStyle = computed(() => ({
-  height: `${contentZoneHeight.value - 210}px`,
+  height: `${contentZoneHeight.value - 230}px`,
 }));
 
 onBeforeUnmount(() => {

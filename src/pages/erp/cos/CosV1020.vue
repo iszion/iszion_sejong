@@ -38,10 +38,6 @@
 
         <q-space />
         <div class="inline q-gutter-x-xs">
-          <q-btn outline color="primary" icon="add" label="라인추가" @click="addDataDetailsRowSection('next')" />
-          <q-btn outline color="negative" icon="remove" label="라인제거" :disable="removeRowsCount <= 0" @click="removeSelectedRow">
-            <q-badge v-show="removeRowsCount > 0" color="red" floating>{{ removeRowsCount }}</q-badge>
-          </q-btn>
           <q-btn outline color="primary" icon="save" label="저장" @click="saveDataSection">
             <q-badge v-show="delRowsCount > 0" color="red" floating>{{ delRowsCount }}</q-badge>
           </q-btn>
@@ -156,73 +152,51 @@ const columnDefs = ref([
   },
   {
     headerName: '코드',
-    field: 'agentCd',
+    field: 'prodCd',
+    editable: false,
     minWidth: 100,
     maxWidth: 100,
   },
   {
-    headerName: '에이젠트명',
-    field: 'agentNm',
-    minWidth: 200,
-    maxWidth: 200,
+    headerName: '도서명',
+    field: 'prodNm',
+    editable: false,
+    minWidth: 300,
   },
   {
-    headerName: '등록일',
-    field: 'makeDay',
+    headerName: '손익분기 수량',
+    field: 'qty',
     minWidth: 130,
     maxWidth: 130,
-    editable: params => !params.node.rowPinned, // 합계 Pinned 행에서는 편집 불가
-    cellEditor: 'agDateStringCellEditor',
-    // valueFormatter: params => dateGetter(params, 'ordDay'),
-    valueGetter: params => dateGetter(params, 'makeDay'),
-    valueSetter: params => dateSetter(params, 'makeDay'),
-    cellStyle: params => {
-      return { textAlign: 'center' };
+    valueFormatter: params => {
+      if (params.value != null) {
+        return new Intl.NumberFormat('ko-KR', {
+          // style: 'currency',
+          // currency: 'KRW',
+          minimumFractionDigits: 0,
+          maximumFractionDigits: 0,
+        }).format(params.value);
+      }
+      return '';
     },
-  },
-  {
-    headerName: '사용중지일',
-    field: 'outDay',
-    minWidth: 130,
-    maxWidth: 130,
-    editable: params => !params.node.rowPinned, // 합계 Pinned 행에서는 편집 불가
-    cellEditor: 'agDateStringCellEditor',
-    // valueFormatter: params => dateGetter(params, 'ordDay'),
-    valueGetter: params => dateGetter(params, 'outDay'),
-    valueSetter: params => dateSetter(params, 'outDay'),
-    cellStyle: params => {
-      return { textAlign: 'center' };
+    cellClass: 'ag-right-aligned-cell',
+    headerClass: params => ($q.dark.isActive ? 'dark-header' : 'light-header'),
+    cellStyle: () => {
+      return {
+        color: $q.dark.isActive ? 'orange' : 'blue',
+      };
     },
   },
   {
     headerName: '기타사항',
-    field: 'explains',
+    field: 'remarks',
     minWidth: 200,
+    headerClass: params => ($q.dark.isActive ? 'dark-header' : 'light-header'),
   },
 ]);
 
 const isShowDeleteBtn = ref(false);
 const isShowSaveBtn = ref(false);
-
-const firstFocus = ref(null);
-const secondFocus = ref(null);
-const addDataSection = () => {
-  oldFormData.value = null;
-  isSaveFg.value = 'I';
-  isShowSaveBtn.value = true;
-  isShowDeleteBtn.value = false;
-  formDisable.value = false;
-  formData.value.stopYn = 'N';
-  formData.value.condFg = '1';
-  formData.value.calcFg = '1';
-
-  myGrid.value.api.setRowData([]);
-  myGrid.value.api.hideOverlay(); // 로딩 오버레이 제거
-
-  setTimeout(() => {
-    firstFocus.value.focus();
-  }, 100);
-};
 
 const saveDataSection = () => {
   if (isEqual(rowData.rows, rowDataDetailsBack.value) && selectedRows.rows.length === 0) {
@@ -270,6 +244,22 @@ const saveDataSection = () => {
   }
 };
 
+// 다크 모드 변경 감지 후 컬럼 스타일 다시 설정
+watch(
+  () => $q.dark.isActive,
+  () => {
+    columnDefs.value.forEach(col => {
+      if (col.field === 'qty' || col.field === 'remarks') {
+        // 특정 필드 (예: 'qty')만 변경
+        col.headerClass = () => ($q.dark.isActive ? 'dark-header' : 'light-header');
+      }
+    });
+
+    // ag-Grid에 컬럼 다시 적용
+    myGrid.value.api?.setColumnDefs([...columnDefs.value]); // 참조 유지하면서 새로운 배열 할당
+  },
+);
+
 // **************************************************************//
 // ***** DataBase 연결부분    *************************************//
 // **************************************************************//
@@ -277,7 +267,7 @@ const saveDataSection = () => {
 // ***** 자료저장 및 삭제 처리부분 *****************************//
 const saveDataAndHandleResult = async resFormData => {
   try {
-    const res = await api.post('/api/mst/mst2040_save', resFormData);
+    const res = await api.post('/api/cos/cos1010_save', resFormData);
     let saveStatus = {
       rtn: res.data.rtn,
       rtnMsg: res.data.rtnMsg,
@@ -291,20 +281,14 @@ const saveDataAndHandleResult = async resFormData => {
 };
 
 // ***** 사용자정보 목록 자료 가져오기 부분  *****************************//
-let maxAgentCd = '1001';
 const getData = async () => {
   try {
-    const response = await api.post('/api/mst/mst2040_list', {
+    const response = await api.post('/api/cos/cos1010_list', {
       paramValue: '',
     });
     rowData.rows = response.data.data;
     rowDataDetailsBack.value = JSON.parse(JSON.stringify(response.data.data));
     myGrid.value.api.setGridOption('rowData', rowData.rows);
-
-    maxAgentCd = rowData.rows
-      .map(row => parseInt(row.agentCd, 10)) // Convert agentCd to numbers
-      .filter(agentCd => agentCd < 9000) // Keep only values below 9000
-      .reduce((max, agentCd) => Math.max(max, agentCd), -Infinity);
   } catch (error) {
     console.error('Error fetching users:', error);
   }
@@ -383,16 +367,6 @@ const gridOptions = {
   },
   onCellEditingStopped: function (event) {
     // console.log('cellEditingStopped : ', event.column.colId);
-    if (event.column.colId === 'explains' && (eventKey.value === 'Enter' || eventKey.value === 'Tab')) {
-      processedEventKey = null;
-      addDataDetailsRowSection('next');
-    } else {
-      const nextColumn = columnFocusMap[event.column.colId];
-      console.log('next : ', nextColumn);
-      if (nextColumn) {
-        myGrid.value.api.setFocusedCell(event.node.rowIndex, nextColumn);
-      }
-    }
   },
   onRowClicked: function (event) {
     // console.log('onRowClicked');
@@ -409,64 +383,30 @@ const gridOptions = {
   onSelectionChanged: function (event) {
     // console.log('onSelectionChanged1');
     selectedRows.rows = event.api.getSelectedRows();
-    removeRowsCount.value = selectedRows.rows.filter(row => row.iuD === 'I').length;
-    delRowsCount.value = selectedRows.rows.filter(row => row.iuD !== 'I').length;
+    delRowsCount.value = selectedRows.rows.filter(row => row.iuD !== 'I' && row.iuD !== '').length;
   },
   onSortChanged: function (event) {
     // console.log('onSortChanged');
   },
   onCellValueChanged: function (event) {
     // console.log('onCellValueChanged');
-    const backData = rowDataDetailsBack.value.filter(item => item.seq === event.data.seq);
+    const backData = rowDataDetailsBack.value.filter(item => item.prodCd === event.data.prodCd);
     if (!isEqual(event.data, backData[0]) && event.data.iuD === 'R') {
       event.data.iuD = 'U';
+    }
+    if (!isEqual(event.data, backData[0]) && event.data.iuD === '') {
+      event.data.iuD = 'I';
     }
   },
 
   debug: false,
 };
-
-/** **** 그리드 Detail 편집부분 ****/
-const addDataDetailsRowSection = event => {
-  let newRowIndex;
-  if (event === 'first') {
-    newRowIndex = 0;
-  } else {
-    newRowIndex = myGrid.value.api.getDisplayedRowCount();
-  }
-  // const addIndex = rowIndex.value;
-  const newItems = {
-    agentCd: maxAgentCd + 1,
-    agentNm: '',
-    makeDay: commUtil.unFormatDate(commUtil.getToday()),
-    outDay: '99991231',
-    explains: '',
-    iuD: 'I',
-  };
-  rowData.rows.splice(newRowIndex, 0, newItems);
-  // Refresh the grid
-  myGrid.value.api.setRowData(rowData.rows);
-  // 포커스를 해당 라인 위치에 적용
-  myGrid.value.api.ensureIndexVisible(newRowIndex);
-  // 첫컬럼에 focus
-  myGrid.value.api.setFocusedCell(newRowIndex, 'agentNm');
-};
-
-const removeSelectedRow = () => {
-  const selectedNodes = myGrid.value.api.getSelectedNodes();
-  // const selectedData = selectedNodes.map(node => node.data).filter(data => data.iuD === 'I');
-  const selectedData = selectedNodes.map(node => node.data).filter(data => data.iuD === 'I');
-
-  // console.log('selectedData : ', JSON.stringify(selectedData));
-
-  // 선택된 행을 제거
-  // rowData.rows = rowData.rows.filter(row => !selectedData.includes(row));
-  rowData.rows = rowData.rows.filter(row => !selectedData.some(selected => JSON.stringify(selected) === JSON.stringify(row)));
-  // console.log('rowData : ', JSON.stringify(rowData.rows));
-
-  // 그리드 데이터 갱신
-  myGrid.value.api.setRowData(rowData.rows);
-};
 </script>
 
-<style lang="sass" scoped></style>
+<style lang="sass" scoped>
+::v-deep(.dark-header)
+  color: orange !important
+
+::v-deep(.light-header)
+  color: blue !important
+</style>

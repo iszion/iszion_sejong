@@ -1,20 +1,29 @@
 <template>
   <q-page class="q-pa-xs-xs q-pa-sm-md" :style-fn="myTweak">
+    <!-- contents title bar -->
+    <div class="row">
+      <div class="col-auto flex flex-center">
+        <q-icon name="font_download" size="sm" class="text-orange" />
+        <span class="text-subtitle1" :class="$q.dark.isActive ? 'text-orange' : 'text-primary'">{{ menuLabel }}</span>
+      </div>
+      <q-space />
+      <q-breadcrumbs v-if="!$q.screen.xs" active-color="grey" style="font-size: 14px" class="self-end">
+        <q-breadcrumbs-el label="판매관리" icon="home" />
+        <q-breadcrumbs-el label="출고관리" icon="widgets" />
+        <q-breadcrumbs-el :label="menuLabel" />
+      </q-breadcrumbs>
+    </div>
+    <!-- end of contents title bar -->
+    <q-separator class="q-mb-sm" color="cyan" size="0.2rem" />
+
     <!-- contents zone -->
     <div class="row q-col-gutter-md">
       <!-- contents List -->
       <div class="col-12">
         <q-card bordered>
-          <!-- contents list title bar -->
-          <q-bar class="q-px-sm">
-            <q-icon name="list_alt" />
-            <span class="text-subtitle2 q-px-sm">권한정보 조정관리</span>
-          </q-bar>
-          <!--  end of contents list title bar -->
           <q-card-actions align="right" class="q-pa-none">
             <q-toolbar class="row">
               <q-select
-                dense
                 stack-label
                 options-dense팀
                 class="q-pb-sm q-pl-sm q-mr-lg"
@@ -37,7 +46,6 @@
                 label-color="orange"
                 v-model="searchValue.textValue"
                 label="ID/성명"
-                dense
                 class="q-pb-sm q-pl-sm q-mr-lg"
                 style="max-width: 120px"
                 @keyup.enter="getData"
@@ -53,12 +61,10 @@
                   <q-icon name="search" size="xs" class="q-mt-sm cursor-pointer" @click="getData" />
                 </template>
               </q-input>
-              <q-btn outline color="positive" dense @click="getData"
-                ><q-icon class="q-mr-sm" name="refresh" size="xs" /><span v-if="!$q.screen.xs">다시 불러오기</span></q-btn
-              >
+              <q-btn outline color="positive" icon="refresh" @click="getData"><span v-if="!$q.screen.xs">다시 불러오기</span></q-btn>
               <q-space />
               <div class="q-gutter-xs">
-                <q-btn v-if="showSaveBtn" outline color="primary" dense @click="saveDataSection"><q-icon name="save" size="xs" /> 저장 </q-btn>
+                <q-btn v-if="showSaveBtn" outline color="primary" icon="save" label="저장" @click="saveDataSection" />
               </div>
             </q-toolbar>
           </q-card-actions>
@@ -713,8 +719,10 @@ onBeforeMount(async () => {
   });
 });
 
+const menuLabel = ref('');
 onMounted(() => {
   window.addEventListener('resize', handleResize);
+  menuLabel.value = window.history.state.label;
   handleResize();
 });
 
@@ -792,7 +800,11 @@ const saveDataDialogAndHandleResult = resFormData => {
 // ***** 프로그램 권한정보 선택된 자료 가져오기 부분  *****************************//
 const getDataDialog = async () => {
   try {
-    const response = await api.post('/api/com/com2010_grntp_list', { paramUserId: showDialogTitle.value.userId, paramGroupCd: selectedGroup.value });
+    const response = await api.post('/api/com/com2010_grntp_list', {
+      paramCompCd: searchValue.compCd,
+      paramUserId: showDialogTitle.value.userId,
+      paramGroupCd: selectedGroup.value,
+    });
     rowDataDialog.rows = response.data.data;
     myGrid1.value.api.setGridOption('rowData', rowDataDialog.rows);
     rowDataDialogBack.value = JSON.parse(JSON.stringify(response.data.data));
@@ -810,7 +822,7 @@ async function getDataCommOption(resCommCd1) {
     switch (resCommCd1) {
       case '901':
         levelOptions.value = response.data.data;
-        console.log('level : ', JSON.stringify(levelOptions.value));
+        // console.log('level : ', JSON.stringify(levelOptions.value));
         break;
       default:
         levelOptions.value = [];

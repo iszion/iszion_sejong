@@ -1,5 +1,21 @@
 <template>
   <q-page class="q-pa-xs-xs q-pa-sm-md" :style-fn="myTweak">
+    <!-- contents title bar -->
+    <div class="row">
+      <div class="col-auto flex flex-center">
+        <q-icon name="font_download" size="sm" class="text-orange" />
+        <span class="text-subtitle1" :class="$q.dark.isActive ? 'text-orange' : 'text-primary'">{{ menuLabel }}</span>
+      </div>
+      <q-space />
+      <q-breadcrumbs v-if="!$q.screen.xs" active-color="grey" style="font-size: 14px" class="self-end">
+        <q-breadcrumbs-el label="판매관리" icon="home" />
+        <q-breadcrumbs-el label="출고관리" icon="widgets" />
+        <q-breadcrumbs-el :label="menuLabel" />
+      </q-breadcrumbs>
+    </div>
+    <!-- end of contents title bar -->
+    <q-separator class="q-mb-sm" color="cyan" size="0.2rem" />
+
     <!-- contents zone -->
     <div class="row q-col-gutter-md">
       <!-- contents List -->
@@ -30,9 +46,7 @@
                 label="그룹선택"
                 @update:model-value="handleSelectedGroup"
               />
-              <q-btn outline color="positive" dense @click="reloadDataSection"
-                ><q-icon class="q-mr-sm" name="refresh" size="xs" />다시 불러오기</q-btn
-              >
+              <q-btn outline color="positive" icon="refresh" label="다시 불러오기" @click="reloadDataSection" />
             </q-toolbar>
           </q-card-actions>
 
@@ -107,12 +121,17 @@
                 [ {{ selectedProg.progNm }} ]
               </span>
               <q-space />
-              <q-btn v-if="showSaveUserBtn" outline dense color="primary" @click="saveDataUserSection" v-close-popup class="q-px-sm q-mr-sm"
-                ><q-icon class="q-mr-xs" name="save" size="xs" /> 권한 적용하기
-              </q-btn>
-              <q-btn outline dense color="primary" v-close-popup class="q-px-sm"
-                ><q-icon name="close" size="xs" /><span v-if="!$q.screen.xs" class="q-pl-xs">닫기</span></q-btn
-              >
+              <q-btn
+                v-if="showSaveUserBtn"
+                outline
+                icon="save"
+                label="권한적용하기"
+                color="primary"
+                @click="saveDataUserSection"
+                v-close-popup
+                class="q-px-sm q-mr-sm"
+              />
+              <q-btn outline icon="close" color="primary" v-close-popup class="q-px-sm"><span v-if="!$q.screen.xs" class="q-pl-xs">닫기</span></q-btn>
             </q-toolbar>
           </q-card-actions>
 
@@ -521,8 +540,11 @@ onBeforeMount(() => {
     });
   });
 });
+
+const menuLabel = ref('');
 onMounted(() => {
   window.addEventListener('resize', handleResize);
+  menuLabel.value = window.history.state.label;
   handleResize();
 });
 
@@ -661,7 +683,7 @@ async function getDataCommOption(resCommCd1) {
       default:
         searchValue.deptOptions = [];
     }
-    console.log('getData1: ', JSON.stringify(searchValue.deptOptions));
+    // console.log('getData1: ', JSON.stringify(searchValue.deptOptions));
   } catch (error) {
     console.error('Error fetching users:', error);
   }

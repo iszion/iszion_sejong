@@ -1,5 +1,21 @@
 <template>
   <q-page class="q-pa-xs-xs q-pa-sm-md">
+    <!-- contents title bar -->
+    <div class="row">
+      <div class="col-auto flex flex-center">
+        <q-icon name="font_download" size="sm" class="text-orange" />
+        <span class="text-subtitle1" :class="$q.dark.isActive ? 'text-orange' : 'text-primary'">{{ menuLabel }}</span>
+      </div>
+      <q-space />
+      <q-breadcrumbs v-if="!$q.screen.xs" active-color="grey" style="font-size: 14px" class="self-end">
+        <q-breadcrumbs-el label="판매관리" icon="home" />
+        <q-breadcrumbs-el label="출고관리" icon="widgets" />
+        <q-breadcrumbs-el :label="menuLabel" />
+      </q-breadcrumbs>
+    </div>
+    <!-- end of contents title bar -->
+    <q-separator class="q-mb-sm" color="cyan" size="0.2rem" />
+
     <!-- contents zone -->
     <div class="row q-col-gutter-md">
       <!-- contents List (좌측 화면) -->
@@ -8,7 +24,7 @@
           <!-- contents list title bar -->
           <q-bar class="q-px-sm">
             <q-icon name="list_alt" />
-            <span class="q-px-sm text-bold text-subtitle1" :class="$q.dark.isActive ? 'text-orange' : 'text-primary'">{{ menuLabel }}</span>
+            <span class="q-px-sm text-subtitle2">자료 리스트</span>
             <q-space />
             <q-btn
               class="q-pa-xs"
@@ -648,7 +664,7 @@ import notifySave from 'src/js_comm/notify-save';
 import commUtil from 'src/js_comm/comm-util';
 
 const $q = useQuasar();
-const dense = ref(false);
+const dense = ref(true);
 const isSaveFg = ref(null);
 
 const divCdOptionsSearch = ref(null);
@@ -679,10 +695,10 @@ const handleResize = () => {
   contentZoneHeight.value = window.innerHeight;
 };
 const contentZoneStyle = computed(() => ({
-  height: `${contentZoneHeight.value - 280}px`,
+  height: `${contentZoneHeight.value - 330}px`,
 }));
 const contentRightZoneStyle = computed(() => ({
-  height: `${contentZoneHeight.value - 200}px`,
+  height: `${contentZoneHeight.value - 250}px`,
 }));
 
 const rowData = reactive({ rows: [] });

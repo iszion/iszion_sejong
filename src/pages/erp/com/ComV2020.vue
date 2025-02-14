@@ -1,5 +1,21 @@
 <template>
   <q-page class="q-pa-xs-xs q-pa-sm-md" :style-fn="myTweak">
+    <!-- contents title bar -->
+    <div class="row">
+      <div class="col-auto flex flex-center">
+        <q-icon name="font_download" size="sm" class="text-orange" />
+        <span class="text-subtitle1" :class="$q.dark.isActive ? 'text-orange' : 'text-primary'">{{ menuLabel }}</span>
+      </div>
+      <q-space />
+      <q-breadcrumbs v-if="!$q.screen.xs" active-color="grey" style="font-size: 14px" class="self-end">
+        <q-breadcrumbs-el label="판매관리" icon="home" />
+        <q-breadcrumbs-el label="출고관리" icon="widgets" />
+        <q-breadcrumbs-el :label="menuLabel" />
+      </q-breadcrumbs>
+    </div>
+    <!-- end of contents title bar -->
+    <q-separator class="q-mb-sm" color="cyan" size="0.2rem" />
+
     <!-- contents zone -->
     <div class="row q-col-gutter-md">
       <!-- contents List -->
@@ -33,12 +49,12 @@
                   @update:model-value="getDataUser"
                 />
                 <q-input
+                  dense
                   stack-label
                   label-color="orange"
                   bottom-slots
                   v-model="searchValue.textValue"
                   label="검색"
-                  dense
                   class="q-pb-none"
                   style="width: 120px"
                 >
@@ -49,7 +65,7 @@
               </div>
               <q-space />
               <div class="q-gutter-xs">
-                <q-btn outline color="positive" dense @click="getDataUser"><q-icon name="search" size="xs" /> 조회 </q-btn>
+                <q-btn outline color="positive" icon="search" label="조회" @click="getDataUser" />
               </div>
             </q-toolbar>
           </q-card-actions>
@@ -88,9 +104,7 @@
               </div>
               <q-space />
               <div class="q-gutter-xs">
-                <q-btn v-if="rowData.rows.length > 0" outline color="primary" dense @click="saveDataSection">
-                  <q-icon name="content_copy" size="xs" class="q-mr-sm" /> 권한복사 시작</q-btn
-                >
+                <q-btn v-if="rowData.rows.length > 0" outline color="primary" icon="content_copy" label="권한복사 시작" @click="saveDataSection" />
               </div>
             </q-toolbar>
           </q-card-actions>
@@ -163,8 +177,10 @@ onBeforeMount(() => {
   });
 });
 
+const menuLabel = ref('');
 onMounted(() => {
   window.addEventListener('resize', handleResize);
+  menuLabel.value = window.history.state.label;
   handleResize();
   getDataCommOption('501');
 });
@@ -519,7 +535,7 @@ const gridOptionsUser = {
   },
   // GRID READY 이벤트, 사이즈 자동조정
   onGridReady: function (event) {
-    console.log('Grid is ready'); // Check if grid initializes
+    // console.log('Grid is ready'); // Check if grid initializes
     event.api.sizeColumnsToFit();
   },
   // 창 크기 변경 되었을 때 이벤트
@@ -603,7 +619,7 @@ const gridOptions = {
   },
   // GRID READY 이벤트, 사이즈 자동조정
   onGridReady: function (event) {
-    console.log('Grid is ready'); // Check if grid initializes
+    // console.log('Grid is ready'); // Check if grid initializes
     event.api.sizeColumnsToFit();
   },
   // 창 크기 변경 되었을 때 이벤트

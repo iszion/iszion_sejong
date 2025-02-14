@@ -72,15 +72,15 @@
             <template #header-file="props">
               <div class="row items-center">
                 <q-icon
-                  :color="props.node.docAyn === 'Y' ? ($q.dark.isActive ? 'white' : 'dark') : $q.dark.isActive ? 'grey-7' : 'grey-5'"
-                  :class="props.node.docAyn === 'Y' ? 'text-bold' : ''"
+                  :color="props.node.docYn === 'Y' ? ($q.dark.isActive ? 'white' : 'dark') : $q.dark.isActive ? 'grey-7' : 'grey-5'"
+                  :class="props.node.docYn === 'Y' ? 'text-bold' : ''"
                   size="12px"
                   class="q-mr-sm"
                   :name="props.node.icon || 'share'"
                 />
                 <div
                   :class="
-                    props.node.docAyn === 'Y'
+                    props.node.docYn === 'Y'
                       ? $q.dark.isActive
                         ? 'text-bold text-white'
                         : 'text-bold text-dark'
@@ -289,7 +289,7 @@ const manualDocB = ref({
 });
 const manualDocU = ref({
   progId: '',
-  empCd: storeUser.userId,
+  userId: storeUser.userId,
   contents: '',
 });
 
@@ -460,9 +460,12 @@ function findValueById(data, id) {
 
 // ***** DataBase 서브메뉴자료 가져오기 부분 *****************************//
 const getSubMenuData = async () => {
-  const paramData = { paramGroupCd: selectedGroup.value, paramUserId: storeUser.userId };
   try {
-    const response = await api.post('/api/sys/menu_sub_list', paramData);
+    const response = await api.post('/api/sys/menu_sub_list', {
+      paramCompCd: storeUser.compCd,
+      paramGroupCd: selectedGroup.value,
+      paramUserId: storeUser.userId,
+    });
 
     menuList.value = buildTreeMenuData(response.data.data);
   } catch (error) {
@@ -474,7 +477,7 @@ const getSubMenuData = async () => {
 const getDataDocA = async resProgId => {
   const paramData = { paramProgId: resProgId };
   try {
-    const response = await api.post('/api/sys/sys4010_docA_select', paramData);
+    const response = await api.post('/api/com/com8010_docA_select', paramData);
     if (isEmpty(response.data.data)) {
       manualDocA.value = '메뉴얼자료가 없습니다';
     } else {
@@ -502,8 +505,8 @@ const getDataDocB = async resProgId => {
   }
 };
 
-const getDataDocU = async (resProgId, resEmpCd) => {
-  const paramData = { paramProgId: resProgId, paramEmpCd: resEmpCd };
+const getDataDocU = async (resProgId, resUserId) => {
+  const paramData = { paramProgId: resProgId, paramUserId: resUserId };
   try {
     const response = await api.post('/api/sys/sys4030_docU_select', paramData);
     if (isEmpty(response.data.data)) {
@@ -525,7 +528,7 @@ const groupOptions = ref([]);
 
 const getGroupData = async () => {
   try {
-    const response = await api.post('/api/sys/prog_group_list', { paramUserId: '' });
+    const response = await api.post('/api/com/prog_group_list_comp', { paramUserId: '' });
     // 옵션 초기화
     groupOptions.value = [];
 

@@ -23,7 +23,7 @@
           <!-- contents list title bar -->
           <q-bar class="q-px-sm">
             <q-icon name="list_alt" />
-            <span class="q-px-sm text-bold text-subtitle1" :class="$q.dark.isActive ? 'text-orange' : 'text-primary'">{{ menuLabel }}</span>
+            <span class="q-px-sm text-subtitle2">자료리스트</span>
             <q-space />
             <q-btn
               class="q-pa-xs"
@@ -79,10 +79,8 @@
               </q-input>
               <q-space />
               <div class="q-gutter-sm">
-                <q-btn outline color="positive" dense @click="getData"><q-icon name="search" size="xs" class="" /> 조회 </q-btn>
-                <q-btn v-if="isShowDeleteBtn" outline color="negative" dense @click="deleteDataSection">
-                  <q-icon name="delete" size="xs" /> 삭제</q-btn
-                >
+                <q-btn outline color="positive" icon="search" label="조회" @click="getData" />
+                <q-btn v-if="isShowDeleteBtn" outline color="negative" icon="delete" label="삭제" @click="deleteDataSection" />
               </div>
             </q-toolbar>
           </q-card-actions>
@@ -121,8 +119,8 @@
               <q-toolbar class="row">
                 <q-space />
                 <div class="q-gutter-xs">
-                  <q-btn v-if="isShowSaveBtn" outline color="primary" dense @click="saveDataSection"><q-icon name="save" size="xs" /> 저장 </q-btn>
-                  <q-btn outline color="positive" dense @click="addDataSection"><q-icon name="add" size="xs" /> 신규 </q-btn>
+                  <q-btn v-if="isShowSaveBtn" outline color="primary" icon="save" label="저장" @click="saveDataSection" />
+                  <q-btn outline color="positive" icon="add" label="신규" @click="addDataSection" />
                 </div>
               </q-toolbar>
             </q-card-actions>

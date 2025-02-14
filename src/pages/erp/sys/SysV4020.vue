@@ -25,7 +25,7 @@
                 options-dense
                 emit-value
                 map-options
-                @update:model-value="handleSelectedGroup"
+                @update:model-value="getSubMenuData"
               />
               <q-space />
               <q-input dense stack-label label-color="orange" ref="filterRef" v-model="filter" label="프로그램검색" style="width: 130px">
@@ -67,15 +67,15 @@
                 <template #header-file="props">
                   <div class="row items-center">
                     <q-icon
-                      :color="props.node.docByn === 'Y' ? ($q.dark.isActive ? 'white' : 'dark') : $q.dark.isActive ? 'grey-7' : 'grey-5'"
-                      :class="props.node.docByn === 'Y' ? 'text-bold' : ''"
+                      :color="props.node.docYn === 'Y' ? ($q.dark.isActive ? 'white' : 'dark') : $q.dark.isActive ? 'grey-7' : 'grey-5'"
+                      :class="props.node.docYn === 'Y' ? 'text-bold' : ''"
                       size="12px"
                       class="q-mr-sm"
                       :name="props.node.icon || 'share'"
                     />
                     <div
                       :class="
-                        props.node.docByn === 'Y'
+                        props.node.docYn === 'Y'
                           ? $q.dark.isActive
                             ? 'text-bold text-white'
                             : 'text-bold text-dark'
@@ -120,12 +120,8 @@
                 {{ selectedProgNm }} ( {{ selectedProgId }} )</span
               >
               <q-space />
-              <q-btn v-if="selectedProgId" outline dense color="primary" @click="saveDataDocSection" class="q-px-sm q-mr-sm"
-                ><q-icon class="q-mr-xs" name="save" size="xs" /> 저장
-              </q-btn>
-              <q-btn v-if="showDeleteBtn" outline dense color="negative" @click="deleteDataDocSection" class="q-px-sm q-mr-sm"
-                ><q-icon class="q-mr-xs" name="delete" size="xs" /> 삭제
-              </q-btn>
+              <q-btn v-if="selectedProgId" outline icon="save" label="저장" color="primary" @click="saveDataDocSection" class="q-px-sm q-mr-sm" />
+              <q-btn v-if="showDeleteBtn" outline icon="delete" label="삭제" color="negative" @click="deleteDataDocSection" class="q-px-sm q-mr-sm" />
             </q-toolbar>
           </q-card-actions>
 
@@ -183,6 +179,8 @@ import { api } from '/src/boot/axios';
 import { isEmpty, isEqual } from 'lodash';
 import jsonUtil from 'src/js_comm/json-util';
 import notifySave from 'src/js_comm/notify-save';
+import { useUserInfoStore } from 'src/store/setUserInfo';
+const storeUser = useUserInfoStore();
 
 const $q = useQuasar();
 
@@ -237,7 +235,7 @@ const handleNodeClick = () => {
   if (nodeValue.value.menuData) {
     showSaveBtn.value = true;
     if (nodeValue.value.menuData.children.length === 0) {
-      // alert(JSON.stringify(nodeValue.value.menuData));
+      // alert(JSON.stringify(nodeValue.value.menuData.progId));
       selectedProgId.value = nodeValue.value.menuData.progId;
       selectedProgNm.value = nodeValue.value.menuData.label;
       getDataDoc(selectedProgId.value);
@@ -251,7 +249,7 @@ const handleNodeClick = () => {
     selectedProgId.value = null;
     selectedProgNm.value = null;
     formData.value.progId = null;
-    formData.value.contents = null;
+    formData.value.contents = '';
   }
 };
 function findValueById(data, id) {
@@ -288,10 +286,9 @@ onBeforeUnmount(() => {
   window.removeEventListener('resize', handleResize);
 });
 onBeforeMount(() => {
-  getGroupData();
-  setTimeout(() => {
-    handleSelectedGroup();
-  }, 500);
+  getGroupData().then(() => {
+    getSubMenuData();
+  });
 });
 onMounted(() => {
   window.addEventListener('resize', handleResize);
@@ -343,14 +340,10 @@ const deleteDataDocSection = () => {
 };
 
 // ***** 검색 선택 처리 부분 ***********************************//
-const handleSelectedGroup = () => {
-  getSubMenuData();
-};
 
-let tree = [];
 const treeExpanded = ref([]);
 function buildTreeMenuData(data) {
-  tree = [];
+  const tree = [];
   const map = {};
 
   // First pass: create a map of all items using mn1 and mn2
@@ -383,15 +376,13 @@ function buildTreeMenuData(data) {
 
 // ***** DataBase 서브메뉴자료 가져오기 부분 *****************************//
 const getSubMenuData = async () => {
-  const paramData = { paramGroupCd: selectedGroup.value };
   try {
-    const response = await api.post('/api/sys/sys4020_list', paramData);
-
+    const response = await api.post('/api/sys/sys4020_list', { paramGroupCd: selectedGroup.value });
     menuList.value = buildTreeMenuData(response.data.data);
     selectedProgId.value = null;
     selectedProgNm.value = null;
     formData.value.progId = null;
-    formData.value.contents = null;
+    formData.value.contents = '';
     showSaveBtn.value = false;
   } catch (error) {
     console.error('Error fetching users:', error);
@@ -400,9 +391,8 @@ const getSubMenuData = async () => {
 
 // ***** DataBase 메뉴얼자료 가져오기 부분 *****************************//
 const getDataDoc = async resProgId => {
-  const paramData = { paramProgId: resProgId };
   try {
-    const response = await api.post('/api/sys/sys4020_docB_select', paramData);
+    const response = await api.post('/api/sys/sys4020_docB_select', { paramProgId: resProgId });
     if (isEmpty(response.data.data)) {
       isSaveFg = 'I';
       formData.value.progId = selectedProgId.value;
@@ -452,7 +442,7 @@ const groupOptions = ref([]);
 
 const getGroupData = async () => {
   try {
-    const response = await api.post('/api/sys/prog_group_list', { paramUserId: '' });
+    const response = await api.post('/api/com/prog_group_list_comp', {});
     // 옵션 초기화
     groupOptions.value = [];
 

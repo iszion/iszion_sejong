@@ -1,5 +1,21 @@
 <template>
   <q-page class="q-pa-xs-xs q-pa-sm-md">
+    <!-- contents title bar -->
+    <div class="row">
+      <div class="col-auto flex flex-center">
+        <q-icon name="font_download" size="sm" class="text-orange" />
+        <span class="text-subtitle1" :class="$q.dark.isActive ? 'text-orange' : 'text-primary'">{{ menuLabel }}</span>
+      </div>
+      <q-space />
+      <q-breadcrumbs v-if="!$q.screen.xs" active-color="grey" style="font-size: 14px" class="self-end">
+        <q-breadcrumbs-el label="판매관리" icon="home" />
+        <q-breadcrumbs-el label="출고관리" icon="widgets" />
+        <q-breadcrumbs-el :label="menuLabel" />
+      </q-breadcrumbs>
+    </div>
+    <!-- end of contents title bar -->
+    <q-separator class="q-mb-sm" color="cyan" size="0.2rem" />
+
     <!-- contents zone -->
     <div class="row q-col-gutter-md">
       <!-- contents List (좌측 화면) -->
@@ -8,7 +24,7 @@
           <!-- contents list title bar -->
           <q-bar class="q-px-sm">
             <q-icon name="list_alt" />
-            <span class="q-px-sm text-bold text-subtitle1" :class="$q.dark.isActive ? 'text-orange' : 'text-primary'">{{ menuLabel }}</span>
+            <span class="text-subtitle2 q-px-sm">자료 리스트</span>
             <q-space />
             <q-btn
               class="q-pa-xs"
@@ -83,6 +99,16 @@
                       <q-icon v-if="searchParam.word !== ''" name="close" @click="searchParam.word = ''" class="cursor-pointer" />
                     </template>
                   </q-input>
+
+                  <q-checkbox
+                    keep-color
+                    v-model="searchParam.useYn"
+                    label="출고정지"
+                    color="red"
+                    false-value="N"
+                    true-value="Y"
+                    @click="handelGetData"
+                  />
                 </div>
               </div>
               <q-space />
@@ -541,6 +567,7 @@ const prodDivOptions = ref(null);
 const searchParam = reactive({
   prodDiv: '',
   prodFg: '',
+  useYn: 'N',
   word: '',
 });
 const statusEdit = reactive({
@@ -563,10 +590,10 @@ const handleResize = () => {
   contentZoneHeight.value = window.innerHeight;
 };
 const contentZoneStyle = computed(() => ({
-  height: `${contentZoneHeight.value - 280}px`,
+  height: `${contentZoneHeight.value - 330}px`,
 }));
 const contentRightZoneStyle = computed(() => ({
-  height: `${contentZoneHeight.value - 200}px`,
+  height: `${contentZoneHeight.value - 250}px`,
 }));
 
 const rowData = reactive({ rows: [] });
@@ -983,6 +1010,7 @@ const getDataMaxPages = async () => {
     const response = await api.post('/api/mst/mst2010_maxPages', {
       paramProdDiv: searchParam.prodDiv,
       paramProdFg: searchParam.prodFg,
+      paramUseYn: searchParam.useYn,
       paramSearchValue: searchParam.word,
       paramPageRows: pagination.pageRows,
       paramStartRowNum: pagination.startRowNum,
@@ -1000,6 +1028,7 @@ const getData = async () => {
     const response = await api.post('/api/mst/mst2010_list', {
       paramProdDiv: searchParam.prodDiv,
       paramProdFg: searchParam.prodFg,
+      paramUseYn: searchParam.useYn,
       paramSearchValue: searchParam.word,
       paramPageRows: pagination.pageRows,
       paramStartRowNum: pagination.startRowNum,
