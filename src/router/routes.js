@@ -10,6 +10,10 @@ const routes = [
 
       { path: 'cos1010', component: () => import('pages/erp/cos/CosV1010.vue') },
       { path: 'cos1020', component: () => import('pages/erp/cos/CosV1020.vue') },
+      { path: 'cos1030', component: () => import('pages/erp/cos/CosV1030.vue') },
+      { path: 'cos3010', component: () => import('pages/erp/cos/CosV3010.vue') },
+      { path: 'cos3020', component: () => import('pages/erp/cos/CosV3020.vue') },
+      { path: 'cos4010', component: () => import('pages/erp/cos/CosV4010.vue') },
 
       { path: 'sal1010', component: () => import('pages/erp/sal/SalV1010.vue') },
       { path: 'sal1020', component: () => import('pages/erp/sal/SalV1020.vue') },

@@ -431,7 +431,9 @@ const userImageName = ref(null);
 const getDataSetUserInfo = async () => {
   try {
     const response = await api.post('/api/com/user_info', { paramUserId: storeUser.userId });
+
     userImageName.value = response.data.data.imageFileNm;
+    console.log('set1 : ', JSON.stringify(response));
     storgeUserInfoGroupSave(
       response.data.data.userId +
         '|' +
@@ -455,6 +457,7 @@ const getDataSetUserInfo = async () => {
         '|' +
         response.data.data.levelNm,
     );
+    console.log('set2 : ', JSON.stringify(response));
   } catch (error) {
     console.error('Error fetching users:', error);
   }

@@ -327,6 +327,7 @@ const columnFocusMap = {
 const removeRowsCount = ref(0);
 const delRowsCount = ref(0);
 const myGrid = ref(null);
+
 const gridOptions = {
   columnDefs: columnDefs.value,
   rowData: rowData.rows,

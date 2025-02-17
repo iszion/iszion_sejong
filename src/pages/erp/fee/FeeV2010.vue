@@ -26,7 +26,7 @@
         <q-separator />
 
         <q-card-section class="row q-pt-xl justify-center">
-          <q-input stack-label label-color="orange" label="입금년도" class="text-h6" v-model="searchValue.year" type="number" style="width: 90px">
+          <q-input stack-label label-color="orange" label="기준년도" class="text-h6" v-model="searchValue.year" type="number" style="width: 90px">
             <template v-slot:append>
               <span class="text-subtitle1 q-pt-md">년</span>
             </template>
@@ -162,19 +162,6 @@ const progress = ref([
 
 const intervals = [null, null, null];
 
-// DB 프로시저 호출 함수
-const getProcedure = async () => {
-  try {
-    const response = await api.post('/api/fee/fee2010_procedure', {
-      paramYear: searchValue.year,
-      paramMonthFrom: searchValue.periodFromMonth,
-      paramMonthTo: searchValue.periodToMonth,
-    });
-  } catch (error) {
-    console.error('Error fetching users:', error);
-  }
-};
-
 function startComputing(id) {
   progress.value[id].loading = true;
   progress.value[id].percentage = 0;
@@ -228,6 +215,19 @@ const handleSelectedMonth = () => {
 // **************************************************************//
 // ***** DataBase 연결부분    *************************************//
 // **************************************************************//
+
+// DB 프로시저 호출 함수
+const getProcedure = async () => {
+  try {
+    const response = await api.post('/api/fee/fee2010_procedure', {
+      paramYear: searchValue.year,
+      paramMonthFrom: searchValue.periodFromMonth,
+      paramMonthTo: searchValue.periodToMonth,
+    });
+  } catch (error) {
+    console.error('Error fetching users:', error);
+  }
+};
 
 // **************************************************************//
 // ***** DataBase 연결부분 끝  *************************************//

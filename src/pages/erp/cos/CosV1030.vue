@@ -16,65 +16,113 @@
     <!-- end of contents title bar -->
     <q-separator class="q-mb-sm" color="cyan" size="0.2rem" />
 
-    <q-card bordered>
-      <q-card-actions class="q-py-sm">
-        <div class="row q-gutter-lg">
-          <q-input
-            dense
-            stack-label
-            label-color="orange"
-            label="손익년도"
-            class="text-subtitle1"
-            v-model="searchValue.year"
-            type="number"
-            style="width: 90px"
-            @update:model-value="getData"
-          >
-            <template v-slot:append>
-              <span class="text-subtitle1 q-pt-md">년</span>
-            </template>
-          </q-input>
-          <q-btn outline color="primary" icon="refresh" label="불러오기" @click="getData" />
-        </div>
-        <q-space />
-        <q-input
-          stack-label
-          bottom-slots
-          label-color="orange"
-          v-model="searchValue.textValue"
-          label="검색"
-          dense
-          class="q-pb-none"
-          style="width: 120px"
-          @keyup.enter="getData"
-        >
-          <template v-slot:append>
-            <q-icon v-if="searchValue.textValue !== ''" name="close" @click="searchValue.textValue = ''" size="xs" class="cursor-pointer q-pt-md" />
-          </template>
-        </q-input>
+    <!-- contents zone -->
+    <div class="row q-col-gutter-md">
+      <!-- contents List (좌측 화면) -->
+      <div class="col-12" :class="{ 'col-md-4': isClassActive }">
+        <q-card bordered>
+          <!-- contents list title bar -->
+          <q-bar class="q-px-sm">
+            <q-icon name="list_alt" />
+            <span class="text-subtitle2 q-px-sm">자료 리스트</span>
+            <q-space />
+            <q-btn
+              class="q-pa-xs"
+              rounded
+              color="grey"
+              text-color="black"
+              dense
+              size="0.4rem"
+              @click="isScreenVisibleProcess"
+              :icon="isScreenVisible ? 'open_in_full' : 'close_fullscreen'"
+            >
+              <q-tooltip class="bg-amber text-black shadow-4" anchor="center left" self="center right">
+                <q-icon name="open_in_full" size="0.8rem" />
+                <strong v-if="isClassActive"> 펼치기 </strong>
+                <strong v-else> 축소하기 </strong>
+              </q-tooltip>
+            </q-btn>
+          </q-bar>
+          <!--  end of contents list title bar -->
+          <q-card-actions align="right" class="q-pa-none">
+            <q-toolbar>
+              <q-btn outline color="primary" icon="refresh" label="불러오기" @click="getData" />
+              <q-space />
+              <q-checkbox keep-color v-model="searchValue.chYn" label="전체" color="red" false-value="N" true-value="Y" @click="getData" />
+              <q-space />
+              <q-input
+                stack-label
+                bottom-slots
+                label-color="orange"
+                v-model="searchValue.textValue"
+                label="검색"
+                dense
+                class="q-pb-none"
+                style="width: 120px"
+                @keyup.enter="getData"
+              >
+                <template v-slot:append>
+                  <q-icon
+                    v-if="searchValue.textValue !== ''"
+                    name="close"
+                    @click="searchValue.textValue = ''"
+                    size="xs"
+                    class="cursor-pointer q-pt-md"
+                  />
+                </template>
+              </q-input>
+            </q-toolbar>
+          </q-card-actions>
 
-        <q-space />
-        <div class="inline q-gutter-x-xs">
-          <q-btn outline color="primary" icon="add" label="라인추가" @click="addDataRowSection('next')" />
-          <q-btn outline color="negative" icon="remove" label="라인제거" :disable="removeRowsCount <= 0" @click="removeSelectedRow" />
-          <q-btn v-if="rowData.rows.length > 0" outline color="primary" icon="save" label="저장" @click="saveDataSection">
-            <q-badge v-show="delRowsCount > 0" color="red" floating>{{ delRowsCount }}</q-badge>
-          </q-btn>
-        </div>
-      </q-card-actions>
-      <q-separator />
-      <q-card-section class="q-pa-xs">
-        <div :style="contentZoneStyle">
-          <ag-grid-vue
-            ref="myGrid"
-            style="width: 100%; height: 100%"
-            :class="$q.dark.isActive ? 'ag-theme-alpine-dark' : 'ag-theme-alpine'"
-            :grid-options="gridOptions"
-          >
-          </ag-grid-vue>
-        </div>
-      </q-card-section>
-    </q-card>
+          <q-separator size="3px" />
+
+          <q-card-section class="q-pa-xs">
+            <div :style="contentZoneStyle">
+              <ag-grid-vue
+                ref="myGridList"
+                style="width: 100%; height: 100%"
+                :class="$q.dark.isActive ? 'ag-theme-alpine-dark' : 'ag-theme-alpine'"
+                :grid-options="gridOptionsList"
+              >
+              </ag-grid-vue>
+            </div>
+          </q-card-section>
+        </q-card>
+      </div>
+      <!-- contents List (우측화면) -->
+      <div v-if="isScreenVisible" class="col-xs-12 col-md-8">
+        <q-card bordered>
+          <!-- contents list title bar -->
+          <q-bar class="q-px-sm">
+            <q-icon name="list_alt" />
+            <span class="text-subtitle2 q-px-sm">자료 조회/조정</span>
+          </q-bar>
+          <!--  end of contents list title bar -->
+          <q-card-actions class="q-py-sm">
+            <div class="inline q-gutter-x-xs">
+              <q-btn outline color="primary" icon="add" label="라인추가" @click="addDataRowSection('next')" />
+              <q-btn outline color="negative" icon="remove" label="라인제거" :disable="removeRowsCount <= 0" @click="removeSelectedRow" />
+            </div>
+            <q-space />
+            <q-btn v-if="rowData.rows.length > 0" outline color="primary" icon="save" label="저장" @click="saveDataSection">
+              <q-badge v-show="delRowsCount > 0" color="red" floating>{{ delRowsCount }}</q-badge>
+            </q-btn>
+          </q-card-actions>
+          <q-separator />
+          <q-card-section class="q-pa-xs">
+            <div :style="contentZoneStyle">
+              <ag-grid-vue
+                ref="myGrid"
+                style="width: 100%; height: 100%"
+                :class="$q.dark.isActive ? 'ag-theme-alpine-dark' : 'ag-theme-alpine'"
+                :grid-options="gridOptions"
+              >
+              </ag-grid-vue>
+            </div>
+          </q-card-section>
+        </q-card>
+      </div>
+    </div>
   </q-page>
 </template>
 
@@ -98,9 +146,18 @@ import HelpProd from 'components/subvue/HelpProd.vue';
 const $q = useQuasar();
 
 const searchValue = reactive({
-  year: commUtil.getTodayYear(),
+  chYn: 'N',
   textValue: '',
 });
+
+const formDisable = ref(true);
+const isScreenVisible = ref(true);
+const isClassActive = ref(true);
+
+const isScreenVisibleProcess = () => {
+  isScreenVisible.value = !isScreenVisible.value;
+  isScreenVisible.value ? (isClassActive.value = true) : (isClassActive.value = false);
+};
 
 const contentZoneHeight = ref(500);
 const handleResize = () => {
@@ -110,8 +167,8 @@ const contentZoneStyle = computed(() => ({
   height: `${contentZoneHeight.value - 260}px`,
 }));
 
-const selectedRows = reactive({ rows: [] });
-const rowData = reactive({ rows: [] });
+const selectedRows = reactive({ list: [], rows: [] });
+const rowData = reactive({ list: [], rows: [] });
 const rowDataBack = ref([]);
 
 onBeforeUnmount(() => {
@@ -148,6 +205,50 @@ const dateSetter = (params, field) => {
   return false;
 };
 
+const columnDefsList = ref([
+  {
+    headerName: '',
+    field: '',
+    maxWidth: 50,
+    minWidth: 50,
+    checkboxSelection: true,
+    headerCheckboxSelection: true,
+
+    pinned: !$q.screen.xs && !$q.screen.sm ? 'left' : null,
+  },
+  {
+    headerName: 'No',
+    field: '',
+    minWidth: 70,
+    maxWidth: 70,
+    filter: false,
+    pinned: !$q.screen.xs && !$q.screen.sm ? 'left' : null,
+    valueGetter: function (params) {
+      return params.node.rowIndex + 1;
+    },
+  },
+  {
+    headerName: '등록',
+    field: 'chYn',
+    minWidth: 80,
+    maxWidth: 80,
+    cellStyle: params => {
+      return { textAlign: 'center' };
+    },
+  },
+  {
+    headerName: '코드',
+    field: 'prodCd',
+    minWidth: 80,
+    maxWidth: 80,
+  },
+  {
+    headerName: '도서명',
+    field: 'prodNm',
+    minWidth: 250,
+  },
+]);
+
 const columnDefs = ref([
   {
     headerName: '',
@@ -169,6 +270,9 @@ const columnDefs = ref([
     filter: false,
     pinned: !$q.screen.xs && !$q.screen.sm ? 'left' : null,
     valueGetter: function (params) {
+      if (params.node.rowPinned) {
+        return null; // Do not display a number for pinned rows
+      }
       return params.node.rowIndex + 1;
     },
   },
@@ -185,44 +289,13 @@ const columnDefs = ref([
       return { textAlign: 'center' };
     },
   },
-  {
-    headerName: '도서명',
-    field: 'prodNm',
-    minWidth: 250,
-    editable: params => !params.node.rowPinned, // 합계 Pinned 행에서는 편집 불가
-    cellClassRules: {
-      'pinned-row': params => params.node.rowPinned, // 합계 스타일 지정
-    },
-  },
-  {
-    headerName: '코드',
-    field: 'prodCd',
-    minWidth: 100,
-    maxWidth: 100,
-    editable: false,
-    cellRendererSelector: params => {
-      // 조건에 따라 cellRenderer 설정
-      if (!params.node.rowPinned) {
-        return {
-          component: CompHelpProdButton,
-          params: {
-            updateSelectedValue: selectedParams => {
-              params.node.setDataValue('prodNm', selectedParams.prodNm); // prodNm 업데이트
-              params.node.setDataValue('prodCd', selectedParams.prodCd); // prodCd 업데이트
-              params.node.setDataValue('price', selectedParams.sPrice); // prodCd 업데이트
-            },
-          },
-        };
-      }
-      // 조건에 맞지 않으면 cellRenderer를 사용하지 않음
-      return null;
-    },
-  },
+
   {
     headerName: '번역비',
     field: 'transAmt',
     minWidth: 140,
     maxWidth: 140,
+    editable: params => !params.node.rowPinned, // 합계 Pinned 행에서는 편집 불가
     valueFormatter: params => {
       if (params.value != null) {
         return new Intl.NumberFormat('ko-KR', {
@@ -245,8 +318,9 @@ const columnDefs = ref([
   {
     headerName: '외주비',
     field: 'expAmt',
-    minWidth: 140,
-    maxWidth: 140,
+    minWidth: 130,
+    maxWidth: 130,
+    editable: params => !params.node.rowPinned, // 합계 Pinned 행에서는 편집 불가
     valueFormatter: params => {
       if (params.value != null) {
         return new Intl.NumberFormat('ko-KR', {
@@ -269,8 +343,9 @@ const columnDefs = ref([
   {
     headerName: '용지대',
     field: 'paperAmt',
-    minWidth: 140,
-    maxWidth: 140,
+    minWidth: 130,
+    maxWidth: 130,
+    editable: params => !params.node.rowPinned, // 합계 Pinned 행에서는 편집 불가
     valueFormatter: params => {
       if (params.value != null) {
         return new Intl.NumberFormat('ko-KR', {
@@ -293,8 +368,9 @@ const columnDefs = ref([
   {
     headerName: '인쇄비',
     field: 'printAmt',
-    minWidth: 140,
-    maxWidth: 140,
+    minWidth: 130,
+    maxWidth: 130,
+    editable: params => !params.node.rowPinned, // 합계 Pinned 행에서는 편집 불가
     valueFormatter: params => {
       if (params.value != null) {
         return new Intl.NumberFormat('ko-KR', {
@@ -317,8 +393,9 @@ const columnDefs = ref([
   {
     headerName: '기타비용',
     field: 'otherAmt',
-    minWidth: 140,
-    maxWidth: 140,
+    minWidth: 130,
+    maxWidth: 130,
+    editable: params => !params.node.rowPinned, // 합계 Pinned 행에서는 편집 불가
     valueFormatter: params => {
       if (params.value != null) {
         return new Intl.NumberFormat('ko-KR', {
@@ -342,6 +419,7 @@ const columnDefs = ref([
     headerName: '기타사항',
     field: 'remarks',
     minWidth: 200,
+    editable: params => !params.node.rowPinned, // 합계 Pinned 행에서는 편집 불가
   },
 ]);
 
@@ -388,7 +466,7 @@ const saveDataSection = () => {
     // Detail 자료 정리
     const saveData = JSON.stringify(JsonUtil.jsonFiller('no1', iu, iuD));
 
-    console.log('save : ', JSON.stringify(saveData));
+    // console.log('save : ', JSON.stringify(saveData));
     saveDataAndHandleResult(saveData).then(val => {
       getData();
     });
@@ -408,6 +486,38 @@ watch(
 // ***** DataBase 연결부분    *************************************//
 // **************************************************************//
 
+// ***** 사용자정보 목록 자료 가져오기 부분  *****************************//
+const getData = async () => {
+  try {
+    const response = await api.post('/api/cos/cos1030_list', {
+      paramChYn: searchValue.chYn,
+      paramValue: searchValue.textValue,
+    });
+    rowData.list = response.data.data;
+    myGridList.value.api.setGridOption('rowData', rowData.list);
+
+    rowData.rows = [];
+    rowDataBack.value = null;
+    myGrid.value.api.setGridOption('rowData', rowData.rows);
+    myGrid.value.api.setGridOption('pinnedBottomRowData', [calculateTotal()]);
+  } catch (error) {
+    console.error('Error fetching users:', error);
+  }
+};
+const getDataSelectedList = async res => {
+  try {
+    const response = await api.post('/api/cos/cos1030_selected_list', {
+      paramProdCd: res.prodCd,
+    });
+    rowData.rows = response.data.data;
+    rowDataBack.value = JSON.parse(JSON.stringify(response.data.data));
+    myGrid.value.api.setGridOption('rowData', rowData.rows);
+    myGrid.value.api.setGridOption('pinnedBottomRowData', [calculateTotal()]);
+  } catch (error) {
+    console.error('Error fetching users:', error);
+  }
+};
+
 // ***** 자료저장 및 삭제 처리부분 *****************************//
 const saveDataAndHandleResult = async resFormData => {
   try {
@@ -424,32 +534,94 @@ const saveDataAndHandleResult = async resFormData => {
   }
 };
 
-// ***** 사용자정보 목록 자료 가져오기 부분  *****************************//
-const getData = async () => {
-  try {
-    const response = await api.post('/api/cos/cos1020_list', {
-      paramYear: searchValue.year,
-      paramValue: searchValue.textValue,
-    });
-    rowData.rows = response.data.data;
-    rowDataBack.value = JSON.parse(JSON.stringify(response.data.data));
-    myGrid.value.api.setGridOption('rowData', rowData.rows);
-    myGrid.value.api.setGridOption('pinnedBottomRowData', [calculateTotal()]);
-  } catch (error) {
-    console.error('Error fetching users:', error);
-  }
-};
-
 // **************************************************************//
 // ***** DataBase 연결부분 끝  *************************************//
 // **************************************************************//
 
 // *********************************
 
+const myGridList = ref(null);
+const gridOptionsList = {
+  columnDefs: columnDefsList.value,
+  rowData: rowData.list,
+  defaultColDef: {
+    flex: 1,
+    sortable: true,
+    filter: true,
+    floatingFilter: false,
+    editable: false,
+  },
+  pagination: false,
+  rowSelection: 'multiple' /* 'single' or 'multiple',*/,
+  suppressRowClickSelection: false,
+  animateRows: true,
+  suppressHorizontalScroll: true,
+  localeText: { noRowsToShow: '조회 결과가 없습니다.' },
+  getRowStyle: function (param) {
+    if (param.node.rowPinned) {
+      return { 'font-weight': 'bold', background: '#dddddd' };
+    }
+    return { 'text-align': 'left' };
+  },
+  getRowHeight: function (param) {
+    // 고정된 행의 높이
+    if (param.node.rowPinned) {
+      return 45;
+    }
+    return 40;
+  },
+  // GRID READY 이벤트, 사이즈 자동조정
+  onGridReady: function (event) {
+    // console.log('Grid is ready'); // Check if grid initializes
+    event.api.sizeColumnsToFit();
+  },
+  // 창 크기 변경 되었을 때 이벤트
+  onGridSizeChanged: function (event) {
+    event.api.sizeColumnsToFit();
+  },
+  onRowEditingStarted: function (event) {
+    // console.log('never called - not doing row editing');
+  },
+  onRowEditingStopped: function (event) {
+    // console.log('never called - not doing row editing');
+  },
+  onCellEditingStarted: function (event) {
+    // console.log('cellEditingStarted');
+  },
+  onCellEditingStopped: function (event) {
+    // console.log('cellEditingStopped');
+  },
+  onRowClicked: function (event) {
+    // console.log('onRowClicked : ', JSON.stringify(event.data));
+    getDataSelectedList(event.data).then(() => {});
+  },
+  onCellClicked: function (event) {
+    // console.log('onCellClicked');
+  },
+  isRowSelectable: function (event) {
+    // console.log('isRowSelectable');
+    return true;
+  },
+  onSelectionChanged: function (event) {
+    // console.log('onSelectionChanged1');
+    selectedRows.list = event.api.getSelectedRows();
+  },
+  onSortChanged: function (event) {
+    // console.log('onSortChanged');
+  },
+  onCellValueChanged: function (event) {
+    // console.log('onCellValueChanged');
+  },
+
+  debug: false,
+};
+
+// *********************************
+
 // rows 전체 합 구하는 부분
 const calculateTotal = () => {
   let totalRow = {
-    prodNm: '합계',
+    makeDay: '합계',
     transAmt: 0,
     expAmt: 0,
     paperAmt: 0,
@@ -473,8 +645,7 @@ const calculateTotal = () => {
 let processedEventKey = null;
 const eventKey = ref(null);
 const columnFocusMap = {
-  makeDay: 'prodNm',
-  prodNm: 'transAmt',
+  makeDay: 'transAmt',
   transAmt: 'expAmt',
   expAmt: 'paperAmt',
   paperAmt: 'printAmt',
@@ -620,8 +791,8 @@ const addDataRowSection = event => {
   }
   // const addIndex = rowIndex.value;
   const newItems = {
-    prodNm: '',
-    prodCd: '',
+    prodNm: selectedRows.list[0].prodNm,
+    prodCd: selectedRows.list[0].prodCd,
     makeDay: commUtil.unFormatDate(commUtil.getToday()),
     transAmt: 0,
     expAmt: 0,
@@ -654,24 +825,6 @@ const removeSelectedRow = () => {
 
   // 그리드 데이터 갱신
   myGrid.value.api.setRowData(rowData.rows);
-};
-
-const openHelpProdDialog = event => {
-  $q.dialog({
-    component: HelpProd,
-    componentProps: {
-      paramValueNm: event.data.prodNm,
-      paramUseYn: 'N',
-      paramCloseDay: commUtil.unFormatDate(commUtil.getToday()),
-    },
-  })
-    .onOk(res => {
-      event.node.setDataValue('prodNm', res.prodNm);
-      event.node.setDataValue('prodCd', res.prodCd);
-      myGrid.value.api.setFocusedCell(event.node.rowIndex, 'transAmt');
-    })
-    .onCancel(() => {})
-    .onDismiss(() => {});
 };
 </script>
 

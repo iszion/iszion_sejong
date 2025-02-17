@@ -165,7 +165,7 @@ const columnDefs = ref([
   },
   {
     headerName: '손익분기 수량',
-    field: 'qty',
+    field: 'limitQty',
     minWidth: 130,
     maxWidth: 130,
     valueFormatter: params => {
@@ -215,7 +215,7 @@ const saveDataSection = () => {
     // Detail 자료 분류작업
     let iu = [];
     let iuD = [];
-    console.log('data : ', JSON.stringify(rowData.rows));
+    // console.log('data : ', JSON.stringify(rowData.rows));
     // 신규 수정 자료정리
     for (let i = 0; i < rowData.rows.length; i++) {
       if (rowData.rows[i].agentNm !== '') {
@@ -237,7 +237,7 @@ const saveDataSection = () => {
     // Detail 자료 정리
     const saveData = JSON.stringify(JsonUtil.jsonFiller('no1', iu, iuD));
 
-    console.log('save : ', JSON.stringify(saveData));
+    // console.log('save : ', JSON.stringify(saveData));
     saveDataAndHandleResult(saveData).then(val => {
       getData();
     });
@@ -248,13 +248,6 @@ const saveDataSection = () => {
 watch(
   () => $q.dark.isActive,
   () => {
-    columnDefs.value.forEach(col => {
-      if (col.field === 'qty' || col.field === 'remarks') {
-        // 특정 필드 (예: 'qty')만 변경
-        col.headerClass = () => ($q.dark.isActive ? 'dark-header' : 'light-header');
-      }
-    });
-
     // ag-Grid에 컬럼 다시 적용
     myGrid.value.api?.setColumnDefs([...columnDefs.value]); // 참조 유지하면서 새로운 배열 할당
   },
@@ -284,7 +277,7 @@ const saveDataAndHandleResult = async resFormData => {
 const getData = async () => {
   try {
     const response = await api.post('/api/cos/cos1010_list', {
-      paramValue: '',
+      paramValue: searchValue.textValue,
     });
     rowData.rows = response.data.data;
     rowDataDetailsBack.value = JSON.parse(JSON.stringify(response.data.data));

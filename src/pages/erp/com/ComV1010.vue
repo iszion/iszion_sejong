@@ -78,6 +78,8 @@
                 </template>
               </q-input>
               <q-space />
+              <q-btn v-if="selectedRows.length === 1" outline color="negative" icon="schema" label="DATABASE 생성" @click="handleDatabaseCreate" />
+              <q-space />
               <div class="q-gutter-sm">
                 <q-btn outline color="positive" icon="search" label="조회" @click="getData" />
                 <q-btn v-if="isShowDeleteBtn" outline color="negative" icon="delete" label="삭제" @click="deleteDataSection" />
@@ -799,6 +801,30 @@ const addDataSection = () => {
     }, 100);
   });
 };
+const handleDatabaseCreate = () => {
+  $q.dialog({
+    dark: true,
+    title: 'Database생성작업',
+    message: '선택한 고객사의 데이타베이스 및 테이블을 생성 및 초기화 합니다.',
+    ok: {
+      push: true,
+      color: 'negative',
+    },
+    cancel: {
+      push: true,
+      color: 'grey-7',
+    },
+    // persistent: true,
+  })
+    .onOk(() => {
+      getCreateDatabase(formData.value.database);
+    })
+    .onCancel(() => {})
+    .onDismiss(() => {
+      // 확인/취소 모두 실행되었을때
+    });
+};
+
 const deleteDataSection = () => {
   $q.dialog({
     dark: true,
@@ -925,6 +951,21 @@ const saveDataAndHandleResult = resFormData => {
     });
 };
 
+// ***** Database생성 프로세스 실행  *****************************//
+const getCreateDatabase = async resDatabase => {
+  try {
+    const res = await api.post('/api/com/com1010_create_database_procedure', {
+      paramDatabase: resDatabase,
+    });
+
+    let saveStatus = {};
+    saveStatus.rtn = res.data.rtn;
+    saveStatus.rtnMsg = res.data.rtnMsg;
+    notifySave.notifyView(saveStatus);
+  } catch (error) {
+    console.error('Error fetching users:', error);
+  }
+};
 // ***** 사용자정보 목록 자료 가져오기 부분  *****************************//
 
 const getData = async () => {
