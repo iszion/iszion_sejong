@@ -513,7 +513,7 @@ const statusEdit = reactive({
 
 const handleDatabaseReset = value => {
   const divNm = divOptions.value.find(opt => opt.commCd === value);
-  formData.value.database = divNm.commNm.substring(0, 1) + formData.value.compCd;
+  formData.value.database = (formData.value.compCd + divNm.commNm.substring(0, 1)).toLowerCase();
 };
 
 const formDisable = ref(true);
@@ -594,19 +594,20 @@ const columnDefs = reactive({
       pinned: !$q.screen.xs && !$q.screen.sm ? 'left' : null,
     },
     {
+      headerName: '회사명',
+      field: 'compNm',
+      minWidth: 120,
+      pinned: !$q.screen.xs && !$q.screen.sm ? 'left' : null,
+    },
+    {
       headerName: 'DB명',
       field: 'database',
-      minWidth: 90,
+      minWidth: 120,
     },
     {
       headerName: '유형',
       field: 'divNm',
       minWidth: 100,
-    },
-    {
-      headerName: '회사명',
-      field: 'compNm',
-      minWidth: 120,
     },
     {
       headerName: '법인명',
@@ -802,10 +803,16 @@ const addDataSection = () => {
   });
 };
 const handleDatabaseCreate = () => {
+  const db_name = 'db_b' + formData.value.database;
   $q.dialog({
     dark: true,
     title: 'Database생성작업',
-    message: '선택한 고객사의 데이타베이스 및 테이블을 생성 및 초기화 합니다.',
+    message:
+      '선택한 고객사 [ <span class="text-subtitle1 text-bold text-orange">' +
+      formData.value.compBusinNm +
+      '</span> ]의 <br /><span class="text-subtitle1 text-bold text-blue">데이타베이스</span> [ <span class="text-subtitle1 text-bold text-orange">' +
+      db_name +
+      '</span> ] 및 <span class="text-subtitle1 text-bold text-blue">테이블</span>을 <br /><span class="text-subtitle1 text-bold text-red">생성 및 초기화</span> 합니다.',
     ok: {
       push: true,
       color: 'negative',
@@ -814,10 +821,11 @@ const handleDatabaseCreate = () => {
       push: true,
       color: 'grey-7',
     },
+    html: true,
     // persistent: true,
   })
     .onOk(() => {
-      getCreateDatabase(formData.value.database);
+      getCreateDatabase(db_name);
     })
     .onCancel(() => {})
     .onDismiss(() => {
@@ -902,40 +910,18 @@ const saveDataAndHandleResult = resFormData => {
           getData();
         } else if (isSaveFg === 'U') {
           const selectedData = myGrid.value.api.getSelectedRows();
-          // selectedData[0] = { ...formData.value };
-          selectedData[0].compCd = formData.value.compCd;
-          selectedData[0].compNm = formData.value.compNm;
-          selectedData[0].comBusinNm = formData.value.compBusinNm;
-          selectedData[0].compOwner = formData.value.compOwner;
-          selectedData[0].compBusinNo = formData.value.compBusinNo;
-          selectedData[0].compCond = formData.value.compCond;
-          selectedData[0].compKind = formData.value.compKind;
-          selectedData[0].compAddr1 = formData.value.compAddr1;
-          selectedData[0].compAddr1x = formData.value.compAddr1x;
-          selectedData[0].compZip1 = formData.value.compZip1;
-          selectedData[0].compAddr2 = formData.value.compAddr2;
-          selectedData[0].compAddr2x = formData.value.compAddr2x;
-          selectedData[0].compZip2 = formData.value.compZip2;
-          selectedData[0].manager = formData.value.manager;
-          selectedData[0].compEmail = formData.value.compEmail;
-          selectedData[0].billEmail = formData.value.billEmail;
-          selectedData[0].billYn = formData.value.billYn;
-          selectedData[0].mobile = formData.value.mobile;
-          selectedData[0].tel = formData.value.tel;
-          selectedData[0].fax = formData.value.fax;
-          selectedData[0].estDay = formData.value.estDay;
-          selectedData[0].makeDay = formData.value.makeDay;
-          selectedData[0].divCd = formData.value.divCd;
-          selectedData[0].outDay = formData.value.outDay;
-          selectedData[0].database = formData.value.database;
-          selectedData[0].explains = formData.value.explains;
 
-          selectedData[0].divNm = selectedDivNm.value;
+          if (selectedData.length > 0) {
+            Object.assign(selectedData[0], {
+              ...formData.value,
+              divNm: selectedDivNm.value,
+            });
 
-          myGrid.value.api.applyTransaction({
-            update: selectedData,
-          });
-          myGrid.value.api.deselectAll();
+            myGrid.value.api.applyTransaction({
+              update: selectedData,
+            });
+            myGrid.value.api.deselectAll();
+          }
         } else if (isSaveFg === 'D') {
           const selectedData = myGrid.value.api.getSelectedRows();
           myGrid.value.api.applyTransaction({ remove: selectedData });
@@ -954,9 +940,7 @@ const saveDataAndHandleResult = resFormData => {
 // ***** Database생성 프로세스 실행  *****************************//
 const getCreateDatabase = async resDatabase => {
   try {
-    const res = await api.post('/api/com/com1010_create_database_procedure', {
-      paramDatabase: resDatabase,
-    });
+    const res = await api.post('/api/com/createDatabase', { paramDatabase: resDatabase });
 
     let saveStatus = {};
     saveStatus.rtn = res.data.rtn;

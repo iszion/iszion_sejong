@@ -79,8 +79,8 @@
                 </q-input>
               </div>
               <q-space />
-              <q-btn v-if="selectedRows.length === 1" outline color="negative" dense @click="passwordReset">
-                <q-icon name="lock_reset" size="xs" class="q-mr-xs" /> 패스워드 Reset
+              <q-btn v-if="selectedRows.length === 1" outline color="negative" @click="passwordReset">
+                <q-icon name="key" size="xs" class="q-mr-xs" /> 패스워드 Reset
               </q-btn>
               <q-space />
               <div class="q-gutter-xs">
@@ -129,12 +129,52 @@
               <q-space />
               <div class="q-gutter-xs">
                 <q-btn v-if="isShowSaveBtn" outline color="primary" @click="saveDataSection"><q-icon name="save" size="xs" /> 저장 </q-btn>
-                <q-btn v-if="searchValue.compCd !== ''" outline color="positive" @click="addDataSection"><q-icon name="add" size="xs" /> 신규 </q-btn>
+                <q-btn outline color="positive" @click="addDataSection"><q-icon name="add" size="xs" /> 신규 </q-btn>
               </div>
             </q-toolbar>
           </q-card-actions>
 
           <q-separator size="3px" />
+
+          <q-card-section class="q-px-none">
+            <div class="row q-px-md q-col-gutter-x-lg">
+              <q-input
+                ref="startFocus"
+                stack-label
+                class="col-9 text-subtitle1"
+                v-model="formData.compNm"
+                label="소속회사"
+                :label-color="$q.dark.isActive ? 'green' : 'blue'"
+                :readonly="formDisableCompCd"
+                @keyup.enter.prevent="openHelpCompDialog(formData.compNm)"
+              >
+                <template v-slot:append>
+                  <q-icon
+                    v-if="formDisable"
+                    size="0.8em"
+                    v-show="formData.compNm !== ''"
+                    name="close"
+                    @click="
+                      formData.compNm = '';
+                      formData.compCd = '';
+                    "
+                    class="cursor-pointer q-pt-md"
+                  />
+                  <q-icon v-show="formDisable" size="0.8em" name="search" @click="openHelpCompDialog('')" class="cursor-pointer q-pt-md" />
+                </template>
+              </q-input>
+              <q-input
+                stack-label
+                class="col-3 text-subtitle1"
+                v-model="formData.compCd"
+                label="코드"
+                :label-color="$q.dark.isActive ? 'green' : 'blue'"
+                readonly
+              />
+            </div>
+          </q-card-section>
+
+          <q-separator class="q-my-xs" size="3px" />
 
           <q-card-section class="q-pa-md">
             <div class="row q-col-gutter-x-xl">
@@ -181,10 +221,17 @@
                   v-model="formData.userId"
                   label="사원번호"
                   label-color="orange"
-                  :disable="formDisableUserId"
+                  :readonly="formDisableUserId"
                 >
                   <template v-slot:append>
-                    <q-icon v-show="formData.userId !== ''" size="0.8em" name="done" class="cursor-pointer q-mt-lg" @click="getDataUserIdCheck">
+                    <q-icon
+                      v-if="formDisable"
+                      v-show="formData.userId !== ''"
+                      size="0.8em"
+                      name="done"
+                      class="cursor-pointer q-mt-lg"
+                      @click="getDataUserIdCheck"
+                    >
                       <q-tooltip transition-show="rotate" transition-hide="rotate" class="bg-amber text-black shadow-4"> ID 중복체크 </q-tooltip>
                     </q-icon>
                   </template>
@@ -310,6 +357,7 @@ import notifySave from 'src/js_comm/notify-save';
 import commUtil from 'src/js_comm/comm-util';
 
 import ImageView from 'components/ImageView.vue';
+import HelpComp from 'components/subvue/HelpComp.vue';
 
 const $q = useQuasar();
 
@@ -331,6 +379,11 @@ const statusEdit = reactive({
   icon: '',
   message: '',
   color: '',
+});
+
+const selectedCompLabel = computed(() => {
+  const selected = searchValue.compOptions.find(option => option.compCd === searchValue.compCd);
+  return selected ? selected.compNm : '';
 });
 
 onBeforeUnmount(() => {
@@ -356,6 +409,7 @@ onMounted(() => {
   handleResize();
 });
 
+const formDisableCompCd = ref(true);
 const formDisableUserId = ref(true);
 const formDisable = ref(true);
 const isScreenVisible = ref(true);
@@ -388,7 +442,6 @@ const columnDefs = reactive({
       maxWidth: 80,
       pinned: 'left',
       valueGetter: function (params) {
-        // Customize row numbers as needed
         return params.node.rowIndex + 1;
       },
       cellStyle: { textAlign: 'center' },
@@ -529,6 +582,8 @@ const formData = ref({
 });
 
 const formDataInitialize = () => {
+  formData.value.compCd = '';
+  formData.value.compNm = '';
   formData.value.userId = '';
   formData.value.userNm = '';
   formData.value.userNmx = '';
@@ -573,6 +628,7 @@ const isShowStatusEdit = ref(false);
 const isShowDeleteBtn = ref(false);
 const isShowSaveBtn = ref(false);
 
+const startFocus = ref(null);
 const userIdFocus = ref(null);
 const userNmFocus = ref(null);
 const addDataSection = () => {
@@ -584,13 +640,24 @@ const addDataSection = () => {
   statusEdit.color = 'primary';
   isSaveFg = 'I';
   isShowSaveBtn.value = true;
-  formDisableUserId.value = false;
   formDisable.value = true;
-  formData.value.compCd = searchValue.compCd;
   formData.value.outDay = '9999-12-31';
   formData.value.manager = 'N';
+  formDisableCompCd.value = true;
+  formDisableUserId.value = true;
   setTimeout(() => {
-    userIdFocus.value.focus();
+    if (searchValue.compCd === '') {
+      formDisableCompCd.value = false;
+      formData.value.compCd = '';
+      formData.value.compNm = '';
+      startFocus.value.focus();
+    } else {
+      formDisableUserId.value = false;
+      formData.value.compCd = searchValue.compCd;
+      formData.value.compNm = selectedCompLabel.value;
+
+      userIdFocus.value.focus();
+    }
   }, 100);
 };
 const deleteDataSection = () => {
@@ -804,30 +871,19 @@ const saveDataAndHandleResult = resFormData => {
           });
         } else if (isSaveFg === 'U') {
           const selectedData = myGrid.value.api.getSelectedRows();
-          // selectedData[0] = { ...formData.value };
-          selectedData[0].userId = formData.value.userId;
-          selectedData[0].oldUserId = formData.value.userId;
-          selectedData[0].userNm = formData.value.userNm;
-          selectedData[0].userNmx = formData.value.userNmx;
-          selectedData[0].deptCd = formData.value.deptCd;
-          selectedData[0].birthday = formData.value.birthday;
-          selectedData[0].mobile = formData.value.mobile;
-          selectedData[0].tel = formData.value.tel;
-          selectedData[0].email = formData.value.email;
-          selectedData[0].manager = formData.value.manager;
-          selectedData[0].inDay = formData.value.inDay;
-          selectedData[0].outDay = formData.value.outDay;
+          if (selectedData.length > 0) {
+            Object.assign(selectedData[0], {
+              ...formData.value,
+              oldUserId: formData.value.userId, // 기존 코드 유지
+              deptNm: selectedDept.value,
+              titlNm: selectedTitl.value,
+            });
 
-          selectedData[0].imageFileNm = formData.value.imageFileNm;
-          selectedData[0].imageFileNmFull = formData.value.imageFileNmFull;
-
-          selectedData[0].deptNm = selectedDept.value;
-          selectedData[0].titlNm = selectedTitl.value;
-
-          myGrid.value.api.applyTransaction({
-            update: selectedData,
-          });
-          myGrid.value.api.deselectAll();
+            myGrid.value.api.applyTransaction({
+              update: selectedData,
+            });
+            myGrid.value.api.deselectAll();
+          }
         } else if (isSaveFg === 'D') {
           const selectedData = myGrid.value.api.getSelectedRows();
           myGrid.value.api.applyTransaction({ remove: selectedData });
@@ -1026,6 +1082,7 @@ const gridOptions = {
       statusEdit.message = '수정/삭제모드 입니다';
       statusEdit.color = 'accent';
       isSaveFg = 'U';
+      formDisableCompCd.value = true;
       formDisableUserId.value = true;
       formDisable.value = false;
     } else if (selectedRows.value.length > 1) {
@@ -1052,6 +1109,27 @@ const gridOptions = {
   },
 
   debug: false,
+};
+
+/* *** 코드헬프부분 ** */
+const openHelpCompDialog = resNm => {
+  $q.dialog({
+    component: HelpComp,
+    componentProps: {
+      paramValueNm: resNm,
+      paramCloseDay: commUtil.unFormatDate(commUtil.getToday()),
+    },
+  })
+    .onOk(res => {
+      formData.value.compCd = res.compCd;
+      formData.value.compNm = res.compNm;
+      setTimeout(() => {
+        formDisableUserId.value = false;
+        userIdFocus.value.focus();
+      }, 200);
+    })
+    .onCancel(() => {})
+    .onDismiss(() => {});
 };
 </script>
 

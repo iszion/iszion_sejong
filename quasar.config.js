@@ -76,7 +76,7 @@ module.exports = configure(function (/* ctx */) {
       env: {
         SERVER_URL: 'http://192.168.141.13:8084',
         // SERVER_URL: 'https://t4.iszion.co.kr:8083',
-        // SERVER_URL: 'http://localhost:8084',
+        // SERVER_URL: 'http://localhost:8080',
       },
       // rawDefine: {}
       // ignorePublicFolder: true,

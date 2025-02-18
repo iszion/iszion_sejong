@@ -433,7 +433,12 @@ const getDataSetUserInfo = async () => {
     const response = await api.post('/api/com/user_info', { paramUserId: storeUser.userId });
 
     userImageName.value = response.data.data.imageFileNm;
-    console.log('set1 : ', JSON.stringify(response));
+
+    if (!response.data.data.levelCd) {
+      response.data.data.levelCd = '9011004';
+    }
+
+    // console.log('set1 : ', JSON.stringify(response));
     storgeUserInfoGroupSave(
       response.data.data.userId +
         '|' +
@@ -457,7 +462,7 @@ const getDataSetUserInfo = async () => {
         '|' +
         response.data.data.levelNm,
     );
-    console.log('set2 : ', JSON.stringify(response));
+    // console.log('set2 : ', JSON.stringify(response));
   } catch (error) {
     console.error('Error fetching users:', error);
   }
@@ -490,6 +495,7 @@ const menuListData = reactive({
   subMenu: {},
 });
 const getDataMainMenu = async () => {
+  console.log('comp : ', storeUser.compCd);
   try {
     const response = await api.post('/api/com/menu_main_list', { paramCompCd: storeUser.compCd, paramUserId: storeUser.userId });
     menuListData.mainMenu = response.data.data;

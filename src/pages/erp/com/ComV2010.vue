@@ -640,16 +640,20 @@ const handleCellValueChangedDialog = () => {
 const saveDataSection = () => {
   let iu = [];
   let iuD = [];
+  let levelCheck = false;
   // 신규/수정 부분
   for (let i = 0; i < updateData.value.length; i++) {
+    if (!updateData.value[i].levelCd) {
+      levelCheck = true;
+    }
     let tmpJson = '{"mode": "' + updateData.value[i].iuD + '","data":' + JSON.stringify(updateData.value[i]) + '}';
     iu.push(tmpJson);
   }
-  if (isEmpty(iu) && isEmpty(iuD)) {
+  if ((isEmpty(iu) && isEmpty(iuD)) || levelCheck) {
     $q.dialog({
       dark: true,
       title: '안내',
-      message: '변경된 자료가 없습니다. ',
+      message: levelCheck ? '권한레벨을 지정하세요' : '변경된 자료가 없습니다. ',
       // persistent: true,
     })
       .onOk(() => {})
